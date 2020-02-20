@@ -1,0 +1,31 @@
+{
+  "name": "cjs-to-deno",
+  "version": "0.1.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/garronej/cjs-to-deno"
+  },
+  "scripts": {
+    "tsc": "npx tsc",
+    "test": "node ./dist/test/main"
+  },
+  "bin": {
+    "cjs-to-deno": "dist/bin/main.js"
+  },
+  "author": "Joseph Garrone",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^4.1.1"
+  },
+  "keywords": [
+    "deno",
+    "transpile",
+    "cjs"
+  ],
+  "devDependencies": {
+    "@types/node": "^8.10.59",
+    "scripting-tools": "github:garronej/scripting-tools",
+    "typescript": "^3.7.5"
+  }
+}

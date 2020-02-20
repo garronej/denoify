@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES6",
+        "declaration": true,
+        "outDir": "./dist",
+        "strictNullChecks": true,
+        "sourceMap": false,
+        "newLine": "LF",
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
+        "strictPropertyInitialization": true,
+        "strictFunctionTypes": true,
+        "noImplicitAny": true,
+    },
+    "filesGlob": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "res/**/*",
+        "dist/**/*"
+    ]
+}

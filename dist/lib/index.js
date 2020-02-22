@@ -9,21 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const replaceImportsFactory_1 = require("./replaceImportsFactory");
+const denoifySourceCodeStringFactory_1 = require("./denoifySourceCodeStringFactory");
 const transformCodebase_1 = require("./transformCodebase");
-const getDenoModuleRepoFactory_1 = require("./getDenoModuleRepoFactory");
+const getDenoDependencyFactory_1 = require("./getDenoDependencyFactory");
 function run(params) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { srcDirPath, destDirPath, nodeModuleDirPath, repoIndex } = params;
-        const { replaceImports } = replaceImportsFactory_1.replaceImportsFactory(getDenoModuleRepoFactory_1.getDenoModuleRepoFactory({
+        const { srcDirPath, destDirPath, nodeModuleDirPath, denoDependencies } = params;
+        const { denoifySourceCodeString } = denoifySourceCodeStringFactory_1.denoifySourceCodeStringFactory(getDenoDependencyFactory_1.getDenoDependencyFactory({
             nodeModuleDirPath,
-            repoIndex
+            denoDependencies
         }));
         yield transformCodebase_1.transformCodebase({
             srcDirPath,
             destDirPath,
-            "transformSourceCode": ({ extension, sourceCode }) => /^\.ts$/i.test(extension) || /^\.js$/i.test(extension) ?
-                replaceImports({ sourceCode })
+            "transformSourceCodeString": ({ extension, sourceCode }) => /^\.ts$/i.test(extension) || /^\.js$/i.test(extension) ?
+                denoifySourceCodeString({ sourceCode })
                 :
                     Promise.resolve(sourceCode)
         });

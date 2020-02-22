@@ -11,7 +11,7 @@
         "noUnusedParameters": false,
         "strictPropertyInitialization": true,
         "strictFunctionTypes": true,
-        "noImplicitAny": true,
+        "noImplicitAny": true
     },
     "filesGlob": [
         "src/**/*"

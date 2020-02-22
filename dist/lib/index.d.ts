@@ -1,7 +1,7 @@
-import { RepoIndex } from "./getDenoModuleRepoFactory";
+import { DenoDependencies } from "./getDenoDependencyFactory";
 export declare function run(params: {
     srcDirPath: string;
     destDirPath: string;
     nodeModuleDirPath: string;
-    repoIndex: RepoIndex;
+    denoDependencies: DenoDependencies;
 }): Promise<void>;

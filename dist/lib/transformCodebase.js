@@ -31,13 +31,14 @@ const crawl = (() => {
         return paths.map(file_path => path.relative(dir_path, file_path));
     };
 })();
+/** Apply a transformation function to every file of directory */
 function transformCodebase(params) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { srcDirPath, destDirPath, transformSourceCode } = params;
+        const { srcDirPath, destDirPath, transformSourceCodeString } = params;
         for (const file_relative_path of crawl(srcDirPath)) {
             st.fs_move("COPY", srcDirPath, destDirPath, file_relative_path);
             const file_path = path.join(destDirPath, file_relative_path);
-            fs.writeFileSync(file_path, Buffer.from(yield transformSourceCode({
+            fs.writeFileSync(file_path, Buffer.from(yield transformSourceCodeString({
                 "extension": path.extname(file_path).substr(1).toLowerCase(),
                 "sourceCode": fs.readFileSync(file_path).toString("utf8")
             }), "utf8"));

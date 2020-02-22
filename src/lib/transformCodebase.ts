@@ -41,11 +41,13 @@ const crawl = (() => {
 
 })();
 
+
+/** Apply a transformation function to every file of directory */
 export async function transformCodebase(
     params: {
         srcDirPath: string;
         destDirPath: string;
-        transformSourceCode: (params: {
+        transformSourceCodeString: (params: {
             /** e.g: .ts */
             extension: string;
             sourceCode: string;
@@ -53,7 +55,7 @@ export async function transformCodebase(
     }
 ) {
 
-    const { srcDirPath, destDirPath, transformSourceCode } = params;
+    const { srcDirPath, destDirPath, transformSourceCodeString } = params;
 
     for (const file_relative_path of crawl(srcDirPath)) {
 
@@ -69,7 +71,7 @@ export async function transformCodebase(
         fs.writeFileSync(
             file_path,
             Buffer.from(
-                await transformSourceCode({
+                await transformSourceCodeString({
                     "extension": path.extname(file_path).substr(1).toLowerCase(),
                     "sourceCode": fs.readFileSync(file_path).toString("utf8")
                 }),

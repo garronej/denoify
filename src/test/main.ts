@@ -1,5 +1,5 @@
 
-import { replaceImportsFactory } from "../lib/replaceImportsFactory";
+import { denoifySourceCodeStringFactory } from "../lib/denoifySourceCodeStringFactory";
 
 {
 
@@ -26,14 +26,14 @@ import { ObserverImpl } from "ts-evt/dist/lib/Observable";
 require("./ok");
 `;
 
-    replaceImportsFactory({
-        "getDenoModuleRepo": async nodeModuleName => {
+    denoifySourceCodeStringFactory({
+        "getDenoDependency": async nodeModuleName => {
             return {
-                "url": `https://deno.land/x/${nodeModuleName}`,
+                "url": `https://deno.land/x/${nodeModuleName.replace(/-/g, "_")}`,
                 "main": "/mod.ts"
             }
         }
-    }).replaceImports({
+    }).denoifySourceCodeString({
         sourceCode
     }).then(console.log)
 

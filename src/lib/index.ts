@@ -1,32 +1,32 @@
 
-import { replaceImportsFactory } from "./replaceImportsFactory";
+import { denoifySourceCodeStringFactory } from "./denoifySourceCodeStringFactory";
 import { transformCodebase } from "./transformCodebase";
-import { getDenoModuleRepoFactory, RepoIndex } from "./getDenoModuleRepoFactory";
+import { getDenoDependencyFactory, DenoDependencies } from "./getDenoDependencyFactory";
 
 export async function run(
     params: {
         srcDirPath: string;
         destDirPath: string;
         nodeModuleDirPath: string;
-        repoIndex: RepoIndex;
+        denoDependencies: DenoDependencies;
     }
 ) {
 
-    const { srcDirPath, destDirPath, nodeModuleDirPath, repoIndex } = params;
+    const { srcDirPath, destDirPath, nodeModuleDirPath, denoDependencies } = params;
 
-    const { replaceImports } = replaceImportsFactory(
-        getDenoModuleRepoFactory({
+    const { denoifySourceCodeString } = denoifySourceCodeStringFactory(
+        getDenoDependencyFactory({
             nodeModuleDirPath,
-            repoIndex
+            denoDependencies
         })
     );
 
     await transformCodebase({
         srcDirPath,
         destDirPath,
-        "transformSourceCode": ({ extension, sourceCode }) =>
+        "transformSourceCodeString": ({ extension, sourceCode }) =>
             /^\.ts$/i.test(extension) || /^\.js$/i.test(extension) ?
-                replaceImports({ sourceCode })
+                denoifySourceCodeString({ sourceCode })
                 :
                 Promise.resolve(sourceCode)
     });

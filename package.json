@@ -1,17 +1,17 @@
 {
-  "name": "cjs-to-deno",
+  "name": "denoify",
   "version": "0.1.0",
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git://github.com/garronej/cjs-to-deno"
+    "url": "git://github.com/garronej/denoify"
   },
   "scripts": {
     "tsc": "npx tsc",
     "test": "node ./dist/test/main"
   },
   "bin": {
-    "cjs-to-deno": "dist/bin/main.js"
+    "denoify": "dist/bin/denoify.js"
   },
   "author": "Joseph Garrone",
   "license": "MIT",
@@ -21,7 +21,8 @@
   "keywords": [
     "deno",
     "transpile",
-    "cjs"
+    "cjs",
+    "CommonJs"
   ],
   "devDependencies": {
     "@types/node": "^8.10.59",

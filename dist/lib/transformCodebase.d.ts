@@ -1,7 +1,8 @@
+/** Apply a transformation function to every file of directory */
 export declare function transformCodebase(params: {
     srcDirPath: string;
     destDirPath: string;
-    transformSourceCode: (params: {
+    transformSourceCodeString: (params: {
         /** e.g: .ts */
         extension: string;
         sourceCode: string;

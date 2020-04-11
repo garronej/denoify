@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict";
 var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", { value: true });

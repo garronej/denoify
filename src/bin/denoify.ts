@@ -114,7 +114,7 @@ run({
                     .outDir
             )
     )(commanderStatic["destDirPath"]),
-    "nodeModuleDirPath": path.join(projectPath, "node_modules"),
+    "projectPath": projectPath,
     ...(() => {
 
         const packageJsonParsed = require(path.join(projectPath, "package.json"));

@@ -10,13 +10,13 @@ export type DenoDependencies = { [nodeModuleName: string]: DenoDependency; };
 
 export function getDenoDependencyFactory(
     params: {
-        nodeModuleDirPath: string;
+        projectPath: string;
         denoDependencies: DenoDependencies;
         devDependencies: string[];
     }
 ) {
 
-    const { nodeModuleDirPath, denoDependencies, devDependencies } = params;
+    const { projectPath, denoDependencies, devDependencies } = params;
 
     const getDenoDependency = async (nodeModuleName: string): Promise<DenoDependency> => {
 
@@ -31,7 +31,7 @@ export function getDenoDependencyFactory(
 
         const packageJsonParsed: Record<string, any> = require(
             path.join(
-                st.find_module_path(nodeModuleName, nodeModuleDirPath),
+                st.find_module_path(nodeModuleName, projectPath),
                 "package.json"
             )
         );

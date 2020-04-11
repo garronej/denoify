@@ -7,7 +7,7 @@ export async function run(
     params: {
         srcDirPath: string;
         destDirPath: string;
-        nodeModuleDirPath: string;
+        projectPath: string;
         denoDependencies: DenoDependencies;
         devDependencies: string[];
     }
@@ -16,14 +16,14 @@ export async function run(
     const {
         srcDirPath,
         destDirPath,
-        nodeModuleDirPath,
+        projectPath,
         denoDependencies,
         devDependencies
     } = params;
 
     const { denoifySourceCodeString } = denoifySourceCodeStringFactory(
         getDenoDependencyFactory({
-            nodeModuleDirPath,
+            projectPath,
             denoDependencies,
             devDependencies
         })

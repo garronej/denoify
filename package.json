@@ -16,7 +16,8 @@
   "author": "Joseph Garrone",
   "license": "MIT",
   "dependencies": {
-    "commander": "^4.1.1"
+    "commander": "^4.1.1",
+    "scripting-tools": "github:garronej/scripting-tools"
   },
   "keywords": [
     "deno",
@@ -26,7 +27,6 @@
   ],
   "devDependencies": {
     "@types/node": "^8.10.59",
-    "scripting-tools": "github:garronej/scripting-tools",
     "typescript": "^3.7.5"
   }
 }

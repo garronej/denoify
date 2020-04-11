@@ -22,6 +22,7 @@ commanderStatic
     package.json:
     {
         "name": "my-module",
+        "main": "./dist/lib/index.js",
         ...
         "dependency": {
             "events": "^3.1.0"
@@ -31,8 +32,9 @@ commanderStatic
             //Url that point to the root of the project repository.
             "url": "https://deno.land/x/my_module" // Or https://raw.githubusercontent.com/[user]/my-module/master/ 
 
-            //Relative path to the default deno export.
-            "main": "/dist/lib/index.ts",
+            //(Optional) Relative path to the default deno export.
+            //If not present it will be deduced from "main" ( here "./dist/lib/index.js" )
+            "main": "./dist/lib/index.ts",
             "dependencies": {
                 //Let's say that my-module imports EventEmitter from "events".
                 //The "events" npm package is not a cross compatible package,

@@ -1,4 +1,4 @@
-declare type DenoDependency = import("./getDenoDependencyFactory").DenoDependency;
+import type { DenoDependency } from "./getDenoDependencyFactory";
 export declare function denoifySourceCodeStringFactory(params: {
     getDenoDependency(nodeModuleName: string): Promise<DenoDependency>;
 }): {
@@ -6,4 +6,3 @@ export declare function denoifySourceCodeStringFactory(params: {
         sourceCode: string;
     }) => Promise<string>;
 };
-export {};

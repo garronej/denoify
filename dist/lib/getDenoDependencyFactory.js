@@ -14,17 +14,22 @@ const path = require("path");
 function getDenoDependencyFactory(params) {
     const { nodeModuleDirPath, denoDependencies } = params;
     const getDenoDependency = (nodeModuleName) => __awaiter(this, void 0, void 0, function* () {
+        var _a;
         {
             const moduleRepo = denoDependencies[nodeModuleName];
             if (moduleRepo !== undefined) {
                 return moduleRepo;
             }
         }
-        const moduleRepo = require(path.join(st.find_module_path(nodeModuleName, nodeModuleDirPath), "package.json"))["deno"];
-        if (moduleRepo === undefined) {
+        const packageJsonParsed = require(path.join(st.find_module_path(nodeModuleName, nodeModuleDirPath), "package.json"));
+        const denoifyKey = "deno";
+        if (!(denoifyKey in packageJsonParsed)) {
             throw new Error(`No 'deno' field in ${nodeModuleName} package.json and no entry in index`);
         }
-        return moduleRepo;
+        return {
+            "url": packageJsonParsed[denoifyKey].url,
+            "main": (_a = packageJsonParsed[denoifyKey].main) !== null && _a !== void 0 ? _a : packageJsonParsed.main.replace(/\.js$/i, ".ts")
+        };
     });
     return { getDenoDependency };
 }

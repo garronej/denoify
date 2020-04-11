@@ -2,7 +2,7 @@
 import * as path from "path";
 import { addCache } from "../tools/addCache";
 import { replaceAsync } from "../tools/replaceAsync";
-type DenoDependency = import("./getDenoDependencyFactory").DenoDependency;
+import type { DenoDependency } from "./getDenoDependencyFactory";
 
 function commonJsImportStringToDenoImportStringFactory(
     params: {

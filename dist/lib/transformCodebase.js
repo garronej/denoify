@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const st = require("scripting-tools");
 const fs = require("fs");
@@ -32,17 +23,15 @@ const crawl = (() => {
     };
 })();
 /** Apply a transformation function to every file of directory */
-function transformCodebase(params) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const { srcDirPath, destDirPath, transformSourceCodeString } = params;
-        for (const file_relative_path of crawl(srcDirPath)) {
-            st.fs_move("COPY", srcDirPath, destDirPath, file_relative_path);
-            const file_path = path.join(destDirPath, file_relative_path);
-            fs.writeFileSync(file_path, Buffer.from(yield transformSourceCodeString({
-                "extension": path.extname(file_path).substr(1).toLowerCase(),
-                "sourceCode": fs.readFileSync(file_path).toString("utf8")
-            }), "utf8"));
-        }
-    });
+async function transformCodebase(params) {
+    const { srcDirPath, destDirPath, transformSourceCodeString } = params;
+    for (const file_relative_path of crawl(srcDirPath)) {
+        st.fs_move("COPY", srcDirPath, destDirPath, file_relative_path);
+        const file_path = path.join(destDirPath, file_relative_path);
+        fs.writeFileSync(file_path, Buffer.from(await transformSourceCodeString({
+            "extension": path.extname(file_path).substr(1).toLowerCase(),
+            "sourceCode": fs.readFileSync(file_path).toString("utf8")
+        }), "utf8"));
+    }
 }
 exports.transformCodebase = transformCodebase;

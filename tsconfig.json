@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "ES6",
+        "target": "ESNext",
         "declaration": true,
         "outDir": "./dist",
         "strictNullChecks": true,

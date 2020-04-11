@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 "use strict";
-var _a, _b, _c, _d;
 Object.defineProperty(exports, "__esModule", { value: true });
 const commanderStatic = require("commander");
 const fs = require("fs");
@@ -87,7 +86,7 @@ commanderStatic
     .option("--src [srcDirPath]", `Default: '[projectPath]/src' | '[projectPath]/lib' -- Path to the directory containing the source .ts files.`)
     .option("--dest [destDirPath]", `Default: Value of tsconfig.json->compilerOptions->outDir -- Directory where to put the modified .ts files.`);
 commanderStatic.parse(process.argv);
-const projectPath = path.resolve((_a = commanderStatic["projectPath"]) !== null && _a !== void 0 ? _a : ".");
+const projectPath = path.resolve(commanderStatic["projectPath"] ?? ".");
 index_1.run({
     "srcDirPath": ((arg) => !!arg ?
         path.resolve(arg) :
@@ -99,5 +98,5 @@ index_1.run({
             .compilerOptions
             .outDir))(commanderStatic["destDirPath"]),
     "nodeModuleDirPath": path.join(projectPath, "node_modules"),
-    "denoDependencies": (_d = (_c = (_b = require(path.join(projectPath, "package.json"))) === null || _b === void 0 ? void 0 : _b.deno) === null || _c === void 0 ? void 0 : _c.dependencies) !== null && _d !== void 0 ? _d : {}
+    "denoDependencies": require(path.join(projectPath, "package.json"))?.deno?.dependencies ?? {}
 });

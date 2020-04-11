@@ -31,7 +31,7 @@ commanderStatic
         ...
         "deno": {
             //Url that point to the root of the project repository.
-            "url": "https://deno.land/x/my_module" // Or https://raw.githubusercontent.com/[user]/my-module/master/ 
+            "url": "https://deno.land/x/my_module" // Or https://raw.githubusercontent.com/[user/org]/my-module/[commit hash]/ 
 
             //(Optional) Relative path to the default deno export.
             //If not present it will be deduced from "main" ( here "./dist/lib/index.js" )

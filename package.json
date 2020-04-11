@@ -11,7 +11,7 @@
     "test": "node ./dist/test/main"
   },
   "bin": {
-    "denoify": "dist/bin/denoify.js"
+    "denoify": "./dist/bin/denoify.js"
   },
   "author": "Joseph Garrone",
   "license": "MIT",

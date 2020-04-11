@@ -5,6 +5,7 @@ const path = require("path");
 function getDenoDependencyFactory(params) {
     const { nodeModuleDirPath, denoDependencies } = params;
     const getDenoDependency = async (nodeModuleName) => {
+        var _a;
         {
             const moduleRepo = denoDependencies[nodeModuleName];
             if (moduleRepo !== undefined) {
@@ -18,8 +19,7 @@ function getDenoDependencyFactory(params) {
         }
         return {
             "url": packageJsonParsed[denoifyKey].url,
-            "main": packageJsonParsed[denoifyKey].main ??
-                packageJsonParsed.main.replace(/\.js$/i, ".ts")
+            "main": (_a = packageJsonParsed[denoifyKey].main) !== null && _a !== void 0 ? _a : packageJsonParsed.main.replace(/\.js$/i, ".ts")
         };
     };
     return { getDenoDependency };

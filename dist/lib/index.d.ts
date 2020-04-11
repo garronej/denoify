@@ -4,4 +4,5 @@ export declare function run(params: {
     destDirPath: string;
     nodeModuleDirPath: string;
     denoDependencies: DenoDependencies;
+    devDependencies: string[];
 }): Promise<void>;

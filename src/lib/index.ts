@@ -9,15 +9,23 @@ export async function run(
         destDirPath: string;
         nodeModuleDirPath: string;
         denoDependencies: DenoDependencies;
+        devDependencies: string[];
     }
 ) {
 
-    const { srcDirPath, destDirPath, nodeModuleDirPath, denoDependencies } = params;
+    const {
+        srcDirPath,
+        destDirPath,
+        nodeModuleDirPath,
+        denoDependencies,
+        devDependencies
+    } = params;
 
     const { denoifySourceCodeString } = denoifySourceCodeStringFactory(
         getDenoDependencyFactory({
             nodeModuleDirPath,
-            denoDependencies
+            denoDependencies,
+            devDependencies
         })
     );
 

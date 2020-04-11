@@ -8,6 +8,7 @@ export declare type DenoDependencies = {
 export declare function getDenoDependencyFactory(params: {
     nodeModuleDirPath: string;
     denoDependencies: DenoDependencies;
+    devDependencies: string[];
 }): {
     getDenoDependency: (nodeModuleName: string) => Promise<DenoDependency>;
 };

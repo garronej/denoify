@@ -5,6 +5,7 @@ $ npx garronej/denoify --help
 
 Usage: denoify [options]
 
+
     A tool to make node module written in TypeScript cross compatible with Deno.
 
     To be made cross compatible a module must:
@@ -28,11 +29,12 @@ Usage: denoify [options]
         ...
         "deno": {
             //Url that point to the root of the project repository.
-            "url": "https://deno.land/x/my_module" // Or https://raw.githubusercontent.com/[user/org]/my-module/[commit hash]
+            "url": "https://deno.land/x/my_module" // Or https://raw.githubusercontent.com/[user/org]/my-module/[commit hash]/ 
 
             //(Optional) Relative path to the default deno export.
             //If not present it will be deduced from "main" ( here "./dist/lib/index.js" )
             "main": "./dist/lib/index.ts",
+
             "dependencies": {
                 //Let's say that my-module imports EventEmitter from "events".
                 //The "events" npm package is not a cross compatible package,
@@ -79,6 +81,8 @@ Usage: denoify [options]
     import { EventEmitter } from "events"                    => import { EventEmitter } from "https://deno.land/x/event_emitter/mod.ts"
     import { Evt } from "ts-evt"                             => import { Evt } from "https://deno.land/x/evt/dist/lib/index.ts"
     import { Observable } from "ts-evt/dist/lib/Observable"  => import { Observable } from "https://deno.land/x/evt/dist/lib/index.ts"
+
+    If a devDependency is not met in deno the import will be replaced by a warning but the script will not throw.
     
 
 Options:

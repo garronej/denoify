@@ -4,10 +4,11 @@ const denoifySourceCodeStringFactory_1 = require("./denoifySourceCodeStringFacto
 const transformCodebase_1 = require("./transformCodebase");
 const getDenoDependencyFactory_1 = require("./getDenoDependencyFactory");
 async function run(params) {
-    const { srcDirPath, destDirPath, nodeModuleDirPath, denoDependencies } = params;
+    const { srcDirPath, destDirPath, nodeModuleDirPath, denoDependencies, devDependencies } = params;
     const { denoifySourceCodeString } = denoifySourceCodeStringFactory_1.denoifySourceCodeStringFactory(getDenoDependencyFactory_1.getDenoDependencyFactory({
         nodeModuleDirPath,
-        denoDependencies
+        denoDependencies,
+        devDependencies
     }));
     await transformCodebase_1.transformCodebase({
         srcDirPath,

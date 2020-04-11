@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 "use strict";
-var _a, _b, _c, _d;
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const commanderStatic = require("commander");
 const fs = require("fs");
@@ -36,6 +36,7 @@ commanderStatic
             //(Optional) Relative path to the default deno export.
             //If not present it will be deduced from "main" ( here "./dist/lib/index.js" )
             "main": "./dist/lib/index.ts",
+
             "dependencies": {
                 //Let's say that my-module imports EventEmitter from "events".
                 //The "events" npm package is not a cross compatible package,
@@ -82,6 +83,8 @@ commanderStatic
     import { EventEmitter } from "events"                    => import { EventEmitter } from "https://deno.land/x/event_emitter/mod.ts"
     import { Evt } from "ts-evt"                             => import { Evt } from "https://deno.land/x/evt/dist/lib/index.ts"
     import { Observable } from "ts-evt/dist/lib/Observable"  => import { Observable } from "https://deno.land/x/evt/dist/lib/index.ts"
+
+    If a devDependency is not met in deno the import will be replaced by a warning but the script will not throw.
     `)
     .option("-p, --project [projectPath]", `Default: './' -- Denoify the project given to a folder with a 'package.json' and 'tsconfig.json'.`)
     .option("--src [srcDirPath]", `Default: '[projectPath]/src' | '[projectPath]/lib' -- Path to the directory containing the source .ts files.`)
@@ -99,5 +102,12 @@ index_1.run({
             .compilerOptions
             .outDir))(commanderStatic["destDirPath"]),
     "nodeModuleDirPath": path.join(projectPath, "node_modules"),
-    "denoDependencies": (_d = (_c = (_b = require(path.join(projectPath, "package.json"))) === null || _b === void 0 ? void 0 : _b.deno) === null || _c === void 0 ? void 0 : _c.dependencies) !== null && _d !== void 0 ? _d : {}
+    ...(() => {
+        var _a, _b, _c;
+        const packageJsonParsed = require(path.join(projectPath, "package.json"));
+        return {
+            "denoDependencies": (_b = (_a = packageJsonParsed === null || packageJsonParsed === void 0 ? void 0 : packageJsonParsed.deno) === null || _a === void 0 ? void 0 : _a.dependencies) !== null && _b !== void 0 ? _b : {},
+            "devDependencies": (_c = packageJsonParsed === null || packageJsonParsed === void 0 ? void 0 : packageJsonParsed.devDependencies) !== null && _c !== void 0 ? _c : []
+        };
+    })()
 });

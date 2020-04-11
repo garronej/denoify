@@ -35,6 +35,7 @@ commanderStatic
             //(Optional) Relative path to the default deno export.
             //If not present it will be deduced from "main" ( here "./dist/lib/index.js" )
             "main": "./dist/lib/index.ts",
+
             "dependencies": {
                 //Let's say that my-module imports EventEmitter from "events".
                 //The "events" npm package is not a cross compatible package,
@@ -81,6 +82,8 @@ commanderStatic
     import { EventEmitter } from "events"                    => import { EventEmitter } from "https://deno.land/x/event_emitter/mod.ts"
     import { Evt } from "ts-evt"                             => import { Evt } from "https://deno.land/x/evt/dist/lib/index.ts"
     import { Observable } from "ts-evt/dist/lib/Observable"  => import { Observable } from "https://deno.land/x/evt/dist/lib/index.ts"
+
+    If a devDependency is not met in deno the import will be replaced by a warning but the script will not throw.
     `)
     .option("-p, --project [projectPath]", `Default: './' -- Denoify the project given to a folder with a 'package.json' and 'tsconfig.json'.`)
     .option("--src [srcDirPath]", `Default: '[projectPath]/src' | '[projectPath]/lib' -- Path to the directory containing the source .ts files.`)
@@ -112,5 +115,14 @@ run({
             )
     )(commanderStatic["destDirPath"]),
     "nodeModuleDirPath": path.join(projectPath, "node_modules"),
-    "denoDependencies": require(path.join(projectPath, "package.json"))?.deno?.dependencies ?? {}
+    ...(() => {
+
+        const packageJsonParsed = require(path.join(projectPath, "package.json"));
+
+        return {
+            "denoDependencies": packageJsonParsed?.deno?.dependencies ?? {},
+            "devDependencies": packageJsonParsed?.devDependencies ?? []
+        };
+
+    })()
 });

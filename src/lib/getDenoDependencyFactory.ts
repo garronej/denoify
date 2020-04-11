@@ -12,18 +12,19 @@ export function getDenoDependencyFactory(
     params: {
         nodeModuleDirPath: string;
         denoDependencies: DenoDependencies;
+        devDependencies: string[];
     }
 ) {
 
-    const { nodeModuleDirPath, denoDependencies } = params;
+    const { nodeModuleDirPath, denoDependencies, devDependencies } = params;
 
-    const getDenoDependency= async (nodeModuleName: string): Promise<DenoDependency> => {
+    const getDenoDependency = async (nodeModuleName: string): Promise<DenoDependency> => {
 
         {
-            const moduleRepo = denoDependencies[nodeModuleName];
+            const denoDependency = denoDependencies[nodeModuleName];
 
-            if (moduleRepo !== undefined) {
-                return moduleRepo;
+            if (denoDependency !== undefined) {
+                return denoDependency;
             }
 
         }
@@ -35,15 +36,25 @@ export function getDenoDependencyFactory(
             )
         );
 
-        const denoifyKey= "deno";
+        const denoifyKey = "deno";
 
-        if( !(denoifyKey in packageJsonParsed) ){
+        if (!(denoifyKey in packageJsonParsed)) {
+
+            if (devDependencies.includes(nodeModuleName)) {
+
+                return {
+                    "url": nodeModuleName,
+                    "main": "NO_DENO_EQUIVALENT_FOR_THIS_DEV_DEPENDENCY.ts"
+                };
+
+            }
+
             throw new Error(`No 'deno' field in ${nodeModuleName} package.json and no entry in index`);
         }
 
         return {
             "url": packageJsonParsed[denoifyKey].url,
-            "main": packageJsonParsed[denoifyKey].main ?? 
+            "main": packageJsonParsed[denoifyKey].main ??
                 packageJsonParsed.main.replace(/\.js$/i, ".ts")
         };
 

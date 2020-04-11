@@ -25,7 +25,7 @@ export async function run(
         srcDirPath,
         destDirPath,
         "transformSourceCodeString": ({ extension, sourceCode }) =>
-            /^\.ts$/i.test(extension) || /^\.js$/i.test(extension) ?
+            /^\.?ts$/i.test(extension) || /^\.?js$/i.test(extension) ?
                 denoifySourceCodeString({ sourceCode })
                 :
                 Promise.resolve(sourceCode)

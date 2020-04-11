@@ -12,7 +12,7 @@ async function run(params) {
     await transformCodebase_1.transformCodebase({
         srcDirPath,
         destDirPath,
-        "transformSourceCodeString": ({ extension, sourceCode }) => /^\.ts$/i.test(extension) || /^\.js$/i.test(extension) ?
+        "transformSourceCodeString": ({ extension, sourceCode }) => /^\.?ts$/i.test(extension) || /^\.?js$/i.test(extension) ?
             denoifySourceCodeString({ sourceCode })
             :
                 Promise.resolve(sourceCode)

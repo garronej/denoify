@@ -6,7 +6,7 @@ export declare type DenoDependencies = {
     [nodeModuleName: string]: DenoDependency;
 };
 export declare function getDenoDependencyFactory(params: {
-    nodeModuleDirPath: string;
+    projectPath: string;
     denoDependencies: DenoDependencies;
     devDependencies: string[];
 }): {

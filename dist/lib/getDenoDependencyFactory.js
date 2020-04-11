@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const st = require("scripting-tools");
 const path = require("path");
 function getDenoDependencyFactory(params) {
-    const { nodeModuleDirPath, denoDependencies, devDependencies } = params;
+    const { projectPath, denoDependencies, devDependencies } = params;
     const getDenoDependency = async (nodeModuleName) => {
         var _a;
         {
@@ -12,7 +12,7 @@ function getDenoDependencyFactory(params) {
                 return denoDependency;
             }
         }
-        const packageJsonParsed = require(path.join(st.find_module_path(nodeModuleName, nodeModuleDirPath), "package.json"));
+        const packageJsonParsed = require(path.join(st.find_module_path(nodeModuleName, projectPath), "package.json"));
         const denoifyKey = "deno";
         if (!(denoifyKey in packageJsonParsed)) {
             if (devDependencies.includes(nodeModuleName)) {

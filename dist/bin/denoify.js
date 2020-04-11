@@ -101,7 +101,7 @@ index_1.run({
         path.join(projectPath, require(path.join(projectPath, "tsconfig.json"))
             .compilerOptions
             .outDir))(commanderStatic["destDirPath"]),
-    "nodeModuleDirPath": path.join(projectPath, "node_modules"),
+    projectPath,
     ...(() => {
         var _a, _b, _c;
         const packageJsonParsed = require(path.join(projectPath, "package.json"));

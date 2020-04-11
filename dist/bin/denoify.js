@@ -107,7 +107,7 @@ index_1.run({
         const packageJsonParsed = require(path.join(projectPath, "package.json"));
         return {
             "denoDependencies": (_b = (_a = packageJsonParsed === null || packageJsonParsed === void 0 ? void 0 : packageJsonParsed.deno) === null || _a === void 0 ? void 0 : _a.dependencies) !== null && _b !== void 0 ? _b : {},
-            "devDependencies": (_c = packageJsonParsed === null || packageJsonParsed === void 0 ? void 0 : packageJsonParsed.devDependencies) !== null && _c !== void 0 ? _c : []
+            "devDependencies": Object.keys((_c = packageJsonParsed === null || packageJsonParsed === void 0 ? void 0 : packageJsonParsed.devDependencies) !== null && _c !== void 0 ? _c : {})
         };
     })()
 });

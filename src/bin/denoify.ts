@@ -121,7 +121,7 @@ run({
 
         return {
             "denoDependencies": packageJsonParsed?.deno?.dependencies ?? {},
-            "devDependencies": packageJsonParsed?.devDependencies ?? []
+            "devDependencies": Object.keys(packageJsonParsed?.devDependencies ?? {})
         };
 
     })()

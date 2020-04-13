@@ -1,3 +1,3 @@
 
-export { Cat } from "./Cat/index.ts";
-export * from "./Dog/index.ts";
+export { Cat } from "./Cat.ts";
+export * from "./Dog.ts";

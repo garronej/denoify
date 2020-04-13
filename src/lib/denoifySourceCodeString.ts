@@ -42,7 +42,7 @@ function commonJsImportStringToDenoImportStringFactory(
                 return importStr;
             }
 
-            if (fs.existsSync(path.join(fileDirPath, `${importStr}.js`))) {
+            if (fs.existsSync(path.join(fileDirPath, `${importStr}.ts`))) {
                 return `${importStr}.ts`;
             }
 

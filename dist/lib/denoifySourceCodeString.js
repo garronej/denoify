@@ -18,7 +18,7 @@ function commonJsImportStringToDenoImportStringFactory(params) {
             if (/\.json$/i.test(importStr)) {
                 return importStr;
             }
-            if (fs.existsSync(path.join(fileDirPath, `${importStr}.js`))) {
+            if (fs.existsSync(path.join(fileDirPath, `${importStr}.ts`))) {
                 return `${importStr}.ts`;
             }
             const out = path.join(importStr, "index.ts");

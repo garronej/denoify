@@ -1,8 +1,13 @@
 
 import { denoifySourceCodeStringFactory } from "../lib/denoifySourceCodeString";
+import fetch from "node-fetch";
 
 import { load } from 'js-yaml'
 console.log(load('hello: world')) // => prints { hello: "world" }
+
+fetch("https://deno.land/x/no_exsist_11222/mod.ts")
+    .then(({ status }) => console.log({ status }, "expect 404"))
+    ;
 
 {
 

@@ -2,16 +2,12 @@
 import * as st from "scripting-tools";
 import * as path from "path";
 
-export type DenoDependency = {
-    url: string;
-    main: string;
-};
 /** Record in package.json->deno->dependencies */
-export type DenoDependencies = { [nodeModuleName: string]: DenoDependency; };
+export type DependenciesPorts = { [nodeModuleName: string]: string; };
 
 export type ResolveResult = {
     type: "PORT";
-    denoDependency: DenoDependency;
+    url: string;
 } | {
     type: "CROSS COMPATIBLE";
     url: string;
@@ -23,13 +19,13 @@ export type ResolveResult = {
 export function resolveFactory(
     params: {
         projectPath: string;
-        denoDependencies: DenoDependencies;
+        dependenciesPorts: DependenciesPorts;
         /** e.g: [ "typescript", "gulp" ] */
         devDependencies: string[];
     }
 ) {
 
-    const { projectPath, denoDependencies, devDependencies } = params;
+    const { projectPath, dependenciesPorts, devDependencies } = params;
 
     const resolve = async (
         params: { nodeModuleName: string }
@@ -38,12 +34,12 @@ export function resolveFactory(
         const { nodeModuleName } = params;
 
         {
-            const denoDependency = denoDependencies[nodeModuleName];
+            const url = dependenciesPorts[nodeModuleName];
 
-            if (denoDependency !== undefined) {
+            if (url !== undefined) {
                 return {
                     "type": "PORT",
-                    denoDependency
+                    url
                 }
             }
 

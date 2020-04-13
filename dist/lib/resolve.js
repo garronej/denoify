@@ -3,16 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const st = require("scripting-tools");
 const path = require("path");
 function resolveFactory(params) {
-    const { projectPath, denoDependencies, devDependencies } = params;
+    const { projectPath, dependenciesPorts, devDependencies } = params;
     const resolve = async (params) => {
         var _a, _b;
         const { nodeModuleName } = params;
         {
-            const denoDependency = denoDependencies[nodeModuleName];
-            if (denoDependency !== undefined) {
+            const url = dependenciesPorts[nodeModuleName];
+            if (url !== undefined) {
                 return {
                     "type": "PORT",
-                    denoDependency
+                    url
                 };
             }
         }

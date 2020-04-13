@@ -5,6 +5,8 @@ import { replaceAsync } from "../tools/replaceAsync";
 import type { ResolveResult } from "./resolve";
 import * as fs from "fs";
 import fetch from "node-fetch";
+const urlJoin = require("url-join");
+
 
 function commonJsImportStringToDenoImportStringFactory(
     params: {
@@ -44,7 +46,9 @@ function commonJsImportStringToDenoImportStringFactory(
                 return `${importStr}.ts`;
             }
 
-            return path.join(importStr, "index.ts");
+            const out= path.join(importStr, "index.ts");
+
+            return out.startsWith(".") ? out : `./${out}`;
 
         }
 
@@ -60,12 +64,10 @@ function commonJsImportStringToDenoImportStringFactory(
 
             //TODO: crawl
             if (rest.length !== 0) {
-                throw new Error("Port support ony default import");
+                throw new Error(`Error with: ${importStr} Port support ony default import`);
             }
 
-            const { url, main } = resolveResult.denoDependency;
-
-            return path.join(url, main);
+            return resolveResult.url;
 
         }
 
@@ -76,36 +78,36 @@ function commonJsImportStringToDenoImportStringFactory(
 
         const denoDistPath = path.join(
             path.dirname(tsconfigOutDir),
-            `deno_${tsconfigOutDir}`
-        ); // ./deno_dist
+            `deno_${path.basename(tsconfigOutDir)}`
+        ); // deno_dist
 
         if (rest.length === 0) {
 
-            return path.join(url, "mod.ts");
+            return urlJoin(url, "mod.ts");
 
 
         }
 
-        const out = path.join(
+        const out = urlJoin(
             url,
-        path.join(
-            denoDistPath,
+            path.join(
+                denoDistPath,
                 path.relative(
                     tsconfigOutDir,
-                    path.join(...rest) // ./dest/tools/typeSafety
-                ) //  ./tools/typeSafety
-        ) // deno_dist/tool/typeSafety
-        + ".ts" // deno_dist/tool/typeSafety.ts
+                    path.join(...rest) // dest/tools/typeSafety
+                ) //  tools/typeSafety
+            ) // deno_dist/tool/typeSafety
+            + ".ts" // deno_dist/tool/typeSafety.ts
         ) // https://deno.land/x/event_emitter/deno_dist/tool/typeSafety.ts
-        ;
-
-        const is404 = await fetch(out)
-            .then(({status}) => status === 404)
             ;
 
-        if( is404 ){
+        const is404 = await fetch(out)
+            .then(({ status }) => status === 404)
+            ;
+
+        if (is404) {
             return out
-                .replace(/\.ts$/, "/index.ts") 
+                .replace(/\.ts$/, "/index.ts")
                 // https://deno.land/x/event_emitter/deno_dist/tool/typeSafety/index.ts
                 ;
         }
@@ -141,7 +143,7 @@ export function denoifySourceCodeStringFactory(
 
         for (const quoteSymbol of [`"`, `'`]) {
 
-            const strRegExpInQuote = `${quoteSymbol}[^${quoteSymbol}]+${quoteSymbol}`
+            const strRegExpInQuote = `${quoteSymbol}[^${quoteSymbol}]+${quoteSymbol}`;
 
             const replacerAsync = (() => {
 
@@ -161,11 +163,12 @@ export function denoifySourceCodeStringFactory(
             })();
 
             for (const regExpStr of [
-                `(?:import|export)\\s+\\*\\s+as\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`,
-                `(?:import|export)\\s*\\{[^\\}]*}\\s*from\\s*${strRegExpInQuote}`,
-                `import\\s*${strRegExpInQuote}`,
-                `import\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`,
-                `[^a-zA-Z\._0-9$]import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)`
+                `export\\s+\\*\\s+from\\s*${strRegExpInQuote}`, //export * from "..."
+                `(?:import|export)(?:\\s+type)?\\s*\\*\\s*as\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`, //import/export [type] * as ns from "..."
+                `(?:import|export)(?:\\s+type)?\\s*{[^}]*}\\s*from\\s*${strRegExpInQuote}`, //import/export [type] { Cat } from "..."
+                `import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s+from\\s*${strRegExpInQuote}`, //import [type] Foo from "..."
+                `import\\s*${strRegExpInQuote}`, //import "..."
+                `[^a-zA-Z\._0-9$]import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)`, //type Foo = import("...").Foo
             ]) {
 
                 out = await replaceAsync(
@@ -173,7 +176,6 @@ export function denoifySourceCodeStringFactory(
                     new RegExp(regExpStr, "mg"),
                     replacerAsync
                 );
-
 
             }
 

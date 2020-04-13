@@ -14,6 +14,12 @@
         "downlevelIteration": true
     },
     "filesGlob": [
-        "./src/**/*.ts"
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "deno_dist/**/*",
+        "dist/**/*",
+        "./mod.ts"
     ]
 }

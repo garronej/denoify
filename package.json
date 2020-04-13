@@ -18,7 +18,8 @@
   "dependencies": {
     "commander": "^4.1.1",
     "node-fetch": "^2.6.0",
-    "scripting-tools": "github:garronej/scripting-tools"
+    "scripting-tools": "github:garronej/scripting-tools",
+    "url-join": "^4.0.1"
   },
   "keywords": [
     "deno",
@@ -27,8 +28,11 @@
     "CommonJs"
   ],
   "devDependencies": {
+    "js-yaml": "^3.13.1",
+    "@types/js-yaml": "^3.12.3",
     "@types/node": "^8.10.59",
     "@types/node-fetch": "^2.5.6",
+    "@types/url-join": "^4.0.0",
     "typescript": "^3.7.5"
   }
 }

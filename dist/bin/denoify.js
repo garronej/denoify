@@ -7,52 +7,50 @@ const path = require("path");
 const index_1 = require("../lib/index");
 commanderStatic
     .description(`
-    A tool to make node module written in TypeScript cross compatible with Deno.
+    A build tool to make node modules written in TypeScript cross compatible with Deno.
 
-    To be made cross compatible a module must:
-    - Have no dependencies or each of it's dependency must be cross compatible or have a deno port available.
-    - Never use the require() function.
+    It allow to support deno and all the other JS runtime environnement with a single codebase.
 
-    Every cross compatible node package should include in their package.json a custom field 
-    named "deno" that will enable other packages that depend on them to be in their turn made cross 
-    compatible with this tool.
+    At this stage of it's development this tools only fix import/export and thus will 
+    only works on projects that do not use any node specific API like global, process ect...
+    However it is enough to port a large quantity of libraries.
 
-    The deno field should be formatted as such:
+    You must provide a deno por for each of the dependencies that have not been made cross 
+    cross compatible with this module:
+
+    Example: 
+        - If your project use: "js-yaml" you can specify the deno port "https://deno.land/x/js_yaml_port/js-yaml.js"
+        - If your project use "run-exclusive" you don't have to specify a port as "run-exclusive" has been made cross compatible with this module.
+
+    If you are not the author of a dependency you can fork it on github and denoify it yourself.
+
+    (garronej/denoify) /res/my-module contain an example module with denoify setup.
+    You can also have a look at:
+    - https://www.npmjs.com/package/evt OR
+    - https://www.npmjs.com/package/run-exclusive
+    Two package that have been made cross compatible using denoify.
+
+    Here is how a project should be setup to work with denoify:
 
     package.json:
     {
         "name": "my-module",
         "main": "./dist/lib/index.js",
         ...
-        "dependency": {
-            "events": "^3.1.0"
-            "run-exclusive": "github:garronej/test-denoify-run-exclusive"
+        "dependencies": {
+            "run-exclusive": "^2.1.6", 
+            "js-yaml": "^3.13.1"
         }
         ...
         "deno": {
-
-            "dependencies": {
-                //my-module imports EventEmitter from "events".
-                //obviously we can't use denoify to make "Gozala/events"
-                //cross compatible ( unless you happen to be u/Gozala ).
-                //However a port is available fro deno, we can use it:
-                "events": {
-                    "url": "https://deno.land/x/event_emitter/",
-                    "main": "/mod.ts"
-                }
-
-                //NOTE: "my-module" uses run-exclusive as dependency but we don't
-                // need to include it in this section as run-exclusive is a module
-                // that have been made cross compatible with denoify.
-                
-            }
-
             //Url to specify so other package using "my-module" can be made cross compatible with denoify.
             "url": "https://deno.land/x/my_module" //Or https://raw.githubusercontent.com/[user/org]/my-module/[commit hash or 'master']/ 
-
+            "dependenciesPorts": {
+                "js-yaml": "https://deno.land/x/js_yaml_port/js-yaml.js" 
+            }
         },
         ...
-        "script" {
+        "scripts" {
             "tsc": "npx tsc",
             "denoify": "npx denoify",
             "build": "npm run tsc && npm run denoify"
@@ -68,28 +66,33 @@ commanderStatic
         ...
         "compilerOptions": {
             ...
-            "outDir": "./dist",
+            "outDir": "./dist", // Must use the outDir option
             ...
         },
-        ...
+        "filesGlob": [
+            "src/**/*"
+        ],
+        "exclude": [
+            "node_modules",
+            "dist/**/*",
+            "deno_dist/**/*", // You must exclude deno_dist
+
+        ]
     }
 
-    With "deno" field configured as such running '$ npm run denoify' will result in 
-    every .ts files of the "src" folder to be transformed and put in the corresponding 
-    sub path of the 'deno_dist' folder.
+    When running '$ npm run denoify', './deno_dist' alongside with './mod.ts'
     
-    Examples of transformations that will take place: 
+    Examples of transformations that will take place from ./src to ./deno_dist
 
-    import { MyClass } from "./MyClass"                       => import { MyClass } from "./MyClass.ts"
-    import { EventEmitter } from "events"                     => import { EventEmitter } from "https://deno.land/x/event_emitter/mod.ts"
+    import { Cat } from "./interfaces/Cat"                      => import { Cat } from "./interfaces/Cat.ts"
+    import { Cat } from "./interfaces"                          => import { Cat } from "./interfaces/index.ts"
+    import { load } from "js-yaml"                              => import { load } from "https://deno.land/x/js_yaml_port/js-yaml.js"
+    import * as runExclusive from "run-exclusive"               => import * as runExclusive from "https://deno.land/x/run_exclusive/mod.js"
+    import { build } from "run-exclusive/dist/lib/runExclusive" => import { build } from "https://deno.land/x/run_exclusive/deno_dist/lib/runExclusive.ts"
 
-    To understand the next import replacement checkout: https://github.com/garronej/evt
+    The mod.ts file will contain 'export * from "./deno_dist/lib/index.ts";' ( path computed from package.json->main )
 
-    import { Evt } from "evt"                                 => import { Evt } from "https://deno.land/x/evt/deno_dist/lib/index.ts"
-    import { assert } from "evt/dist/tools/typeSafety"        => import { assert } from "https://deno.land/x/evt/deno_dist/tools/typeSafety/index.ts"
-    import { assert } from "evt/dist/tools/typeSafety/assert" => import { assert } from "https://deno.land/x/evt/deno_dist/tools/typeSafety/assert.ts"
-
-    If a devDependency is not met in deno the import will be replaced by a warning but the script will not throw.
+    The devDependencies does not necessarily have to be met.
     `)
     .option("-p, --project [projectPath]", `Default: './' -- Denoify the project given to a folder with a 'package.json' and 'tsconfig.json'.`)
     .option("--src [srcDirPath]", `Default: '[projectPath]/src' | '[projectPath]/lib' -- Path to the directory containing the source .ts files.`);

@@ -1,6 +1,9 @@
 
 import { denoifySourceCodeStringFactory } from "../lib/denoifySourceCodeString";
 
+import { load } from 'js-yaml'
+console.log(load('hello: world')) // => prints { hello: "world" }
+
 {
 
     const sourceCode = `
@@ -10,16 +13,17 @@ import
 
 from 
 
-"scripting-tools1"; import * as foobar from "scripting-tools2" import * as d from "scripting-tools3";
+"my-module-1"; import * as foobar from "my-module-2" import * as d from "my-module-3";
 const ok = 3;
-import { } from "scripting-tools4";
-import * as baz from "scripting-tools5";
-import * as foo from 'scripting-tools5';
+import { } from "my-module-4";
+import * as baz from "my-module-5";
+import * as foo from 'my-module-5';
+import type * as foo from 'my-module-5';
+import type  { Cat } from 'my-module-5';
 import "oo";
 
 const dd = import("yes-1");
 const dd = import   (   "yes-1"    );
-require("colors");
 
 `;
 
@@ -27,10 +31,7 @@ require("colors");
         "resolve": async ({ nodeModuleName }) => {
             return {
                 "type": "PORT",
-                "denoDependency": {
-                    "url": `https://deno.land/x/${nodeModuleName.replace(/-/g, "_")}`,
-                    "main": "/mod.ts"
-                }
+                "url": `https://deno.land/x/${nodeModuleName.replace(/-/g, "_")}/mod.ts`,
             }
         }
     }).denoifySourceCodeString({
@@ -39,25 +40,3 @@ require("colors");
     }).then(console.log)
 
 }
-
-/*
-import { transformCodebase } from "../lib/transformCodebase";
-import * as path from "path";
-
-const module_dir_path = path.join(__dirname, "..", "..");
-
-
-{
-
-    transformCodebase({
-        "src_dir_path": path.join(module_dir_path, "res", "src"),
-        "dest_dir_path": path.join(module_dir_path, "res", "deno_generated_src"),
-        "transformSourceCode": ({ extension, sourceCode }) => Promise.resolve(sourceCode)
-    }).then(() => console.log("DONE"));
-
-}
-*/
-
-
-
-

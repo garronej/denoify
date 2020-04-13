@@ -1,14 +1,10 @@
-export declare type DenoDependency = {
-    url: string;
-    main: string;
-};
 /** Record in package.json->deno->dependencies */
-export declare type DenoDependencies = {
-    [nodeModuleName: string]: DenoDependency;
+export declare type DependenciesPorts = {
+    [nodeModuleName: string]: string;
 };
 export declare type ResolveResult = {
     type: "PORT";
-    denoDependency: DenoDependency;
+    url: string;
 } | {
     type: "CROSS COMPATIBLE";
     url: string;
@@ -18,7 +14,7 @@ export declare type ResolveResult = {
 };
 export declare function resolveFactory(params: {
     projectPath: string;
-    denoDependencies: DenoDependencies;
+    dependenciesPorts: DependenciesPorts;
     /** e.g: [ "typescript", "gulp" ] */
     devDependencies: string[];
 }): {

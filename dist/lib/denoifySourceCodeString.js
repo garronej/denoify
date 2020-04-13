@@ -5,6 +5,7 @@ const addCache_1 = require("../tools/addCache");
 const replaceAsync_1 = require("../tools/replaceAsync");
 const fs = require("fs");
 const node_fetch_1 = require("node-fetch");
+const urlJoin = require("url-join");
 function commonJsImportStringToDenoImportStringFactory(params) {
     const resolve = addCache_1.addCache(params.resolve);
     async function commonJsImportStringToDenoImportString(params) {
@@ -20,7 +21,8 @@ function commonJsImportStringToDenoImportStringFactory(params) {
             if (fs.existsSync(path.join(fileDirPath, `${importStr}.js`))) {
                 return `${importStr}.ts`;
             }
-            return path.join(importStr, "index.ts");
+            const out = path.join(importStr, "index.ts");
+            return out.startsWith(".") ? out : `./${out}`;
         }
         const [nodeModuleName, ...rest] = importStr.split("/");
         const resolveResult = await resolve({ nodeModuleName });
@@ -30,19 +32,18 @@ function commonJsImportStringToDenoImportStringFactory(params) {
         if (resolveResult.type === "PORT") {
             //TODO: crawl
             if (rest.length !== 0) {
-                throw new Error("Port support ony default import");
+                throw new Error(`Error with: ${importStr} Port support ony default import`);
             }
-            const { url, main } = resolveResult.denoDependency;
-            return path.join(url, main);
+            return resolveResult.url;
         }
         const { url, // https://deno.land/x/event_emitter/
         tsconfigOutDir, } = resolveResult;
-        const denoDistPath = path.join(path.dirname(tsconfigOutDir), `deno_${tsconfigOutDir}`); // ./deno_dist
+        const denoDistPath = path.join(path.dirname(tsconfigOutDir), `deno_${path.basename(tsconfigOutDir)}`); // deno_dist
         if (rest.length === 0) {
-            return path.join(url, "mod.ts");
+            return urlJoin(url, "mod.ts");
         }
-        const out = path.join(url, path.join(denoDistPath, path.relative(tsconfigOutDir, path.join(...rest) // ./dest/tools/typeSafety
-        ) //  ./tools/typeSafety
+        const out = urlJoin(url, path.join(denoDistPath, path.relative(tsconfigOutDir, path.join(...rest) // dest/tools/typeSafety
+        ) //  tools/typeSafety
         ) // deno_dist/tool/typeSafety
             + ".ts" // deno_dist/tool/typeSafety.ts
         ) // https://deno.land/x/event_emitter/deno_dist/tool/typeSafety.ts
@@ -73,18 +74,12 @@ function denoifySourceCodeStringFactory(params) {
                 };
             })();
             for (const regExpStr of [
-                /*
-                `\\(?:import|export\\)\\s+\\*\\s+as\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`,
-                `\\(?:import|export\\)\\s*\\{[^\\}]*}\\s*from\\s*${strRegExpInQuote}`,
+                `export\\s+\\*\\s+from\\s*${strRegExpInQuote}`,
+                `(?:import|export)(?:\\s+type)?\\s*\\*\\s*as\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`,
+                `(?:import|export)(?:\\s+type)?\\s*{[^}]*}\\s*from\\s*${strRegExpInQuote}`,
+                `import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s+from\\s*${strRegExpInQuote}`,
                 `import\\s*${strRegExpInQuote}`,
-                `import\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`,
-                `[^a-zA-Z\._0-9$]import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)`
-                */
-                `(?:import|export)\\s+\\*\\s+as\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`,
-                `(?:import|export)\\s*\\{[^\\}]*}\\s*from\\s*${strRegExpInQuote}`,
-                `import\\s*${strRegExpInQuote}`,
-                `import\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`,
-                `[^a-zA-Z\._0-9$]import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)`
+                `[^a-zA-Z\._0-9$]import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)`,
             ]) {
                 out = await replaceAsync_1.replaceAsync(out, new RegExp(regExpStr, "mg"), replacerAsync);
             }

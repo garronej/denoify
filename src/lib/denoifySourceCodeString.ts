@@ -72,26 +72,21 @@ function commonJsImportStringToDenoImportStringFactory(
         }
 
         const { 
-            url, // https://deno.land/x/event_emitter/
+            url, // https://deno.land/x/evt/mod.ts
             tsconfigOutDir, // ./dist
         } = resolveResult;
 
-        const denoDistPath = path.join(
-            path.dirname(tsconfigOutDir),
-            `deno_${path.basename(tsconfigOutDir)}`
-        ); // deno_dist
-
         if (rest.length === 0) {
-
-            return urlJoin(url, "mod.ts");
-
-
+            return url;
         }
 
         const out = urlJoin(
-            url,
+            url.match(/^(.*\/)[^\/]+$/)![1], // https://deno.land/x/evt/
             path.join(
-                denoDistPath,
+                path.join(
+                    path.dirname(tsconfigOutDir),
+                    `deno_${path.basename(tsconfigOutDir)}`
+                ), // deno_dist
                 path.relative(
                     tsconfigOutDir,
                     path.join(...rest) // dest/tools/typeSafety

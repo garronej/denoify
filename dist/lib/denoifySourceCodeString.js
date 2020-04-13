@@ -69,8 +69,8 @@ function commonJsImportStringToDenoImportStringFactory(params) {
                         return [4 /*yield*/, resolve({ nodeModuleName: nodeModuleName })];
                     case 1:
                         resolveResult = _b.sent();
-                        if (resolveResult.type === "UNMET DEV DEPENDENCY") {
-                            return [2 /*return*/, importStr + " (unmet dev dependency)"];
+                        if (resolveResult.type === "UNMET") {
+                            return [2 /*return*/, importStr + " DENOIFY: DEPENDENCY UNMET (" + resolveResult.kind + ")"];
                         }
                         if (resolveResult.type === "PORT") {
                             //TODO: crawl

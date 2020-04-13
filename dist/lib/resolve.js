@@ -55,11 +55,22 @@ function resolveFactory(params) {
                         }];
                 }
             }
-            targetModulePath = st.find_module_path(nodeModuleName, projectPath);
+            try {
+                targetModulePath = st.find_module_path(nodeModuleName, projectPath);
+            }
+            catch (_d) {
+                return [2 /*return*/, {
+                        "type": "UNMET",
+                        "kind": "STANDARD"
+                    }];
+            }
             url = (_b = (_a = require(path.join(targetModulePath, "package.json"))) === null || _a === void 0 ? void 0 : _a["deno"]) === null || _b === void 0 ? void 0 : _b.url;
             if (url === undefined) {
                 if (devDependencies.includes(nodeModuleName)) {
-                    return [2 /*return*/, { "type": "UNMET DEV DEPENDENCY" }];
+                    return [2 /*return*/, {
+                            "type": "UNMET",
+                            "kind": "DEV DEPENDENCY"
+                        }];
                 }
                 throw new Error("No 'deno' field in " + nodeModuleName + " package.json and no entry in index");
             }

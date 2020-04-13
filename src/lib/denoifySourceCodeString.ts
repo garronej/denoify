@@ -56,8 +56,8 @@ function commonJsImportStringToDenoImportStringFactory(
 
         const resolveResult = await resolve({ nodeModuleName });
 
-        if( resolveResult.type === "UNMET DEV DEPENDENCY" ){
-            return `${importStr} (unmet dev dependency)`;
+        if( resolveResult.type === "UNMET" ){
+            return `${importStr} DENOIFY: DEPENDENCY UNMET (${resolveResult.kind})`
         }
 
         if( resolveResult.type === "PORT" ){

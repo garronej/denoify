@@ -10,7 +10,8 @@ export declare type ResolveResult = {
     url: string;
     tsconfigOutDir: string;
 } | {
-    type: "UNMET DEV DEPENDENCY";
+    type: "UNMET";
+    kind: "DEV DEPENDENCY" | "STANDARD";
 };
 export declare function resolveFactory(params: {
     projectPath: string;

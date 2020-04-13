@@ -1,7 +1,7 @@
 
 import * as interfaces from "./interfaces/index.ts";
-import * as runExclusive from "https://raw.githubusercontent.com/garronej/test-denoify-run-exclusive/master/mod.ts";
-import { buildMethod } from "https://raw.githubusercontent.com/garronej/test-denoify-run-exclusive/master/deno_dist/lib/runExclusive.ts";
+import * as runExclusive from "https://deno.land/x/run_eclusive/mod.ts";
+import { buildMethod } from "https://deno.land/x/run_eclusive/deno_dist/lib/runExclusive.ts";
 import { load } from "https://deno.land/x/js_yaml_port/js-yaml.js";
 
 console.log(load('hello: world')); // => prints { hello: "world" }

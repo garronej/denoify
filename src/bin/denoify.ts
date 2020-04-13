@@ -11,10 +11,9 @@ commanderStatic
     It allow to support deno and all the other JS runtime environnement with a single codebase.
 
     At this stage of it's development this tools only fix import/export and thus will 
-    only works on projects that do not use any node specific API like global, process ect...
-    However it is enough to port a large quantity of libraries.
+    only works on projects that do not use any node specific API like global, process, "fs", "path" ect...
 
-    You must provide a deno por for each of the dependencies that have not been made cross 
+    You must provide a deno port for each of the dependencies that have not been made cross 
     cross compatible with this module:
 
     Example: 
@@ -26,7 +25,7 @@ commanderStatic
     (garronej/denoify) /res/my-module contain an example module with denoify setup.
     You can also have a look at:
     - https://www.npmjs.com/package/evt OR
-    - https://www.npmjs.com/package/run-exclusive
+    - https://www.npmjs.com/package/run_exclusive
     Two package that have been made cross compatible using denoify.
 
     Here is how a project should be setup to work with denoify:

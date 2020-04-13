@@ -13,7 +13,8 @@ export type ResolveResult = {
     url: string;
     tsconfigOutDir: string;
 } | {
-    type: "UNMET DEV DEPENDENCY";
+    type: "UNMET";
+    kind: "DEV DEPENDENCY" | "STANDARD"
 };
 
 export function resolveFactory(
@@ -45,17 +46,30 @@ export function resolveFactory(
 
         }
 
-        const targetModulePath = st.find_module_path(nodeModuleName, projectPath);
+        let targetModulePath: string;
+        try {
+
+            targetModulePath = st.find_module_path(nodeModuleName, projectPath);
+
+        } catch{
+            return {
+                "type": "UNMET",
+                "kind": "STANDARD"
+            }
+        }
 
         const url: string | undefined = require(
             path.join(targetModulePath, "package.json")
         )?.["deno"]?.url;
 
-        if ( url === undefined ) {
+        if (url === undefined) {
 
             if (devDependencies.includes(nodeModuleName)) {
 
-                return { "type": "UNMET DEV DEPENDENCY" }
+                return {
+                    "type": "UNMET",
+                    "kind": "DEV DEPENDENCY"
+                }
 
             }
 

@@ -2,7 +2,7 @@
     "name": "my-module",
     "main": "./dist/lib/index.js",
     "dependencies": {
-        "run-exclusive": "github:garronej/test-denoify-run-exclusive",
+        "run-exclusive": "2.1.9",
         "js-yaml": "^3.13.1"
     },
     "deno": {

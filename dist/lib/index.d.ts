@@ -1,8 +1,4 @@
-import { DenoDependencies } from "./getDenoDependencyFactory";
-export declare function run(params: {
-    srcDirPath: string;
-    destDirPath: string;
+export declare function run({ projectPath, srcDirPath }: {
     projectPath: string;
-    denoDependencies: DenoDependencies;
-    devDependencies: string[];
+    srcDirPath?: string;
 }): Promise<void>;

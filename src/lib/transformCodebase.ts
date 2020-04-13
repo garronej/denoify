@@ -51,6 +51,7 @@ export async function transformCodebase(
             /** e.g: .ts */
             extension: string;
             sourceCode: string;
+            fileDirPath: string;
         }) => Promise<string>;
     }
 ) {
@@ -73,7 +74,8 @@ export async function transformCodebase(
             Buffer.from(
                 await transformSourceCodeString({
                     "extension": path.extname(file_path).substr(1).toLowerCase(),
-                    "sourceCode": fs.readFileSync(file_path).toString("utf8")
+                    "sourceCode": fs.readFileSync(file_path).toString("utf8"),
+                    "fileDirPath": path.dirname(file_path)
                 }),
                 "utf8"
             )

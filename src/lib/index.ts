@@ -1,43 +1,71 @@
 
-import { denoifySourceCodeStringFactory } from "./denoifySourceCodeStringFactory";
+import { denoifySourceCodeStringFactory } from "./denoifySourceCodeString";
 import { transformCodebase } from "./transformCodebase";
-import { getDenoDependencyFactory, DenoDependencies } from "./getDenoDependencyFactory";
+import { resolveFactory } from "./resolve";
+import * as fs from "fs";
+import * as path from "path";
 
 export async function run(
-    params: {
-        srcDirPath: string;
-        destDirPath: string;
+    {
+        projectPath,
+        srcDirPath = ["src", "lib"]
+            .find(name => fs.existsSync(path.join(projectPath, name)))!
+    }: {
         projectPath: string;
-        denoDependencies: DenoDependencies;
-        devDependencies: string[];
+        srcDirPath?: string;
     }
 ) {
 
-    const {
-        srcDirPath,
-        destDirPath,
-        projectPath,
-        denoDependencies,
-        devDependencies
-    } = params;
+
+    const packageJsonParsed = require(path.join(projectPath, "package.json"));
 
     const { denoifySourceCodeString } = denoifySourceCodeStringFactory(
-        getDenoDependencyFactory({
+        resolveFactory({
             projectPath,
-            denoDependencies,
-            devDependencies
+            "denoDependencies": packageJsonParsed?.deno?.dependencies ?? {},
+            devDependencies: Object.keys(packageJsonParsed?.devDependencies ?? {})
         })
     );
 
+    const tsconfigOutDir = require(path.join(projectPath, "tsconfig.json"))
+            .compilerOptions
+            .outDir
+            ; // ./dist
+
+    const denoDistPath = path.join(
+            path.dirname(tsconfigOutDir),
+            `deno_${path.basename(tsconfigOutDir)}`
+    ); // ./deno_dist
+
     await transformCodebase({
-        srcDirPath,
-        destDirPath,
-        "transformSourceCodeString": ({ extension, sourceCode }) =>
+        "srcDirPath": path.join(projectPath, srcDirPath),
+        "destDirPath": path.join(
+            projectPath,
+            denoDistPath
+        ),
+        "transformSourceCodeString": ({ extension, sourceCode, fileDirPath }) =>
             /^\.?ts$/i.test(extension) || /^\.?js$/i.test(extension) ?
-                denoifySourceCodeString({ sourceCode })
+                denoifySourceCodeString({ sourceCode, fileDirPath })
                 :
                 Promise.resolve(sourceCode)
     });
+
+    fs.writeFileSync(
+        path.join(projectPath, "mod.ts"),
+        Buffer.from([
+            `export * from "`,
+            path.join(
+                denoDistPath,
+                path.relative(
+                    tsconfigOutDir,
+                    packageJsonParsed.main // ./dist/lib/index.js
+                ) // ./lib/index.js
+            ) // ./deno_dist/lib/index.js
+                .replace(/\.js$/i, ".ts"), // ./deno_dist/lib/index.ts
+            `";`
+        ].join(""), "utf8")
+    );
+
 
 }
 

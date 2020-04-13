@@ -6,5 +6,6 @@ export declare function transformCodebase(params: {
         /** e.g: .ts */
         extension: string;
         sourceCode: string;
+        fileDirPath: string;
     }) => Promise<string>;
 }): Promise<void>;

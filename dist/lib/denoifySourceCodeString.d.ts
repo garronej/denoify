@@ -1,8 +1,11 @@
-import type { DenoDependency } from "./getDenoDependencyFactory";
+import type { ResolveResult } from "./resolve";
 export declare function denoifySourceCodeStringFactory(params: {
-    getDenoDependency(nodeModuleName: string): Promise<DenoDependency>;
+    resolve(params: {
+        nodeModuleName: string;
+    }): Promise<ResolveResult>;
 }): {
     denoifySourceCodeString: (params: {
+        fileDirPath: string;
         sourceCode: string;
     }) => Promise<string>;
 };

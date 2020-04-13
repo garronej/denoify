@@ -1,0 +1,26 @@
+{
+    "name": "my-module",
+    "main": "./dist/lib/index.js",
+    "dependency": {
+        "events": "^3.1.0",
+        "run-exclusive": "github:garronej/test-denoify-run-exclusive"
+    },
+    "deno": {
+        "dependencies": {
+            "events": {
+                "url": "https://deno.land/x/event_emitter/",
+                "main": "/mod.ts"
+            }
+        },
+        "url": "https://raw.githubusercontent.com/garronej/denoify/master/res/my-module"
+    },
+    "script": {
+        "tsc": "npx tsc",
+        "denoify": "npx denoify",
+        "build": "npm run tsc && npm run denoify"
+    },
+    "devDependencies": {
+        "denoify": "file:../..",
+        "ts-md5": "^1.2.7"
+    }
+}

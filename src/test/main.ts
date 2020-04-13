@@ -1,5 +1,5 @@
 
-import { denoifySourceCodeStringFactory } from "../lib/denoifySourceCodeStringFactory";
+import { denoifySourceCodeStringFactory } from "../lib/denoifySourceCodeString";
 
 {
 
@@ -21,20 +21,21 @@ const dd = import("yes-1");
 const dd = import   (   "yes-1"    );
 require("colors");
 
-import { ObserverImpl } from "ts-evt/dist/lib/Observable";
-
-require("./ok");
 `;
 
     denoifySourceCodeStringFactory({
-        "getDenoDependency": async nodeModuleName => {
+        "resolve": async ({ nodeModuleName }) => {
             return {
-                "url": `https://deno.land/x/${nodeModuleName.replace(/-/g, "_")}`,
-                "main": "/mod.ts"
+                "type": "PORT",
+                "denoDependency": {
+                    "url": `https://deno.land/x/${nodeModuleName.replace(/-/g, "_")}`,
+                    "main": "/mod.ts"
+                }
             }
         }
     }).denoifySourceCodeString({
-        sourceCode
+        sourceCode,
+        "fileDirPath": "."
     }).then(console.log)
 
 }

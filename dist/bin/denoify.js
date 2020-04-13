@@ -3,7 +3,6 @@
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 const commanderStatic = require("commander");
-const fs = require("fs");
 const path = require("path");
 const index_1 = require("../lib/index");
 commanderStatic
@@ -27,27 +26,29 @@ commanderStatic
         ...
         "dependency": {
             "events": "^3.1.0"
+            "run-exclusive": "github:garronej/test-denoify-run-exclusive"
         }
         ...
         "deno": {
-            //Url that point to the root of the project repository.
-            "url": "https://deno.land/x/my_module" // Or https://raw.githubusercontent.com/[user/org]/my-module/[commit hash]/ 
-
-            //(Optional) Relative path to the default deno export.
-            //If not present it will be deduced from "main" ( here "./dist/lib/index.js" )
-            "main": "./dist/lib/index.ts",
 
             "dependencies": {
-                //Let's say that my-module imports EventEmitter from "events".
-                //The "events" npm package is not a cross compatible package,
-                //"Gozala/events"'s package.json does not specify a "deno" field,
-                //yet a port is available for deno so we can explicitly reference it.
+                //my-module imports EventEmitter from "events".
+                //obviously we can't use denoify to make "Gozala/events"
+                //cross compatible ( unless you happen to be u/Gozala ).
+                //However a port is available fro deno, we can use it:
                 "events": {
                     "url": "https://deno.land/x/event_emitter/",
                     "main": "/mod.ts"
-                },
-                //...
+                }
+
+                //NOTE: "my-module" uses run-exclusive as dependency but we don't
+                // need to include it in this section as run-exclusive is a module
+                // that have been made cross compatible with denoify.
+                
             }
+
+            //Url to specify so other package using "my-module" can be made cross compatible with denoify.
+            "url": "https://deno.land/x/my_module" //Or https://raw.githubusercontent.com/[user/org]/my-module/[commit hash or 'master']/ 
 
         },
         ...
@@ -75,39 +76,25 @@ commanderStatic
 
     With "deno" field configured as such running '$ npm run denoify' will result in 
     every .ts files of the "src" folder to be transformed and put in the corresponding 
-    sub path of the 'dist' folder.
+    sub path of the 'deno_dist' folder.
     
     Examples of transformations that will take place: 
 
-    import { MyClass } from "./MyClass"                      => import { MyClass } from "./MyClass.ts"
-    import { EventEmitter } from "events"                    => import { EventEmitter } from "https://deno.land/x/event_emitter/mod.ts"
-    import { Evt } from "ts-evt"                             => import { Evt } from "https://deno.land/x/evt/dist/lib/index.ts"
-    import { Observable } from "ts-evt/dist/lib/Observable"  => import { Observable } from "https://deno.land/x/evt/dist/lib/index.ts"
+    import { MyClass } from "./MyClass"                       => import { MyClass } from "./MyClass.ts"
+    import { EventEmitter } from "events"                     => import { EventEmitter } from "https://deno.land/x/event_emitter/mod.ts"
+
+    To understand the next import replacement checkout: https://github.com/garronej/evt
+
+    import { Evt } from "evt"                                 => import { Evt } from "https://deno.land/x/evt/deno_dist/lib/index.ts"
+    import { assert } from "evt/dist/tools/typeSafety"        => import { assert } from "https://deno.land/x/evt/deno_dist/tools/typeSafety/index.ts"
+    import { assert } from "evt/dist/tools/typeSafety/assert" => import { assert } from "https://deno.land/x/evt/deno_dist/tools/typeSafety/assert.ts"
 
     If a devDependency is not met in deno the import will be replaced by a warning but the script will not throw.
     `)
     .option("-p, --project [projectPath]", `Default: './' -- Denoify the project given to a folder with a 'package.json' and 'tsconfig.json'.`)
-    .option("--src [srcDirPath]", `Default: '[projectPath]/src' | '[projectPath]/lib' -- Path to the directory containing the source .ts files.`)
-    .option("--dest [destDirPath]", `Default: Value of tsconfig.json->compilerOptions->outDir -- Directory where to put the modified .ts files.`);
+    .option("--src [srcDirPath]", `Default: '[projectPath]/src' | '[projectPath]/lib' -- Path to the directory containing the source .ts files.`);
 commanderStatic.parse(process.argv);
-const projectPath = path.resolve((_a = commanderStatic["projectPath"]) !== null && _a !== void 0 ? _a : ".");
 index_1.run({
-    "srcDirPath": ((arg) => !!arg ?
-        path.resolve(arg) :
-        path.join(projectPath, ["src", "lib"]
-            .find(name => fs.existsSync(path.join(projectPath, name)))))(commanderStatic["srcDirPath"]),
-    "destDirPath": ((arg) => !!arg ?
-        path.resolve(arg) :
-        path.join(projectPath, require(path.join(projectPath, "tsconfig.json"))
-            .compilerOptions
-            .outDir))(commanderStatic["destDirPath"]),
-    projectPath,
-    ...(() => {
-        var _a, _b, _c;
-        const packageJsonParsed = require(path.join(projectPath, "package.json"));
-        return {
-            "denoDependencies": (_b = (_a = packageJsonParsed === null || packageJsonParsed === void 0 ? void 0 : packageJsonParsed.deno) === null || _a === void 0 ? void 0 : _a.dependencies) !== null && _b !== void 0 ? _b : {},
-            "devDependencies": Object.keys((_c = packageJsonParsed === null || packageJsonParsed === void 0 ? void 0 : packageJsonParsed.devDependencies) !== null && _c !== void 0 ? _c : {})
-        };
-    })()
+    "projectPath": path.resolve((_a = commanderStatic["projectPath"]) !== null && _a !== void 0 ? _a : "."),
+    "srcDirPath": commanderStatic["srcDirPath"],
 });

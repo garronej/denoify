@@ -1,7 +1,7 @@
 # denoify
 
 ```raw
-$ npx garronej/denoify --help
+> npx garronej/denoify --help
 
 Usage: denoify [options]
 
@@ -70,11 +70,11 @@ Usage: denoify [options]
         "filesGlob": [
             "src/**/*"
         ],
-        "exclude": [
+        "exclude": [ // Must also use explicit exclude to ignore ts files generated for deno.
             "node_modules",
             "dist/**/*",
-            "deno_dist/**/*", // You must exclude deno_dist
-
+            "deno_dist/**/*", 
+            "./mod.ts" 
         ]
     }
 
@@ -91,4 +91,9 @@ Usage: denoify [options]
     The mod.ts file will contain 'export * from "./deno_dist/lib/index.ts";' ( path computed from package.json->main )
 
     The devDependencies does not necessarily have to be met.
+
+Options:
+  -p, --project [projectPath]  Default: './' -- Denoify the project given to a folder with a 'package.json' and 'tsconfig.json'.
+  --src [srcDirPath]           Default: '[projectPath]/src' | '[projectPath]/lib' -- Path to the directory containing the source .ts files.
+  -h, --help                   output usage information
 ```

@@ -72,11 +72,11 @@ commanderStatic
         "filesGlob": [
             "src/**/*"
         ],
-        "exclude": [
+        "exclude": [ // Must also use explicit exclude to ignore ts files generated for deno.
             "node_modules",
             "dist/**/*",
-            "deno_dist/**/*", // You must exclude deno_dist
-
+            "deno_dist/**/*", 
+            "./mod.ts" 
         ]
     }
 

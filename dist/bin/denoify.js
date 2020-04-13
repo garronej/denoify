@@ -59,6 +59,12 @@ commanderStatic
         "devDependencies": {
             "denoify": "github:garronej/denoify"
         }
+        "files": [ // If you cherry-pick the files included in the npm bundle you must include tsconfig
+            "/dist/lib",
+            "/src/lib",
+            "/tsconfig.json"
+        ]
+
     }
 
     tsconfig.json:

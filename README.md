@@ -57,6 +57,12 @@ Usage: denoify [options]
         "devDependencies": {
             "denoify": "github:garronej/denoify"
         }
+        "files": [ // If you cherry-pick the files included in the npm bundle you must include tsconfig
+            "/dist/lib",
+            "/src/lib",
+            "/tsconfig.json"
+        ]
+
     }
 
     tsconfig.json:
@@ -91,6 +97,7 @@ Usage: denoify [options]
     The mod.ts file will contain 'export * from "./deno_dist/lib/index.ts";' ( path computed from package.json->main )
 
     The devDependencies does not necessarily have to be met.
+    
 
 Options:
   -p, --project [projectPath]  Default: './' -- Denoify the project given to a folder with a 'package.json' and 'tsconfig.json'.

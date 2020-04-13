@@ -75,7 +75,7 @@ export async function transformCodebase(
                 await transformSourceCodeString({
                     "extension": path.extname(file_path).substr(1).toLowerCase(),
                     "sourceCode": fs.readFileSync(file_path).toString("utf8"),
-                    "fileDirPath": path.join(srcDirPath, file_relative_path)
+                    "fileDirPath": path.dirname(path.join(srcDirPath, file_relative_path))
                 }),
                 "utf8"
             )

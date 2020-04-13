@@ -31,7 +31,7 @@ async function transformCodebase(params) {
         fs.writeFileSync(file_path, Buffer.from(await transformSourceCodeString({
             "extension": path.extname(file_path).substr(1).toLowerCase(),
             "sourceCode": fs.readFileSync(file_path).toString("utf8"),
-            "fileDirPath": path.dirname(file_path)
+            "fileDirPath": path.join(srcDirPath, file_relative_path)
         }), "utf8"));
     }
 }

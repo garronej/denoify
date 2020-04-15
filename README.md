@@ -13,7 +13,7 @@ Usage: denoify [options]
     only works on projects that do not use any node specific API like global, process ect...
     However it is enough to port a large quantity of libraries.
 
-    You must provide a deno por for each of the dependencies that have not been made cross 
+    You must provide a deno port for each of the dependencies that have not been made cross 
     cross compatible with this module:
 
     Example: 

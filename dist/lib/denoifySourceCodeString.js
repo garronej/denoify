@@ -40,13 +40,12 @@ var path = require("path");
 var addCache_1 = require("../tools/addCache");
 var replaceAsync_1 = require("../tools/replaceAsync");
 var fs = require("fs");
-var node_fetch_1 = require("node-fetch");
-var urlJoin = require("url-join");
+var urlJoin_1 = require("../tools/urlJoin");
 function commonJsImportStringToDenoImportStringFactory(params) {
     var resolve = addCache_1.addCache(params.resolve);
     function commonJsImportStringToDenoImportString(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var fileDirPath, importStr, out_1, _a, nodeModuleName, rest, resolveResult, url, tsconfigOutDir, out, is404;
+            var fileDirPath, importStr, out_1, _a, nodeModuleName, rest, resolveResult, baseUrl, tsconfigOutDir, out, is404;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -79,18 +78,19 @@ function commonJsImportStringToDenoImportStringFactory(params) {
                             }
                             return [2 /*return*/, resolveResult.url];
                         }
-                        url = resolveResult.url, tsconfigOutDir = resolveResult.tsconfigOutDir;
+                        baseUrl = resolveResult.baseUrl, tsconfigOutDir = resolveResult.tsconfigOutDir;
                         if (rest.length === 0) {
-                            return [2 /*return*/, url];
+                            return [2 /*return*/, urlJoin_1.urlJoin(baseUrl, "mod.ts")];
                         }
-                        out = urlJoin(url.match(/^(.*\/)[^\/]+$/)[1], // https://deno.land/x/evt/
-                        path.join(path.join(path.dirname(tsconfigOutDir), "deno_" + path.basename(tsconfigOutDir)), // deno_dist
+                        out = urlJoin_1.urlJoin(baseUrl, path.join(path.join(path.dirname(tsconfigOutDir), // .
+                        "deno_" + path.basename(tsconfigOutDir) //deno_dist
+                        ), // deno_dist
                         path.relative(tsconfigOutDir, path.join.apply(path, rest)) //  tools/typeSafety
                         ) // deno_dist/tool/typeSafety
                             + ".ts" // deno_dist/tool/typeSafety.ts
-                        ) // https://deno.land/x/event_emitter/deno_dist/tool/typeSafety.ts
+                        ) // https://raw.githubusercontent.com/garronej/evt/v1.6.5/deno_dist/tool/typeSafety.ts
                         ;
-                        return [4 /*yield*/, node_fetch_1.default(out)
+                        return [4 /*yield*/, fetch(out)
                                 .then(function (_a) {
                                 var status = _a.status;
                                 return status === 404;
@@ -100,7 +100,7 @@ function commonJsImportStringToDenoImportStringFactory(params) {
                         if (is404) {
                             return [2 /*return*/, out
                                     .replace(/\.ts$/, "/index.ts")
-                                // https://deno.land/x/event_emitter/deno_dist/tool/typeSafety/index.ts
+                                // https://raw.githubusercontent.com/garronej/evt/v1.6.5/deno_dist/tool/typeSafety/index.ts
                             ];
                         }
                         return [2 /*return*/, out];

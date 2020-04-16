@@ -1,16 +1,18 @@
 
 import * as st from "scripting-tools";
 import * as path from "path";
-
-/** Record in package.json->deno->dependencies */
-export type DependenciesPorts = { [nodeModuleName: string]: string; };
+import { is404 } from "../tools/is404";
+import { urlJoin } from "../tools/urlJoin";
+import fetch from "node-fetch";
+import * as commentJson from "comment-json";
+import { id } from "../tools/id";
 
 export type ResolveResult = {
     type: "PORT";
     url: string;
 } | {
     type: "CROSS COMPATIBLE";
-    url: string;
+    baseUrl: string;
     tsconfigOutDir: string;
 } | {
     type: "UNMET";
@@ -20,13 +22,26 @@ export type ResolveResult = {
 export function resolveFactory(
     params: {
         projectPath: string;
-        dependenciesPorts: DependenciesPorts;
-        /** e.g: [ "typescript", "gulp" ] */
-        devDependencies: string[];
+        denoPorts: { [nodeModuleName: string]: string; };
+        devDependencies: { [nodeModuleName: string]: string; };
+        dependencies: { [nodeModuleName: string]: string; }
     }
 ) {
 
-    const { projectPath, dependenciesPorts, devDependencies } = params;
+    const { denoPorts } = params;
+
+    const allDependencies = {
+        ...params.dependencies,
+        ...params.devDependencies
+    };
+
+    const devDependenciesNames = Object.keys(params.devDependencies);
+
+    const getTargetModulePath = (nodeModuleName: string) =>
+        st.find_module_path(
+            nodeModuleName,
+            params.projectPath
+        );
 
     const resolve = async (
         params: { nodeModuleName: string }
@@ -35,7 +50,7 @@ export function resolveFactory(
         const { nodeModuleName } = params;
 
         {
-            const url = dependenciesPorts[nodeModuleName];
+            const url = denoPorts[nodeModuleName];
 
             if (url !== undefined) {
                 return {
@@ -46,25 +61,76 @@ export function resolveFactory(
 
         }
 
-        let targetModulePath: string;
-        try {
+        if (!(nodeModuleName in allDependencies)) {
 
-            targetModulePath = st.find_module_path(nodeModuleName, projectPath);
-
-        } catch{
             return {
                 "type": "UNMET",
                 "kind": "STANDARD"
             }
+
         }
 
-        const url: string | undefined = require(
-            path.join(targetModulePath, "package.json")
-        )?.["deno"]?.url;
+        const targetModulePath = getTargetModulePath(nodeModuleName);
 
-        if (url === undefined) {
+        const packageJsonParsed = require(path.join(targetModulePath, "package.json"));
 
-            if (devDependencies.includes(nodeModuleName)) {
+
+        const getBaseUrlParams = (() => {
+
+            {
+
+                const matchedArray = allDependencies[nodeModuleName]
+                    .match(/^(?:github:\s*)?([^\/]*)\/([^\/]+)$/i)
+                    ;
+
+                if (!!matchedArray) {
+
+                    const [repositoryName, branch] = matchedArray[2].split("#");
+
+                    return id<Parameters<typeof getBaseUrl>[0][]>([
+                        {
+                            "branch": branch ?? "master",
+                            "userOrOrg": matchedArray[1],
+                            repositoryName
+                        }
+                    ]);
+
+                }
+
+            }
+
+            const repositoryUrl = packageJsonParsed?.["repository"]?.["url"];
+
+            if (!repositoryUrl) {
+                return undefined;
+            }
+
+            const [repositoryName, userOrOrg] =
+                repositoryUrl
+                    .replace(/\.git$/i, "")
+                    .split("/")
+                    .filter((s: string) => !!s)
+                    .reverse()
+                ;
+
+            if (!repositoryName || !userOrOrg) {
+                return undefined;
+            }
+
+            return ["v", ""].map<Parameters<typeof getBaseUrl>[0]>(
+                prefix => ({
+
+                    "branch": `${prefix}${packageJsonParsed["version"]}`,
+                    userOrOrg,
+                    repositoryName
+                }))
+
+        })();
+
+        function onUnmetDevDependencyOrError(nodeModuleName: string, errorMessage: string): ResolveResult {
+
+            //TODO: factorize
+            if (devDependenciesNames.includes(nodeModuleName)) {
 
                 return {
                     "type": "UNMET",
@@ -73,20 +139,106 @@ export function resolveFactory(
 
             }
 
-            throw new Error(`No 'deno' field in ${nodeModuleName} package.json and no entry in index`);
+            throw new Error(errorMessage);
+
+        }
+
+        if (!getBaseUrlParams) {
+
+            return onUnmetDevDependencyOrError(
+                nodeModuleName,
+                `Can't find the ${nodeModuleName} github repository`
+            );
+
+        }
+
+        const baseUrl = (await Promise.all(getBaseUrlParams.map(getBaseUrl)))
+            .find(baseUrl => !!baseUrl)
+            ;
+
+        if (!baseUrl) {
+
+            return onUnmetDevDependencyOrError(
+                nodeModuleName,
+                `${nodeModuleName} v${packageJsonParsed["version"]} do not have a github release`
+            );
+
+        }
+
+        const hasBeenDenoified = await (async () => {
+
+            let modTsRaw: string;
+
+            try {
+
+                modTsRaw = await fetch(urlJoin(baseUrl, "mod.ts"))
+                    .then(res => res.text())
+                    ;
+
+            } catch{
+
+                return false;
+
+            }
+
+            if (!modTsRaw.match(/denoify/i)) {
+                return false;
+            }
+
+            return true;
+
+
+        })();
+
+        if (!hasBeenDenoified) {
+
+            return onUnmetDevDependencyOrError(
+                nodeModuleName,
+                `${nodeModuleName} do not seems to have been denoified`
+            );
+
         }
 
         return {
             "type": "CROSS COMPATIBLE",
-            url,
+            baseUrl,
             "tsconfigOutDir":
-                require(path.join(projectPath, "tsconfig.json"))
-                    .compilerOptions
-                    .outDir
+
+                commentJson.parse(
+                    await fetch(urlJoin(baseUrl, "tsconfig.ts"))
+                        .then(res => res.text())
+                )
+                ["compilerOptions"]
+                ["outDir"]
         };
+
 
     };
 
     return { resolve };
+
+}
+
+//https://raw.githubusercontent.com/garronej/run_exclusive/v2.1.11/package.json
+async function getBaseUrl(params: {
+    branch: string;
+    userOrOrg: string;
+    repositoryName: string;
+}): Promise<string | undefined> {
+
+    const { branch, userOrOrg, repositoryName } = params;
+
+    const url = [
+        `https://raw.githubusercontent.com`,
+        userOrOrg,
+        repositoryName,
+        branch
+    ].join("/")
+
+    if (await is404(urlJoin(url, "mod.ts"))) {
+        return undefined;
+    }
+
+    return url;
 
 }

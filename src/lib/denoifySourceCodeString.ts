@@ -4,8 +4,7 @@ import { addCache } from "../tools/addCache";
 import { replaceAsync } from "../tools/replaceAsync";
 import type { ResolveResult } from "./resolve";
 import * as fs from "fs";
-import fetch from "node-fetch";
-const urlJoin = require("url-join");
+import { urlJoin } from "../tools/urlJoin";
 
 
 function commonJsImportStringToDenoImportStringFactory(
@@ -72,20 +71,20 @@ function commonJsImportStringToDenoImportStringFactory(
         }
 
         const { 
-            url, // https://deno.land/x/evt/mod.ts
+            baseUrl, // https://raw.githubusercontent.com/garronej/evt/v1.6.5
             tsconfigOutDir, // ./dist
         } = resolveResult;
 
         if (rest.length === 0) {
-            return url;
+            return urlJoin(baseUrl, "mod.ts");
         }
 
         const out = urlJoin(
-            url.match(/^(.*\/)[^\/]+$/)![1], // https://deno.land/x/evt/
+            baseUrl,
             path.join(
                 path.join(
-                    path.dirname(tsconfigOutDir),
-                    `deno_${path.basename(tsconfigOutDir)}`
+                    path.dirname(tsconfigOutDir), // .
+                    `deno_${path.basename(tsconfigOutDir)}`//deno_dist
                 ), // deno_dist
                 path.relative(
                     tsconfigOutDir,
@@ -93,7 +92,7 @@ function commonJsImportStringToDenoImportStringFactory(
                 ) //  tools/typeSafety
             ) // deno_dist/tool/typeSafety
             + ".ts" // deno_dist/tool/typeSafety.ts
-        ) // https://deno.land/x/event_emitter/deno_dist/tool/typeSafety.ts
+        ) // https://raw.githubusercontent.com/garronej/evt/v1.6.5/deno_dist/tool/typeSafety.ts
             ;
 
         const is404 = await fetch(out)
@@ -103,7 +102,7 @@ function commonJsImportStringToDenoImportStringFactory(
         if (is404) {
             return out
                 .replace(/\.ts$/, "/index.ts")
-                // https://deno.land/x/event_emitter/deno_dist/tool/typeSafety/index.ts
+                // https://raw.githubusercontent.com/garronej/evt/v1.6.5/deno_dist/tool/typeSafety/index.ts
                 ;
         }
 

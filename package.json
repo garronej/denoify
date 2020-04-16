@@ -16,7 +16,9 @@
   "author": "Joseph Garrone",
   "license": "MIT",
   "dependencies": {
+    "@types/comment-json": "^1.1.1",
     "commander": "^4.1.1",
+    "comment-json": "^3.0.2",
     "node-fetch": "^2.6.0",
     "scripting-tools": "github:garronej/scripting-tools",
     "url-join": "^4.0.1"

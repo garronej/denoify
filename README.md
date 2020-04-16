@@ -36,7 +36,7 @@ A detailed example is provided later on.
 - You must provide a deno port for each of the dependencies that have not been made cross compatible with this module. **Example**: 
   - Your project depends on the NPM module ``"js-yaml"``: there is already a 1 to 1 port available you can specify the deno port ``"https://deno.land/x/js_yaml_port/js-yaml.js"``
   - Your project depend on the NPM module ``"run-exclusive"``: you don't have to specify a port as ``"run-exclusive"`` has been made cross compatible with this module.
-  - Your project depend on ``"ts-md5"``: you will have to fork the repo of the project, denoify the module yourself.
+  - Your project depend on ``"ts-md5"``: you will have to fork the repo of the project and denoify the module yourself.
 
 ## For recursive resolution 
 

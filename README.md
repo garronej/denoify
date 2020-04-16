@@ -13,7 +13,7 @@ This tool take as input a TypeScript codebase that was meant to target node and/
 
 # Motivation
 
-Although it is quite easy to port a module to deno it is a chore to maintain two codebase. For many project there is not that many change that need to be made on the source files to be compatible with deno.
+Although it is quite easy to port a module to deno it is a chore to maintain two codebase.
 
 # Limitations
 
@@ -25,7 +25,7 @@ At this stage of it's development denoify has quite strict limitations:
 
 # Requirements
 
-This is just to give an idea of what has to be done to enable denoify you work.
+This is just to give an idea of what has to be done to enable denoify to work.
 A detailed example is provided later on.
 
 ## Bare

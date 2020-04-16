@@ -40,7 +40,7 @@ A detailed example is provided later on.
 
 ## For recursive resolution 
 
-If you want that to enable your module to be, in it's turn, used as dependency in projects using denoify.
+If you want to enable your module to be, in it's turn, used as dependency in projects using denoify.
 
 - Your project must be hosted on GitHub and be public.
 - The ``"repository"`` entry of the ``package.json`` file must be completed. ( ``npm`` gives a warning if it is not anyway )

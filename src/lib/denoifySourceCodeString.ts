@@ -4,6 +4,7 @@ import { addCache } from "../tools/addCache";
 import { replaceAsync } from "../tools/replaceAsync";
 import type { ResolveResult } from "./resolve";
 import * as fs from "fs";
+import { is404 } from "../tools/is404";
 import { urlJoin } from "../tools/urlJoin";
 
 
@@ -95,11 +96,8 @@ function commonJsImportStringToDenoImportStringFactory(
         ) // https://raw.githubusercontent.com/garronej/evt/v1.6.5/deno_dist/tool/typeSafety.ts
             ;
 
-        const is404 = await fetch(out)
-            .then(({ status }) => status === 404)
-            ;
 
-        if (is404) {
+        if (await is404(out)) {
             return out
                 .replace(/\.ts$/, "/index.ts")
                 // https://raw.githubusercontent.com/garronej/evt/v1.6.5/deno_dist/tool/typeSafety/index.ts

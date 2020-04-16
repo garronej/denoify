@@ -40,12 +40,13 @@ var path = require("path");
 var addCache_1 = require("../tools/addCache");
 var replaceAsync_1 = require("../tools/replaceAsync");
 var fs = require("fs");
+var is404_1 = require("../tools/is404");
 var urlJoin_1 = require("../tools/urlJoin");
 function commonJsImportStringToDenoImportStringFactory(params) {
     var resolve = addCache_1.addCache(params.resolve);
     function commonJsImportStringToDenoImportString(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var fileDirPath, importStr, out_1, _a, nodeModuleName, rest, resolveResult, baseUrl, tsconfigOutDir, out, is404;
+            var fileDirPath, importStr, out_1, _a, nodeModuleName, rest, resolveResult, baseUrl, tsconfigOutDir, out;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -90,14 +91,9 @@ function commonJsImportStringToDenoImportStringFactory(params) {
                             + ".ts" // deno_dist/tool/typeSafety.ts
                         ) // https://raw.githubusercontent.com/garronej/evt/v1.6.5/deno_dist/tool/typeSafety.ts
                         ;
-                        return [4 /*yield*/, fetch(out)
-                                .then(function (_a) {
-                                var status = _a.status;
-                                return status === 404;
-                            })];
+                        return [4 /*yield*/, is404_1.is404(out)];
                     case 2:
-                        is404 = _b.sent();
-                        if (is404) {
+                        if (_b.sent()) {
                             return [2 /*return*/, out
                                     .replace(/\.ts$/, "/index.ts")
                                 // https://raw.githubusercontent.com/garronej/evt/v1.6.5/deno_dist/tool/typeSafety/index.ts

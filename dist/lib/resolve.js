@@ -173,7 +173,7 @@ function resolveFactory(params) {
                     };
                     _b = "tsconfigOutDir";
                     _d = (_c = commentJson).parse;
-                    return [4 /*yield*/, node_fetch_1.default(urlJoin_1.urlJoin(baseUrl, "tsconfig.ts"))
+                    return [4 /*yield*/, node_fetch_1.default(urlJoin_1.urlJoin(baseUrl, "tsconfig.json"))
                             .then(function (res) { return res.text(); })];
                 case 3: return [2 /*return*/, (_a[_b] = _d.apply(_c, [_e.sent()])["compilerOptions"]["outDir"],
                         _a)];

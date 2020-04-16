@@ -203,9 +203,8 @@ export function resolveFactory(
             "type": "CROSS COMPATIBLE",
             baseUrl,
             "tsconfigOutDir":
-
                 commentJson.parse(
-                    await fetch(urlJoin(baseUrl, "tsconfig.ts"))
+                    await fetch(urlJoin(baseUrl, "tsconfig.json"))
                         .then(res => res.text())
                 )
                 ["compilerOptions"]

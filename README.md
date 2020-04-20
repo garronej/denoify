@@ -7,20 +7,20 @@
 </p>
 <br>
 
-This tool take as input a TypeScript codebase that was meant to target node and/or the web and spit out modified version of the sources files that are ready to be deployed as a Deno module.  
+This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files that are ready to be deployed as a Deno module.  
   
-**Denoify do for deno what browserify do for the browser.**
+**Denoify does for deno what browserify does for the browser.**
 
 # Motivation
 
-Although it is quite easy to port a module to deno it is a chore to maintain two codebase.
+Although it is quite easy to port a module to deno it is a chore to maintain two codebases.
 
 # Limitations
 
-At this stage of it's development denoify has quite strict limitations:
+At this stage of its development denoify has quite strict limitations:
 
-- Only fix ``import``/``export`` and thus only works on projects that do not use any node specific API like ``global``, ``process`` ect.  
-- Only support TypeScript projects.
+- Only fixes ``import``/``export`` and thus only works on projects that do not use any node specific API like ``global``, ``process`` etc.  
+- Only supports TypeScript projects.
 - Dynamic imports using ``require()`` are not supported.
 
 # Requirements
@@ -34,17 +34,17 @@ A detailed example is provided later on.
 - The ``tsconfig.json`` must use the ``"compilerOptions"`` -> ``"outDir"`` option.
 - All strict TS checks must be enabled in ``tsconfig.json`` ( ``"noUnusedLocals"``, ``"noUnusedParameters"`` and ``"strict"`` )
 - You must provide a deno port for each of the dependencies that have not been made cross compatible with this module. **Example**: 
-  - Your project depends on the NPM module ``"js-yaml"``: there is already a 1 to 1 port available you can specify the deno port ``"https://deno.land/x/js_yaml_port/js-yaml.js"``
-  - Your project depend on the NPM module ``"run-exclusive"``: you don't have to specify a port as ``"run-exclusive"`` has been made cross compatible with this module.
-  - Your project depend on ``"ts-md5"``: you will have to fork the repo of the project and denoify the module yourself.
+  - Your project depends on the NPM module ``"js-yaml"``: there is already a 1 to 1 port available -- you can specify the deno port ``"https://deno.land/x/js_yaml_port/js-yaml.js"``
+  - Your project depends on the NPM module ``"run-exclusive"``: you don't have to specify a port as ``"run-exclusive"`` has been made cross-compatible with this module.
+  - Your project depends on ``"ts-md5"``: you will have to fork the repo of the project and denoify the module yourself.
 
 ## For recursive resolution 
 
-If you want to enable your module to be, in it's turn, used as dependency in projects using denoify.
+If you want to enable your module to be, in its turn, used as a dependency in projects using denoify.
 
 - Your project must be hosted on GitHub and be public.
-- The ``"repository"`` entry of the ``package.json`` file must be completed. ( ``npm`` gives a warning if it is not anyway )
-- Each time you publish a release on NPM (``> npm publish``)  you must also create a new release on github with tag name ``vX.Y.Z`` corresponding to your package json.
+- The ``"repository"`` entry in the ``package.json`` file must be completed. ( ``npm`` gives a warning if it is not anyway )
+- Each time you publish a release on NPM (``> npm publish``)  you must also create a new release on GitHub with tag name ``vX.Y.Z`` corresponding to your package json.
 
 # Setup
 
@@ -52,7 +52,7 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 
 # Real world example
 
-Modules that have been made cross compatible using denoify:
+Modules that have been made cross-compatible using denoify:
 
 - [evt](https://evt.land)
 - [run-exclusive](https://github.com/garronej/run-exclusive)

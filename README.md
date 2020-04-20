@@ -48,7 +48,7 @@ If you want to enable your module to be, in it's turn, used as dependency in pro
 
 # Setup
 
-Check out [this repo](https://github.com/garronej/denoify_example) to see in practice how to setup your denoify with your repo.
+Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to setup your denoify with your repo.
 
 # Real world example
 

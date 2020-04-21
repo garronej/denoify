@@ -15,7 +15,7 @@ This tool takes as input a TypeScript codebase that was meant to target node and
 
 Although it is quite easy to port a module to deno it is a chore to maintain two codebases.
 
-# Limitations
+# (current) Limitations
 
 At this stage of its development denoify has quite strict limitations:
 
@@ -23,9 +23,19 @@ At this stage of its development denoify has quite strict limitations:
 - Only supports TypeScript projects.
 - Dynamic imports using ``require()`` are not supported.
 
-# Requirements
+# Roadmap to 1.0
 
-This is just to give an idea of what has to be done to enable denoify to work.
+- ( in progress ) Create a JSON database of known ports that will be used by default so that users don't have to specify a port for EVERY dependency.
+  Like browserify that uses [this](https://www.npmjs.com/package/events) when it encounter ``import { EventEmitter } from "events"``.
+- Adds to this database the standard node modules ( like ``fs``, ``http``, ``util``, ``events`` ect )
+- Using the typescript compiler API to parse source files instead of doing the change with ``RegExp``s.
+  [ts-morph](https://github.com/dsherret/ts-morph) seems to be a good option here. 
+- Polyfills global node API that are not imported like ``Buffer`` and ``process``. ( language parsing must land first ) 
+- Allows ``require()`` ( synchronous dynamical loading of modules ) 
+
+# Requirements
+`
+This section is just to give an idea of what has to be done to enable denoify to work.
 A detailed example is provided later on.
 
 ## Bare

@@ -7,6 +7,7 @@
 </p>
 <br>
 
+
 This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files that are ready to be deployed as a Deno module.  
   
 **Denoify does for deno what browserify does for the browser.**
@@ -56,9 +57,15 @@ If you want to enable your module to be, in its turn, used as a dependency in pr
 - The ``"repository"`` entry in the ``package.json`` file must be completed. ( ``npm`` gives a warning if it is not anyway )
 - Each time you publish a release on NPM (``> npm publish``)  you must also create a new release on GitHub with tag name ``vX.Y.Z`` corresponding to your package json.
 
+# Install
+
+```bash
+> npm install --save-dev garronej/denoify#0.1.0
+```
+
 # Setup
 
-Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to setup your denoify with your repo.
+Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module/tree/v0.1.0) to see in practice how to setup your denoify with your repo.
 
 # Real world example
 

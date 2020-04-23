@@ -43,7 +43,7 @@ var fs = require("fs");
 var path = require("path");
 var commentJson = require("comment-json");
 var denoifyImportArgument_1 = require("./denoifyImportArgument");
-function run(_a) {
+function denoify(_a) {
     var projectPath = _a.projectPath, _b = _a.srcDirPath, srcDirPath = _b === void 0 ? ["src", "lib"]
         .find(function (name) { return fs.existsSync(path.join(projectPath, name)); }) : _b;
     return __awaiter(this, void 0, void 0, function () {
@@ -96,4 +96,4 @@ function run(_a) {
         });
     });
 }
-exports.run = run;
+exports.denoify = denoify;

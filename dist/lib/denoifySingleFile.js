@@ -36,83 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var path = require("path");
-var addCache_1 = require("../tools/addCache");
 var replaceAsync_1 = require("../tools/replaceAsync");
-var Scheme_1 = require("./Scheme");
-var fs = require("fs");
-var is404_1 = require("../tools/is404");
-function commonJsImportStringToDenoImportStringFactory(params) {
-    var resolve = addCache_1.addCache(params.resolve);
-    function commonJsImportStringToDenoImportString(params) {
-        return __awaiter(this, void 0, void 0, function () {
-            var fileDirPath, importStr, out_1, _a, nodeModuleName, rest, resolveResult, scheme, tsconfigOutDir, pathToFile, out;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        fileDirPath = params.fileDirPath;
-                        importStr = params
-                            .importStr // ./interfaces/
-                            .replace(/\/+$/, "/index") // ./interfaces/index
-                        ;
-                        if (importStr.startsWith(".")) {
-                            if (/\.json$/i.test(importStr)) {
-                                return [2 /*return*/, importStr];
-                            }
-                            if (fs.existsSync(path.join(fileDirPath, importStr + ".ts"))) {
-                                return [2 /*return*/, importStr + ".ts"];
-                            }
-                            out_1 = path.join(importStr, "index.ts");
-                            return [2 /*return*/, out_1.startsWith(".") ? out_1 : "./" + out_1];
-                        }
-                        _a = importStr.split("/"), nodeModuleName = _a[0], rest = _a.slice(1);
-                        return [4 /*yield*/, resolve({ nodeModuleName: nodeModuleName })];
-                    case 1:
-                        resolveResult = _b.sent();
-                        if (resolveResult.type === "NON-FATAL UNMET DEPENDENCY") {
-                            return [2 /*return*/, importStr + " DENOIFY: DEPENDENCY UNMET (" + resolveResult.kind + ")"];
-                        }
-                        if (resolveResult.type === "HANDMADE PORT") {
-                            //TODO: crawl
-                            if (rest.length !== 0) {
-                                throw new Error("Error with: " + importStr + " Port support ony default import");
-                            }
-                            return [2 /*return*/, Scheme_1.Scheme.buildUrl(resolveResult.scheme, {})];
-                        }
-                        scheme = resolveResult.scheme, tsconfigOutDir = resolveResult.tsconfigOutDir;
-                        if (rest.length === 0) {
-                            return [2 /*return*/, Scheme_1.Scheme.buildUrl(scheme, {})];
-                        }
-                        pathToFile = path.join(path.join(path.dirname(tsconfigOutDir), // .
-                        "deno_" + path.basename(tsconfigOutDir) //deno_dist
-                        ), // deno_dist
-                        path.relative(tsconfigOutDir, path.join.apply(path, rest)) //  tools/typeSafety
-                        ) // deno_dist/tool/typeSafety
-                            + ".ts" // deno_dist/tool/typeSafety.ts
-                        ;
-                        out = Scheme_1.Scheme.buildUrl(scheme, { pathToFile: pathToFile });
-                        return [4 /*yield*/, is404_1.is404(out)];
-                    case 2:
-                        if (!_b.sent()) return [3 /*break*/, 4];
-                        out = out
-                            .replace(/\.ts$/, "/index.ts");
-                        return [4 /*yield*/, is404_1.is404(out)];
-                    case 3:
-                        if (_b.sent()) {
-                            throw new Error("Problem resolving " + importStr + " in " + fileDirPath + " with " + JSON.stringify(scheme) + " 404 not found.");
-                        }
-                        _b.label = 4;
-                    case 4: return [2 /*return*/, out];
-                }
-            });
-        });
-    }
-    return { commonJsImportStringToDenoImportString: commonJsImportStringToDenoImportString };
-}
-function denoifySourceCodeStringFactory(params) {
-    var commonJsImportStringToDenoImportString = commonJsImportStringToDenoImportStringFactory(params).commonJsImportStringToDenoImportString;
+function denoifySingleFileFactory(params) {
+    var denoifyImportArgument = params.denoifyImportArgument;
     /** Returns source code with deno imports replaced */
-    function denoifySourceCodeString(params) {
+    function denoifySingleFile(params) {
         return __awaiter(this, void 0, void 0, function () {
             var fileDirPath, sourceCode, out, _loop_1, _i, _a, quoteSymbol;
             var _this = this;
@@ -130,13 +58,13 @@ function denoifySourceCodeStringFactory(params) {
                                         replacerAsync = (function () {
                                             var regExpReplaceInQuote = new RegExp("^([^" + quoteSymbol + "]*" + quoteSymbol + ")([^" + quoteSymbol + "]+)(" + quoteSymbol + "[^" + quoteSymbol + "]*)$", "m");
                                             return function (substring) { return __awaiter(_this, void 0, void 0, function () {
-                                                var _a, before, importStr, after, _b;
+                                                var _a, before, importArgument, after, _b;
                                                 return __generator(this, function (_c) {
                                                     switch (_c.label) {
                                                         case 0:
-                                                            _a = substring.match(regExpReplaceInQuote), before = _a[1], importStr = _a[2], after = _a[3];
+                                                            _a = substring.match(regExpReplaceInQuote), before = _a[1], importArgument = _a[2], after = _a[3];
                                                             _b = "" + before;
-                                                            return [4 /*yield*/, commonJsImportStringToDenoImportString({ fileDirPath: fileDirPath, importStr: importStr })];
+                                                            return [4 /*yield*/, denoifyImportArgument({ fileDirPath: fileDirPath, importArgument: importArgument })];
                                                         case 1: return [2 /*return*/, _b + (_c.sent()) + after];
                                                     }
                                                 });
@@ -182,6 +110,6 @@ function denoifySourceCodeStringFactory(params) {
             });
         });
     }
-    return { denoifySourceCodeString: denoifySourceCodeString };
+    return { denoifySingleFile: denoifySingleFile };
 }
-exports.denoifySourceCodeStringFactory = denoifySourceCodeStringFactory;
+exports.denoifySingleFileFactory = denoifySingleFileFactory;

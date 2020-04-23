@@ -1,0 +1,21 @@
+{
+    "builtins": {
+        "events": "https://deno.land/std/node/events.ts",
+        "fs": "https://deno.land/std/node/fs.ts", //Partial
+        "os": "https://deno.land/std/node/os.ts", //Partial
+        "path": "https://deno.land/std/node/path.ts",
+        "process": "https://deno.land/std/node/process.ts", //Partial
+        "querystring": "https://deno.land/std/node/querystring.ts",
+        "timers": "https://deno.land/std/node/timers.ts",
+        "util": "https://deno.land/std/node/util.ts", //Partial
+        "global": "https://deno.land/std/node/global.ts"
+        /*
+        Important: built in missing: Buffer, http, https, stream...
+        Follow evolution of support here: https://deno.land/std/node/README.md
+        */
+    },
+    "third_party": {
+        "js-yaml": "https://deno.land/x/js_yaml_port/js-yaml.js",
+        "ts-md5": "garronej/ts-md5"
+    }
+}

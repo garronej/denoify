@@ -38,13 +38,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var path = require("path");
 var addCache_1 = require("../tools/addCache");
-var replaceAsync_1 = require("../tools/replaceAsync");
 var Scheme_1 = require("./Scheme");
 var fs = require("fs");
 var is404_1 = require("../tools/is404");
-function commonJsImportStringToDenoImportStringFactory(params) {
+/**
+ * examples:
+ * "evt" -> "https://deno.land/x/evt@.../mod.ts"
+ * "" -> "https://deno.land/x/evt@.../mod.ts"
+ * "./interfaces" -> "./interfaces/index.ts"
+ */
+function denoifyImportArgumentFactory(params) {
     var resolve = addCache_1.addCache(params.resolve);
-    function commonJsImportStringToDenoImportString(params) {
+    function denoifyImportArgument(params) {
         return __awaiter(this, void 0, void 0, function () {
             var fileDirPath, importStr, out_1, _a, nodeModuleName, rest, resolveResult, scheme, tsconfigOutDir, pathToFile, out;
             return __generator(this, function (_b) {
@@ -52,7 +57,7 @@ function commonJsImportStringToDenoImportStringFactory(params) {
                     case 0:
                         fileDirPath = params.fileDirPath;
                         importStr = params
-                            .importStr // ./interfaces/
+                            .importArgument // ./interfaces/
                             .replace(/\/+$/, "/index") // ./interfaces/index
                         ;
                         if (importStr.startsWith(".")) {
@@ -107,81 +112,6 @@ function commonJsImportStringToDenoImportStringFactory(params) {
             });
         });
     }
-    return { commonJsImportStringToDenoImportString: commonJsImportStringToDenoImportString };
+    return { denoifyImportArgument: denoifyImportArgument };
 }
-function denoifySourceCodeStringFactory(params) {
-    var commonJsImportStringToDenoImportString = commonJsImportStringToDenoImportStringFactory(params).commonJsImportStringToDenoImportString;
-    /** Returns source code with deno imports replaced */
-    function denoifySourceCodeString(params) {
-        return __awaiter(this, void 0, void 0, function () {
-            var fileDirPath, sourceCode, out, _loop_1, _i, _a, quoteSymbol;
-            var _this = this;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        fileDirPath = params.fileDirPath, sourceCode = params.sourceCode;
-                        out = sourceCode;
-                        _loop_1 = function (quoteSymbol) {
-                            var strRegExpInQuote, replacerAsync, _i, _a, regExpStr;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
-                                    case 0:
-                                        strRegExpInQuote = quoteSymbol + "[^" + quoteSymbol + "]+" + quoteSymbol;
-                                        replacerAsync = (function () {
-                                            var regExpReplaceInQuote = new RegExp("^([^" + quoteSymbol + "]*" + quoteSymbol + ")([^" + quoteSymbol + "]+)(" + quoteSymbol + "[^" + quoteSymbol + "]*)$", "m");
-                                            return function (substring) { return __awaiter(_this, void 0, void 0, function () {
-                                                var _a, before, importStr, after, _b;
-                                                return __generator(this, function (_c) {
-                                                    switch (_c.label) {
-                                                        case 0:
-                                                            _a = substring.match(regExpReplaceInQuote), before = _a[1], importStr = _a[2], after = _a[3];
-                                                            _b = "" + before;
-                                                            return [4 /*yield*/, commonJsImportStringToDenoImportString({ fileDirPath: fileDirPath, importStr: importStr })];
-                                                        case 1: return [2 /*return*/, _b + (_c.sent()) + after];
-                                                    }
-                                                });
-                                            }); };
-                                        })();
-                                        _i = 0, _a = [
-                                            "export\\s+\\*\\s+from\\s*" + strRegExpInQuote,
-                                            "(?:import|export)(?:\\s+type)?\\s*\\*\\s*as\\s+[^\\s]+\\s+from\\s*" + strRegExpInQuote,
-                                            "(?:import|export)(?:\\s+type)?\\s*{[^}]*}\\s*from\\s*" + strRegExpInQuote,
-                                            "import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s+from\\s*" + strRegExpInQuote,
-                                            "import\\s*" + strRegExpInQuote,
-                                            "[^a-zA-Z._0-9$]import\\s*\\(\\s*" + strRegExpInQuote + "\\s*\\)",
-                                        ];
-                                        _b.label = 1;
-                                    case 1:
-                                        if (!(_i < _a.length)) return [3 /*break*/, 4];
-                                        regExpStr = _a[_i];
-                                        return [4 /*yield*/, replaceAsync_1.replaceAsync(out, new RegExp(regExpStr, "mg"), replacerAsync)];
-                                    case 2:
-                                        out = _b.sent();
-                                        _b.label = 3;
-                                    case 3:
-                                        _i++;
-                                        return [3 /*break*/, 1];
-                                    case 4: return [2 /*return*/];
-                                }
-                            });
-                        };
-                        _i = 0, _a = ["\"", "'"];
-                        _b.label = 1;
-                    case 1:
-                        if (!(_i < _a.length)) return [3 /*break*/, 4];
-                        quoteSymbol = _a[_i];
-                        return [5 /*yield**/, _loop_1(quoteSymbol)];
-                    case 2:
-                        _b.sent();
-                        _b.label = 3;
-                    case 3:
-                        _i++;
-                        return [3 /*break*/, 1];
-                    case 4: return [2 /*return*/, out];
-                }
-            });
-        });
-    }
-    return { denoifySourceCodeString: denoifySourceCodeString };
-}
-exports.denoifySourceCodeStringFactory = denoifySourceCodeStringFactory;
+exports.denoifyImportArgumentFactory = denoifyImportArgumentFactory;

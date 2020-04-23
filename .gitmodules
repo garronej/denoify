@@ -1,0 +1,3 @@
+[submodule "my_dummy_npm_and_deno_module"]
+	path = my_dummy_npm_and_deno_module
+	url = https://github.com/garronej/my_dummy_npm_and_deno_module

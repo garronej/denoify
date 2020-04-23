@@ -1,12 +1,13 @@
 
-import { denoifySourceCodeStringFactory } from "./denoifySourceCodeString";
+import { denoifySingleFileFactory } from "./denoifySingleFile";
 import { transformCodebase } from "./transformCodebase";
 import { resolveFactory } from "./resolve";
 import * as fs from "fs";
 import * as path from "path";
 import * as commentJson from "comment-json";
+import { denoifyImportArgumentFactory } from "./denoifyImportArgument";
 
-export async function run(
+export async function denoify(
     {
         projectPath,
         srcDirPath = ["src", "lib"]
@@ -19,14 +20,28 @@ export async function run(
 
     const packageJsonParsed = require(path.join(projectPath, "package.json"));
 
-    const { denoifySourceCodeString } = denoifySourceCodeStringFactory(
-        resolveFactory({
-            projectPath,
-            "denoPorts": packageJsonParsed["denoPorts"] ?? {},
-            "dependencies": packageJsonParsed["dependencies"] ?? {},
-            "devDependencies": packageJsonParsed["devDependencies"] ?? {}
-        })
-    );
+    const { denoifySingleFile } = denoifySingleFileFactory((() => {
+
+        const { denoifyImportArgument } = denoifyImportArgumentFactory((() => {
+
+            const { resolve } = resolveFactory({
+                projectPath,
+                "userProvidedPorts": packageJsonParsed["denoPorts"] ?? {},
+                "dependencies": packageJsonParsed["dependencies"] ?? {},
+                "devDependencies": packageJsonParsed["devDependencies"] ?? {},
+                "log": console.log
+            });
+
+            return { resolve };
+
+
+        })());
+
+        return { denoifyImportArgument };
+
+    })());
+
+
 
     const tsconfigOutDir = commentJson.parse(
         fs.readFileSync(
@@ -47,7 +62,7 @@ export async function run(
         ),
         "transformSourceCodeString": ({ extension, sourceCode, fileDirPath }) =>
             /^\.?ts$/i.test(extension) || /^\.?js$/i.test(extension) ?
-                denoifySourceCodeString({ sourceCode, fileDirPath })
+                denoifySingleFile({ sourceCode, fileDirPath })
                 :
                 Promise.resolve(sourceCode)
     });

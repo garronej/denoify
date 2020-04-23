@@ -19,6 +19,7 @@
     "exclude": [
         "node_modules",
         "res/**/*",
-        "dist/**/*"
+        "dist/**/*",
+        "my_dummy_npm_and_deno_module"
     ]
 }

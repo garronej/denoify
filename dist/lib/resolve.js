@@ -49,161 +49,345 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var st = require("scripting-tools");
 var path = require("path");
-var is404_1 = require("../tools/is404");
-var urlJoin_1 = require("../tools/urlJoin");
-var node_fetch_1 = require("node-fetch");
-var commentJson = require("comment-json");
 var id_1 = require("../tools/id");
+var Scheme_1 = require("./Scheme");
+var getTsconfigOutDirIfDenoified_1 = require("./getTsconfigOutDirIfDenoified");
+var commentJson = require("comment-json");
+var fs = require("fs");
+var knownPorts = (function () {
+    var _a = commentJson.parse(fs.readFileSync(path.join(__dirname, "..", "..", "knownPorts.jsonc")).toString("utf8")), third_party = _a.third_party, builtins = _a.builtins;
+    return __assign(__assign({}, third_party), builtins);
+})();
+/**
+ *
+ * Example 1:
+ *
+ * Context:
+ * - package.json "dependencies" has an entry { "js-yaml": "~3.12.0" }
+ * - There is no entry "js-yaml" in package.json "denoPorts"
+ * - The version field in "./node_modules/js-yaml/package.json" is "3.12.1"
+ *
+ * Resolve is called with:
+ * nodeModuleName: "js-yaml"
+ *
+ * ->
+ *
+ * The resolution goes as follow:
+ * - The entry "js-yaml" in package.json is not a "github:xxx" scheme. Skip
+ * - We use "./node_modules/js-yaml/package.json" repository field to lookup
+ *   the github repo hosting the module: KSXGitHub/simple-js-yaml-port-for-deno.
+ *   We found out that it is not a denoified module ( there is not a "./mod.ts" file
+ *   containing the work "denoify"). Skip
+ * - There is no entry "js-yaml" in package.json "denoPorts". Skip
+ * - There is an entry { "js-yaml": "https://deno.land/x/js_yaml_port/js-yaml.js" }
+ *   in knownPort.json, GET https://deno.land/x/js_yaml_port@3.12.1/js-yaml.js is not a 404. Done
+ *
+ * {
+ * "type": "HANDMADE PORT",
+ * "scheme": {
+ *     "type": "url",
+ *     "urlType": "deno.land",
+ *     "baseUrlWithoutBranch": "https://deno.land/x/js_yaml_port",
+ *     "branch": "3.12.1",
+ *     "pathToIndex": "js-yaml.js"
+ * }
+ * }
+ *
+ *
+ * If the version field in "./node_modules/js-yaml/package.json" was "3.12.2"
+ * as GET https://deno.land/x/js_yaml_port@3.12.2/js-yaml.js gives a 404
+ * ( KSXGitHub/simple-js-yaml-port-for-deno as no "v3.12.2" or "3.12.2" branch )
+ * the result would have been the same without the "branch" property in the "scheme" and
+ * a warning would have been printed to the console.
+ *
+ * Example 2:
+ *
+ * Context:
+ * - package.json "dependencies" has no entry for "fs"
+ * - There is no entry "fs" in package.json "denoPorts"
+ *
+ * Resolve is called with:
+ * nodeModuleName: "fs"
+ *
+ * ->
+ *
+ * The resolution goes as follow:
+ * - "fs" is not present in "dependencies" nor "devDependencies" of package.json, assuming node builtin.
+ * - There is no entry for "fs" in package.json "denoPorts". Skip
+ * - There is an entry { "fs": "https://deno.land/std/node/fs.ts" } in known port. Done
+ *
+ * {
+ * "type": "HANDMADE PORT",
+ * "scheme": {
+ *     "type": "url",
+ *     "urlType": "deno.land",
+ *     "baseUrlWithoutBranch": "https://deno.land/std",
+ *     "pathToIndex": "node/fs.ts"
+ * }
+ * }
+ *
+ * Example 3:
+ *
+ * Context:
+ * - package.json "dependencies" has an entry { "ts-md5": "~1.2.7" }
+ * - There is no entry "ts-md5" in package.json "denoPorts"
+ * - The version field in "./node_modules/js-yaml/package.json" is "1.2.7"
+ *
+ * Resolve is called with:
+ * nodeModuleName: "ts-md5"
+ *
+ * ->
+ *
+ * The resolution goes as follow:
+ * - The entry "js-yaml" in package.json is not a "github:xxx" scheme. Skip
+ * - We use "./node_modules/ts-md5/package.json" repository field to lookup
+ *   the github repo hosting the module: cotag/ts-md5.
+ *   We found out that it is not a denoified module. Skip
+ * - There is no entry "ts-md5" in package.json "denoPorts". Skip
+ * - There is an entry { "ts-md5": "garronej/ts-md5" }
+ *   in knownPort.json, GET https://raw.github.com/garronej/ts-md5/v1.2.7/mod.ts is not a 404
+ *   and contain the word denoify. Done
+ *
+ * We lookup the "outDir" in https://raw.github.com/garronej/ts-md5/v1.2.7/tsconfig.json,
+ * we need it so import "ts-md5/dist/md5_worker" can be replaced by "ts-md5/deno_dist/md5_worker.ts" later on.
+ *
+ * {
+ * "type": "DENOIFIED MODULE",
+ * "scheme": {
+ *     "type": "github",
+ *     "userOrOrg": "garronej",
+ *     "repositoryName": "ts-md5",
+ *     "branch": "v1.2.7"
+ * },
+ * "tsconfigOutDir": "dist"
+ * }
+ *
+ * Example 4:
+ *
+ * Context:
+ * - package.json "dependencies" has an entry { "ts-md5": "garronej/ts-md5#1.2.7" }
+ *
+ * Resolve is called with:
+ * nodeModuleName: "ts-md5"
+ *
+ * ->
+ *
+ * The resolution goes as follow:
+ * - The entry "js-yaml" in package.json ("garronej/ts-md5") is a "github:xxx" scheme.
+ *   GET https://raw.github.com/garronej/ts-md5/v1.2.7/mod.ts is not a 404 and the file
+ *   contains the word "denoify". Done
+ *
+ * We lookup the "outDir" in https://raw.github.com/garronej/ts-md5/v1.2.7/tsconfig.json,
+ *
+ * {
+ * "type": "DENOIFIED MODULE",
+ * "scheme": {
+ *     "type": "github",
+ *     "userOrOrg": "garronej",
+ *     "repositoryName": "ts-md5",
+ *     "branch": "v1.2.7"
+ * },
+ * "tsconfigOutDir": "dist"
+ * }
+ *
+ * Example 5:
+ *
+ * Context:
+ * - package.json "dependencies" has an entry { "run-exclusive": "^2.1.0" }
+ * - The version field in "./node_modules/run-exclusive/package.json" is "2.1.12".
+ *
+ * Resolve is called with:
+ * nodeModuleName: "run-exclusive"
+ *
+ * ->
+ *
+ * The resolution goes as follow:
+ * - The entry "run-exclusive" in package.json is not a "github:xxx" scheme. Skip
+ * - We use "./node_modules/ts-md5/package.json" repository field to lookup
+ *   the github repo hosting the module: garronej/run-exclusive.
+ *   https://raw.github.com/garronej/ts-md5/v2.1.12/mod.ts is not a 404
+ *   and contain the word "denoify". Done
+ *
+ * We lookup the "outDir" in https://raw.github.com/garronej/run-exclusive/v2.1.12/tsconfig.json,
+ *
+ * {
+ * "type": "DENOIFIED MODULE",
+ * "scheme": {
+ *     "type": "github",
+ *     "userOrOrg": "garronej",
+ *     "repositoryName": "run-exclusive",
+ *     "branch": "v2.1.12"
+ * },
+ * "tsconfigOutDir": "dist"
+ * }
+ *
+ */
 function resolveFactory(params) {
-    var _this = this;
-    var denoPorts = params.denoPorts;
+    var log = params.log;
+    var denoPorts = (function () {
+        var denoPorts = {};
+        [knownPorts, params.userProvidedPorts].forEach(function (record) { return Object.keys(record).forEach(function (nodeModuleName) {
+            return denoPorts[nodeModuleName] = record[nodeModuleName];
+        }); });
+        return { denoPorts: denoPorts };
+    })().denoPorts;
     var allDependencies = __assign(__assign({}, params.dependencies), params.devDependencies);
     var devDependenciesNames = Object.keys(params.devDependencies);
     var getTargetModulePath = function (nodeModuleName) {
         return st.find_module_path(nodeModuleName, params.projectPath);
     };
-    var resolve = function (params) { return __awaiter(_this, void 0, void 0, function () {
-        function onUnmetDevDependencyOrError(nodeModuleName, errorMessage) {
-            //TODO: factorize
-            if (devDependenciesNames.includes(nodeModuleName)) {
-                return {
-                    "type": "UNMET",
-                    "kind": "DEV DEPENDENCY"
-                };
-            }
-            throw new Error(errorMessage);
-        }
-        var nodeModuleName, url, targetModulePath, packageJsonParsed, getBaseUrlParams, baseUrl, hasBeenDenoified, _a, _b, _c, _d;
-        var _this = this;
-        return __generator(this, function (_e) {
-            switch (_e.label) {
-                case 0:
-                    nodeModuleName = params.nodeModuleName;
-                    {
-                        url = denoPorts[nodeModuleName];
-                        if (url !== undefined) {
+    var isInUserProvidedPort = function (nodeModuleName) {
+        return nodeModuleName in params.userProvidedPorts;
+    };
+    function resolve(params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var nodeModuleName //js-yaml
+            , scheme, tsconfigOutDir, targetModulePath, packageJsonParsed, version // 3.13.1 (version installed)
+            , wrap, result, _a, scheme, warning;
+            var _this = this;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        nodeModuleName = params.nodeModuleName;
+                        if (!!(nodeModuleName in allDependencies)) return [3 /*break*/, 2];
+                        if (!(nodeModuleName in denoPorts)) {
                             return [2 /*return*/, {
-                                    "type": "PORT",
-                                    url: url
+                                    "type": "NON-FATAL UNMET DEPENDENCY",
+                                    "kind": "BUILTIN"
                                 }];
                         }
-                    }
-                    if (!(nodeModuleName in allDependencies)) {
-                        return [2 /*return*/, {
-                                "type": "UNMET",
-                                "kind": "STANDARD"
+                        scheme = Scheme_1.Scheme.parse(denoPorts[nodeModuleName]);
+                        return [4 /*yield*/, getTsconfigOutDirIfDenoified_1.getTsconfigOutDirIfDenoified({ scheme: scheme })];
+                    case 1:
+                        tsconfigOutDir = (_b.sent()).tsconfigOutDir;
+                        return [2 /*return*/, !!tsconfigOutDir ? {
+                                "type": "DENOIFIED MODULE",
+                                scheme: scheme,
+                                tsconfigOutDir: tsconfigOutDir
+                            } : {
+                                "type": "HANDMADE PORT",
+                                scheme: scheme
                             }];
-                    }
-                    targetModulePath = getTargetModulePath(nodeModuleName);
-                    packageJsonParsed = require(path.join(targetModulePath, "package.json"));
-                    getBaseUrlParams = (function () {
-                        var _a;
-                        {
-                            var matchedArray = allDependencies[nodeModuleName]
-                                .match(/^(?:github:\s*)?([^\/]*)\/([^\/]+)$/i);
-                            if (!!matchedArray) {
-                                var _b = matchedArray[2].split("#"), repositoryName_1 = _b[0], branch = _b[1];
-                                return id_1.id([
-                                    {
-                                        "branch": branch !== null && branch !== void 0 ? branch : "master",
-                                        "userOrOrg": matchedArray[1],
-                                        repositoryName: repositoryName_1
+                    case 2:
+                        targetModulePath = getTargetModulePath(nodeModuleName);
+                        packageJsonParsed = require(path.join(targetModulePath, "package.json"));
+                        version = packageJsonParsed.version;
+                        return [4 /*yield*/, (function () { return __awaiter(_this, void 0, void 0, function () {
+                                var scheme, tsconfigOutDir;
+                                var _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            try {
+                                                scheme = Scheme_1.Scheme.parse(allDependencies[nodeModuleName]);
+                                            }
+                                            catch (_c) {
+                                                // ^1.2.3
+                                                return [2 /*return*/, {
+                                                        "isSuccess": false,
+                                                        "tryRepositoryField": true
+                                                    }];
+                                            }
+                                            return [4 /*yield*/, Scheme_1.Scheme.resolveVersion(scheme, { "version": (_a = scheme.branch) !== null && _a !== void 0 ? _a : "master" })];
+                                        case 1:
+                                            scheme = (_b.sent()).scheme;
+                                            return [4 /*yield*/, getTsconfigOutDirIfDenoified_1.getTsconfigOutDirIfDenoified({ scheme: scheme })];
+                                        case 2:
+                                            tsconfigOutDir = (_b.sent()).tsconfigOutDir;
+                                            if (!tsconfigOutDir) {
+                                                return [2 /*return*/, {
+                                                        "isSuccess": false,
+                                                        "tryRepositoryField": false
+                                                    }];
+                                            }
+                                            return [2 /*return*/, {
+                                                    "isSuccess": true,
+                                                    "result": id_1.id({
+                                                        "type": "DENOIFIED MODULE",
+                                                        scheme: scheme,
+                                                        tsconfigOutDir: tsconfigOutDir
+                                                    })
+                                                }];
                                     }
-                                ]);
+                                });
+                            }); })()];
+                    case 3:
+                        wrap = _b.sent();
+                        if (wrap.isSuccess) {
+                            return [2 /*return*/, wrap.result];
+                        }
+                        return [4 /*yield*/, (function () { return __awaiter(_this, void 0, void 0, function () {
+                                var repositoryUrl, _a, repositoryName, userOrOrg, _b, scheme, warning, tsconfigOutDir;
+                                var _c;
+                                return __generator(this, function (_d) {
+                                    switch (_d.label) {
+                                        case 0:
+                                            if (!wrap.tryRepositoryField) {
+                                                return [2 /*return*/, undefined];
+                                            }
+                                            repositoryUrl = (_c = packageJsonParsed["repository"]) === null || _c === void 0 ? void 0 : _c["url"];
+                                            if (!repositoryUrl) {
+                                                return [2 /*return*/, undefined];
+                                            }
+                                            _a = repositoryUrl
+                                                .replace(/\.git$/i, "")
+                                                .split("/")
+                                                .filter(function (s) { return !!s; })
+                                                .reverse(), repositoryName = _a[0], userOrOrg = _a[1];
+                                            if (!repositoryName || !userOrOrg) {
+                                                return [2 /*return*/, undefined];
+                                            }
+                                            return [4 /*yield*/, Scheme_1.Scheme.resolveVersion(Scheme_1.Scheme.parse("github:" + userOrOrg + "/" + repositoryName), { version: version })];
+                                        case 1:
+                                            _b = _d.sent(), scheme = _b.scheme, warning = _b.warning;
+                                            return [4 /*yield*/, getTsconfigOutDirIfDenoified_1.getTsconfigOutDirIfDenoified({ scheme: scheme })];
+                                        case 2:
+                                            tsconfigOutDir = (_d.sent()).tsconfigOutDir;
+                                            if (!tsconfigOutDir) {
+                                                return [2 /*return*/, undefined];
+                                            }
+                                            if (warning) {
+                                                log(warning);
+                                            }
+                                            return [2 /*return*/, id_1.id({
+                                                    "type": "DENOIFIED MODULE",
+                                                    scheme: scheme,
+                                                    tsconfigOutDir: tsconfigOutDir
+                                                })];
+                                    }
+                                });
+                            }); })()];
+                    case 4:
+                        result = _b.sent();
+                        if (!!result) {
+                            if (isInUserProvidedPort(nodeModuleName)) {
+                                log("NOTE: " + nodeModuleName + " is a denoified module, there is no need for an entry for in package.json denoPorts");
                             }
+                            return [2 /*return*/, result];
                         }
-                        var repositoryUrl = (_a = packageJsonParsed === null || packageJsonParsed === void 0 ? void 0 : packageJsonParsed["repository"]) === null || _a === void 0 ? void 0 : _a["url"];
-                        if (!repositoryUrl) {
-                            return undefined;
+                        if (!(nodeModuleName in denoPorts)) return [3 /*break*/, 6];
+                        return [4 /*yield*/, Scheme_1.Scheme.resolveVersion(Scheme_1.Scheme.parse(denoPorts[nodeModuleName]), { version: version })];
+                    case 5:
+                        _a = _b.sent(), scheme = _a.scheme, warning = _a.warning;
+                        if (!!warning) {
+                            log(warning);
                         }
-                        var _c = repositoryUrl
-                            .replace(/\.git$/i, "")
-                            .split("/")
-                            .filter(function (s) { return !!s; })
-                            .reverse(), repositoryName = _c[0], userOrOrg = _c[1];
-                        if (!repositoryName || !userOrOrg) {
-                            return undefined;
+                        return [2 /*return*/, {
+                                "type": "HANDMADE PORT",
+                                scheme: scheme
+                            }];
+                    case 6:
+                        if (devDependenciesNames.includes(nodeModuleName)) {
+                            return [2 /*return*/, {
+                                    "type": "NON-FATAL UNMET DEPENDENCY",
+                                    "kind": "DEV DEPENDENCY"
+                                }];
                         }
-                        return ["v", ""].map(function (prefix) { return ({
-                            "branch": "" + prefix + packageJsonParsed["version"],
-                            userOrOrg: userOrOrg,
-                            repositoryName: repositoryName
-                        }); });
-                    })();
-                    if (!getBaseUrlParams) {
-                        return [2 /*return*/, onUnmetDevDependencyOrError(nodeModuleName, "Can't find the " + nodeModuleName + " github repository")];
-                    }
-                    return [4 /*yield*/, Promise.all(getBaseUrlParams.map(getBaseUrl))];
-                case 1:
-                    baseUrl = (_e.sent())
-                        .find(function (baseUrl) { return !!baseUrl; });
-                    if (!baseUrl) {
-                        return [2 /*return*/, onUnmetDevDependencyOrError(nodeModuleName, nodeModuleName + " v" + packageJsonParsed["version"] + " do not have a github release")];
-                    }
-                    return [4 /*yield*/, (function () { return __awaiter(_this, void 0, void 0, function () {
-                            var modTsRaw, _a;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
-                                    case 0:
-                                        _b.trys.push([0, 2, , 3]);
-                                        return [4 /*yield*/, node_fetch_1.default(urlJoin_1.urlJoin(baseUrl, "mod.ts"))
-                                                .then(function (res) { return res.text(); })];
-                                    case 1:
-                                        modTsRaw = _b.sent();
-                                        return [3 /*break*/, 3];
-                                    case 2:
-                                        _a = _b.sent();
-                                        return [2 /*return*/, false];
-                                    case 3:
-                                        if (!modTsRaw.match(/denoify/i)) {
-                                            return [2 /*return*/, false];
-                                        }
-                                        return [2 /*return*/, true];
-                                }
-                            });
-                        }); })()];
-                case 2:
-                    hasBeenDenoified = _e.sent();
-                    if (!hasBeenDenoified) {
-                        return [2 /*return*/, onUnmetDevDependencyOrError(nodeModuleName, nodeModuleName + " do not seems to have been denoified")];
-                    }
-                    _a = {
-                        "type": "CROSS COMPATIBLE",
-                        baseUrl: baseUrl
-                    };
-                    _b = "tsconfigOutDir";
-                    _d = (_c = commentJson).parse;
-                    return [4 /*yield*/, node_fetch_1.default(urlJoin_1.urlJoin(baseUrl, "tsconfig.json"))
-                            .then(function (res) { return res.text(); })];
-                case 3: return [2 /*return*/, (_a[_b] = _d.apply(_c, [_e.sent()])["compilerOptions"]["outDir"],
-                        _a)];
-            }
+                        throw new Error("You need to provide a deno port for " + nodeModuleName);
+                }
+            });
         });
-    }); };
+    }
     return { resolve: resolve };
 }
 exports.resolveFactory = resolveFactory;
-//https://raw.githubusercontent.com/garronej/run_exclusive/v2.1.11/package.json
-function getBaseUrl(params) {
-    return __awaiter(this, void 0, void 0, function () {
-        var branch, userOrOrg, repositoryName, url;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    branch = params.branch, userOrOrg = params.userOrOrg, repositoryName = params.repositoryName;
-                    url = [
-                        "https://raw.githubusercontent.com",
-                        userOrOrg,
-                        repositoryName,
-                        branch
-                    ].join("/");
-                    return [4 /*yield*/, is404_1.is404(urlJoin_1.urlJoin(url, "mod.ts"))];
-                case 1:
-                    if (_a.sent()) {
-                        return [2 /*return*/, undefined];
-                    }
-                    return [2 /*return*/, url];
-            }
-        });
-    });
-}

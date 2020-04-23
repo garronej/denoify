@@ -1,6 +1,6 @@
 {
   "name": "denoify",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
   "repository": {
     "type": "git",
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "tsc": "npx tsc && chmod +x ./dist/bin/denoify.js",
-    "test": "node ./dist/test/main"
+    "test": "node ./dist/test"
   },
   "bin": {
     "denoify": "./dist/bin/denoify.js"
@@ -30,11 +30,12 @@
     "CommonJs"
   ],
   "devDependencies": {
-    "js-yaml": "^3.13.1",
     "@types/js-yaml": "^3.12.3",
     "@types/node": "^8.10.59",
     "@types/node-fetch": "^2.5.6",
     "@types/url-join": "^4.0.0",
+    "evt": "^1.6.8",
+    "js-yaml": "^3.13.1",
     "typescript": "^3.7.5"
   }
 }

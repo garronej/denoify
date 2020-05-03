@@ -1,4 +1,4 @@
-export declare function denoify({ projectPath, srcDirPath }: {
+export declare function denoify(params: {
     projectPath: string;
     srcDirPath?: string;
 }): Promise<void>;

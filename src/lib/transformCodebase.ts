@@ -3,43 +3,8 @@
 import * as st from "scripting-tools";
 import * as fs from "fs";
 import * as path from "path";
+import { crawl } from "../tools/crawl";
 
-/** List all files in a given directory return paths relative to the dir_path */
-const crawl = (() => {
-
-    const crawlRec = (dir_path: string, paths: string[]) => {
-
-        for (const file_name of fs.readdirSync(dir_path)) {
-
-            const file_path = path.join(dir_path, file_name);
-
-            const ls_stat = fs.lstatSync(file_path);
-
-            if (ls_stat.isDirectory()) {
-
-                crawlRec(file_path, paths);
-
-                continue;
-
-            }
-
-            paths.push(file_path);
-
-        }
-
-    };
-
-    return function crawl(dir_path: string): string[] {
-
-        const paths: string[] = [];
-
-        crawlRec(dir_path, paths);
-
-        return paths.map(file_path => path.relative(dir_path, file_path));
-
-    }
-
-})();
 
 
 /** Apply a transformation function to every file of directory */

@@ -36,43 +36,29 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var st = require("scripting-tools");
-var fs = require("fs");
 var path = require("path");
-var crawl_1 = require("../tools/crawl");
-/** Apply a transformation function to every file of directory */
-function transformCodebase(params) {
-    return __awaiter(this, void 0, void 0, function () {
-        var srcDirPath, destDirPath, transformSourceCodeString, _i, _a, file_relative_path, file_path, _b, _c, _d, _e, _f;
-        return __generator(this, function (_g) {
-            switch (_g.label) {
-                case 0:
-                    srcDirPath = params.srcDirPath, destDirPath = params.destDirPath, transformSourceCodeString = params.transformSourceCodeString;
-                    _i = 0, _a = crawl_1.crawl(srcDirPath);
-                    _g.label = 1;
-                case 1:
-                    if (!(_i < _a.length)) return [3 /*break*/, 4];
-                    file_relative_path = _a[_i];
-                    st.fs_move("COPY", srcDirPath, destDirPath, file_relative_path);
-                    file_path = path.join(destDirPath, file_relative_path);
-                    _c = (_b = fs).writeFileSync;
-                    _d = [file_path];
-                    _f = (_e = Buffer).from;
-                    return [4 /*yield*/, transformSourceCodeString({
-                            "extension": path.extname(file_path).substr(1).toLowerCase(),
-                            "sourceCode": fs.readFileSync(file_path).toString("utf8"),
-                            "fileDirPath": path.dirname(path.join(srcDirPath, file_relative_path))
-                        })];
-                case 2:
-                    _c.apply(_b, _d.concat([_f.apply(_e, [_g.sent(),
-                            "utf8"])]));
-                    _g.label = 3;
-                case 3:
-                    _i++;
-                    return [3 /*break*/, 1];
-                case 4: return [2 /*return*/];
-            }
+var exec_1 = require("./exec");
+function moveContentUpOneLevelFactory(params) {
+    var isDryRun = params.isDryRun;
+    var exec = exec_1.execFactory({ isDryRun: isDryRun }).exec;
+    function moveContentUpOneLevel(params) {
+        return __awaiter(this, void 0, void 0, function () {
+            var dirPath;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        dirPath = params.dirPath.replace(/\/$/, "");
+                        return [4 /*yield*/, exec("mv " + dirPath + "/* " + dirPath + "/.[^.]* " + path.join(dirPath, ".."))];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, exec("rm -r " + dirPath)];
+                    case 2:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
         });
-    });
+    }
+    return { moveContentUpOneLevel: moveContentUpOneLevel };
 }
-exports.transformCodebase = transformCodebase;
+exports.moveContentUpOneLevelFactory = moveContentUpOneLevelFactory;

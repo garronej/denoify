@@ -19,7 +19,10 @@
     "@types/comment-json": "^1.1.1",
     "commander": "^4.1.1",
     "comment-json": "^3.0.2",
+    "gitignore-parser": "0.0.2",
+    "glob": "^7.1.6",
     "node-fetch": "^2.6.0",
+    "path-depth": "^1.0.0",
     "scripting-tools": "github:garronej/scripting-tools",
     "url-join": "^4.0.1"
   },
@@ -30,6 +33,7 @@
     "CommonJs"
   ],
   "devDependencies": {
+    "@types/glob": "^7.1.1",
     "@types/js-yaml": "^3.12.3",
     "@types/node": "^8.10.59",
     "@types/node-fetch": "^2.5.6",

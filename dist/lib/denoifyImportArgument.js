@@ -44,16 +44,16 @@ var is404_1 = require("../tools/is404");
 /**
  * examples:
  * "evt" -> "https://deno.land/x/evt@.../mod.ts"
- * "" -> "https://deno.land/x/evt@.../mod.ts"
+ * "evt/dist/tools/typeSafety" -> "https://deno.land/x/evt@.../deno_dist/tools/typeSafety/index.ts"
  * "./interfaces" -> "./interfaces/index.ts"
  */
 function denoifyImportArgumentFactory(params) {
     var resolve = addCache_1.addCache(params.resolve);
     function denoifyImportArgument(params) {
         return __awaiter(this, void 0, void 0, function () {
-            var fileDirPath, importStr, out_1, _a, nodeModuleName, rest, resolveResult, scheme, tsconfigOutDir, pathToFile, out;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var fileDirPath, importStr, out, _a, nodeModuleName, specificImportPath, resolveResult, out, _i, _b, tsconfigOutDir, out;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         fileDirPath = params.fileDirPath;
                         importStr = params
@@ -67,47 +67,78 @@ function denoifyImportArgumentFactory(params) {
                             if (fs.existsSync(path.join(fileDirPath, importStr + ".ts"))) {
                                 return [2 /*return*/, importStr + ".ts"];
                             }
-                            out_1 = path.join(importStr, "index.ts");
-                            return [2 /*return*/, out_1.startsWith(".") ? out_1 : "./" + out_1];
+                            out = path.join(importStr, "index.ts");
+                            return [2 /*return*/, out.startsWith(".") ? out : "./" + out];
                         }
-                        _a = importStr.split("/"), nodeModuleName = _a[0], rest = _a.slice(1);
+                        _a = (function () {
+                            var _a = importStr.split("/"), nodeModuleName = _a[0], rest = _a.slice(1);
+                            return {
+                                nodeModuleName: nodeModuleName,
+                                "specificImportPath": rest.join("/")
+                            };
+                        })(), nodeModuleName = _a.nodeModuleName, specificImportPath = _a.specificImportPath;
                         return [4 /*yield*/, resolve({ nodeModuleName: nodeModuleName })];
                     case 1:
-                        resolveResult = _b.sent();
+                        resolveResult = _c.sent();
                         if (resolveResult.type === "NON-FATAL UNMET DEPENDENCY") {
                             return [2 /*return*/, importStr + " DENOIFY: DEPENDENCY UNMET (" + resolveResult.kind + ")"];
                         }
-                        if (resolveResult.type === "HANDMADE PORT") {
-                            //TODO: crawl
-                            if (rest.length !== 0) {
-                                throw new Error("Error with: " + importStr + " Port support ony default import");
-                            }
-                            return [2 /*return*/, Scheme_1.Scheme.buildUrl(resolveResult.scheme, {})];
-                        }
-                        scheme = resolveResult.scheme, tsconfigOutDir = resolveResult.tsconfigOutDir;
-                        if (rest.length === 0) {
-                            return [2 /*return*/, Scheme_1.Scheme.buildUrl(scheme, {})];
-                        }
-                        pathToFile = path.join(path.join(path.dirname(tsconfigOutDir), // .
-                        "deno_" + path.basename(tsconfigOutDir) //deno_dist
-                        ), // deno_dist
-                        path.relative(tsconfigOutDir, path.join.apply(path, rest)) //  tools/typeSafety
-                        ) // deno_dist/tool/typeSafety
-                            + ".ts" // deno_dist/tool/typeSafety.ts
-                        ;
-                        out = Scheme_1.Scheme.buildUrl(scheme, { pathToFile: pathToFile });
+                        if (!!specificImportPath) return [3 /*break*/, 3];
+                        out = Scheme_1.Scheme.buildUrl(resolveResult.scheme, {});
                         return [4 /*yield*/, is404_1.is404(out)];
                     case 2:
-                        if (!_b.sent()) return [3 /*break*/, 4];
+                        if (_c.sent()) {
+                            throw new Error(out + " 404 not found.");
+                        }
+                        return [2 /*return*/, out];
+                    case 3:
+                        _i = 0, _b = [
+                            (function () {
+                                switch (resolveResult.type) {
+                                    case "DENOIFIED MODULE": return resolveResult.tsconfigOutDir;
+                                    case "HANDMADE PORT": return "dist";
+                                }
+                            })(),
+                            undefined
+                        ];
+                        _c.label = 4;
+                    case 4:
+                        if (!(_i < _b.length)) return [3 /*break*/, 9];
+                        tsconfigOutDir = _b[_i];
+                        out = Scheme_1.Scheme.buildUrl(resolveResult.scheme, {
+                            "pathToFile": (tsconfigOutDir === undefined ?
+                                specificImportPath
+                                :
+                                    path.join(path.join(path.dirname(tsconfigOutDir), // .
+                                    "deno_" + path.basename(tsconfigOutDir) //deno_dist
+                                    ), // deno_dist
+                                    path.relative(tsconfigOutDir, specificImportPath // dest/tools/typeSafety
+                                    ) //  tools/typeSafety
+                                    ) // deno_dist/tool/typeSafety
+                            ) + ".ts" // deno_dist/tool/typeSafety.ts
+                        });
+                        return [4 /*yield*/, is404_1.is404(out)];
+                    case 5:
+                        if (_c.sent()) {
+                            return [3 /*break*/, 6];
+                        }
+                        return [2 /*return*/, out];
+                    case 6:
                         out = out
                             .replace(/\.ts$/, "/index.ts");
                         return [4 /*yield*/, is404_1.is404(out)];
-                    case 3:
-                        if (_b.sent()) {
-                            throw new Error("Problem resolving " + importStr + " in " + fileDirPath + " with " + JSON.stringify(scheme) + " 404 not found.");
+                    case 7:
+                        if (_c.sent()) {
+                            return [3 /*break*/, 8];
                         }
-                        _b.label = 4;
-                    case 4: return [2 /*return*/, out];
+                        return [2 /*return*/, out];
+                    case 8:
+                        _i++;
+                        return [3 /*break*/, 4];
+                    case 9: throw new Error([
+                        "Problem resolving " + importStr + " in " + fileDirPath + " with",
+                        JSON.stringify(resolveResult.scheme) + " 404 not found."
+                    ].join(" "));
                 }
             });
         });

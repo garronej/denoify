@@ -2,7 +2,7 @@ import type { Result as ResolveResult } from "./resolve";
 /**
  * examples:
  * "evt" -> "https://deno.land/x/evt@.../mod.ts"
- * "" -> "https://deno.land/x/evt@.../mod.ts"
+ * "evt/dist/tools/typeSafety" -> "https://deno.land/x/evt@.../deno_dist/tools/typeSafety/index.ts"
  * "./interfaces" -> "./interfaces/index.ts"
  */
 export declare function denoifyImportArgumentFactory(params: {

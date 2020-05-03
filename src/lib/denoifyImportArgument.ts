@@ -9,7 +9,7 @@ import type { Result as ResolveResult } from "./resolve";
 /**
  * examples: 
  * "evt" -> "https://deno.land/x/evt@.../mod.ts"
- * "" -> "https://deno.land/x/evt@.../mod.ts"
+ * "evt/dist/tools/typeSafety" -> "https://deno.land/x/evt@.../deno_dist/tools/typeSafety/index.ts"
  * "./interfaces" -> "./interfaces/index.ts"
  */
 export function denoifyImportArgumentFactory(
@@ -56,7 +56,17 @@ export function denoifyImportArgumentFactory(
 
         }
 
-        const [nodeModuleName, ...rest] = importStr.split("/");
+        const { nodeModuleName, specificImportPath } = (() => {
+
+            const [nodeModuleName, ...rest] = importStr.split("/");
+
+            return {
+                nodeModuleName,
+                "specificImportPath": rest.join("/")
+            };
+
+
+        })();
 
         const resolveResult = await resolve({ nodeModuleName });
 
@@ -64,58 +74,81 @@ export function denoifyImportArgumentFactory(
             return `${importStr} DENOIFY: DEPENDENCY UNMET (${resolveResult.kind})`
         }
 
+        if (!specificImportPath) {
 
-        if (resolveResult.type === "HANDMADE PORT") {
+            const out=  Scheme.buildUrl(resolveResult.scheme, {});
 
-            //TODO: crawl
-            if (rest.length !== 0) {
-                throw new Error(`Error with: ${importStr} Port support ony default import`);
+            if (await is404(out)) {
+                throw new Error(`${out} 404 not found.`);
             }
 
-            return Scheme.buildUrl(resolveResult.scheme, {});
+            return out;
 
         }
 
+        for (const tsconfigOutDir of [
+            (() => {
+                switch (resolveResult.type) {
+                    case "DENOIFIED MODULE": return resolveResult.tsconfigOutDir;
+                    case "HANDMADE PORT": return "dist";
+                }
+            })(),
+            undefined
+        ]) {
 
-        const { scheme, tsconfigOutDir } = resolveResult;
 
+            let out = Scheme.buildUrl(
+                resolveResult.scheme,
+                {
+                    "pathToFile":
+                        (tsconfigOutDir === undefined ?
+                            specificImportPath
+                            :
+                            path.join(
+                                path.join(
+                                    path.dirname(tsconfigOutDir), // .
+                                    `deno_${path.basename(tsconfigOutDir)}`//deno_dist
+                                ), // deno_dist
+                                path.relative(
+                                    tsconfigOutDir,
+                                    specificImportPath // dest/tools/typeSafety
+                                ) //  tools/typeSafety
+                            ) // deno_dist/tool/typeSafety
+                        ) + ".ts" // deno_dist/tool/typeSafety.ts
+                }
+            );
 
-        if (rest.length === 0) {
-            return Scheme.buildUrl(scheme, {});
-        }
+            walk: {
 
-        let pathToFile = path.join(
-            path.join(
-                path.dirname(tsconfigOutDir), // .
-                `deno_${path.basename(tsconfigOutDir)}`//deno_dist
-            ), // deno_dist
-            path.relative(
-                tsconfigOutDir,
-                path.join(...rest) // dest/tools/typeSafety
-            ) //  tools/typeSafety
-        ) // deno_dist/tool/typeSafety
-            + ".ts" // deno_dist/tool/typeSafety.ts
+                if (await is404(out)) {
+                    break walk;
+                }
 
-        let out = Scheme.buildUrl(
-            scheme,
-            { pathToFile }
-        );
+                return out;
 
-        if (await is404(out)) {
+            }
 
             out = out
                 .replace(/\.ts$/, "/index.ts")
                 // https://.../deno_dist/tool/typeSafety/index.ts
                 ;
 
-            if (await is404(out)) {
-                throw new Error(`Problem resolving ${importStr} in ${fileDirPath} with ${JSON.stringify(scheme)} 404 not found.`);
+            walk: {
+
+                if (await is404(out)) {
+                    break walk;
+                }
+
+                return out;
+
             }
 
         }
 
-        return out;
-
+        throw new Error([
+            `Problem resolving ${importStr} in ${fileDirPath} with`, 
+            `${JSON.stringify(resolveResult.scheme)} 404 not found.`
+        ].join(" "));
 
     }
 

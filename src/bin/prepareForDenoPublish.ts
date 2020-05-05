@@ -31,7 +31,7 @@ async function prepareForDenoPublish(params: { pathToTargetModule: string; }) {
     modTsFile.create({
         "tsFilePath": path.relative(
             tsconfigOutDir, // ./dist
-            require(path.join(process.cwd(), "package.json")).main // ./dist/lib/index.js
+            JSON.parse(fs.readFileSync("package.json").toString("utf8")).main // ./dist/lib/index.js
                 .replace(/\.js$/i, ".ts"), // ./dist/lib/index.ts
         ), // ./lib/index.ts
         "projectPath": ".",

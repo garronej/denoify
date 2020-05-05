@@ -284,7 +284,11 @@ export function resolveFactory(
         // node_modules/js-yaml
         const targetModulePath = getTargetModulePath(nodeModuleName);
 
-        const packageJsonParsed = require(path.join(targetModulePath, "package.json"));
+        const packageJsonParsed = JSON.parse(
+            fs.readFileSync(
+                path.join(targetModulePath, "package.json")
+            ).toString("utf8")
+        );
 
         const {
             version // 3.13.1 (version installed)

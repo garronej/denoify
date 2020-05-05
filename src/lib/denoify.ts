@@ -27,7 +27,10 @@ export async function denoify(
         throw new Error("No src directory found");
     }
 
-    const packageJsonParsed = require(path.join(process.cwd(), "package.json"));
+    const packageJsonParsed = JSON.parse(
+        fs.readFileSync("package.json")
+            .toString("utf8")
+    );
 
     const tsconfigOutDir: string | undefined = commentJson.parse(
         fs.readFileSync("./tsconfig.json")

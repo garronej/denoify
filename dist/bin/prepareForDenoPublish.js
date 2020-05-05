@@ -64,7 +64,7 @@ function prepareForDenoPublish(params) {
                     }
                     modTsFile_1.modTsFile.create({
                         "tsFilePath": path.relative(tsconfigOutDir, // ./dist
-                        require(path.join(process.cwd(), "package.json")).main // ./dist/lib/index.js
+                        JSON.parse(fs.readFileSync("package.json").toString("utf8")).main // ./dist/lib/index.js
                             .replace(/\.js$/i, ".ts")),
                         "projectPath": ".",
                         isDryRun: isDryRun

@@ -270,7 +270,7 @@ function resolveFactory(params) {
                             }];
                     case 2:
                         targetModulePath = getTargetModulePath(nodeModuleName);
-                        packageJsonParsed = require(path.join(targetModulePath, "package.json"));
+                        packageJsonParsed = JSON.parse(fs.readFileSync(path.join(targetModulePath, "package.json")).toString("utf8"));
                         version = packageJsonParsed.version;
                         return [4 /*yield*/, (function () { return __awaiter(_this, void 0, void 0, function () {
                                 var scheme, tsconfigOutDir;

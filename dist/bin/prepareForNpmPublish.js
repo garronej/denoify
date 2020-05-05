@@ -81,7 +81,8 @@ function prepareForNpmPublish(params) {
                     if (fs.existsSync(".npmignore")) {
                         throw new Error(".npmignore not supported, please use package.json 'files' instead");
                     }
-                    packageJsonParsed = require(path.join(process.cwd(), "package.json"));
+                    packageJsonParsed = JSON.parse(fs.readFileSync("package.json")
+                        .toString("utf8"));
                     return [4 /*yield*/, (function () {
                             var pathWithWildcards = packageJsonParsed
                                 .files;

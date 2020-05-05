@@ -59,7 +59,8 @@ function denoify(params) {
                     if (!srcDirPath) {
                         throw new Error("No src directory found");
                     }
-                    packageJsonParsed = require(path.join(process.cwd(), "package.json"));
+                    packageJsonParsed = JSON.parse(fs.readFileSync("package.json")
+                        .toString("utf8"));
                     tsconfigOutDir = commentJson.parse(fs.readFileSync("./tsconfig.json")
                         .toString("utf8"))["compilerOptions"]["outDir"];
                     if (!tsconfigOutDir) {

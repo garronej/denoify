@@ -28,7 +28,10 @@ async function prepareForNpmPublish(params: { pathToTargetModule: string; }) {
         throw new Error(".npmignore not supported, please use package.json 'files' instead");
     }
 
-    const packageJsonParsed = require(path.join(process.cwd(), "package.json"));
+    const packageJsonParsed = JSON.parse(
+        fs.readFileSync("package.json")
+            .toString("utf8")
+    );
 
     const packageJsonFilesResolved: string[] | undefined = await (() => {
 

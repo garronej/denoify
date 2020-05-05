@@ -7,11 +7,13 @@
     "url": "git://github.com/garronej/denoify"
   },
   "scripts": {
-    "tsc": "npx tsc && chmod +x ./dist/bin/denoify.js",
+    "tsc": "npx tsc && chmod +x ./dist/bin/*.js",
     "test": "node ./dist/test"
   },
   "bin": {
-    "denoify": "./dist/bin/denoify.js"
+    "denoify": "./dist/bin/denoify.js",
+    "denoify_enable_short_npm_import_path": "./dist/bin/enableShortNpmImportPath.js",
+    "denoify_enable_short_deno_import_path": "./dist/bin/enableShortDenoImportPath.js"
   },
   "author": "Joseph Garrone",
   "license": "MIT",

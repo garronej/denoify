@@ -7,6 +7,8 @@
 </p>
 <br>
 
+**WARNING**: This is a pre release it is likely broken. A usable build will be availible soon.
+
 This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files that are ready to be deployed as a Deno module.  
   
 **Denoify does for deno what browserify does for the browser.**

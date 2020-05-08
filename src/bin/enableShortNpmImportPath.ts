@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as path from "path";
 import { globProxyFactory } from "../tools/globProxy";
 import { modTsFile } from "../lib/modTsFile";
@@ -8,6 +10,7 @@ import { execFactory } from "../tools/exec";
 import { getIsDryRun } from "../lib/getIsDryRun";
 import { crawl } from "../tools/crawl";
 import * as fs from "fs";
+
 
 
 /** 

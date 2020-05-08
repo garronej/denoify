@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {

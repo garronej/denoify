@@ -7,7 +7,9 @@
     "url": "git://github.com/garronej/denoify"
   },
   "scripts": {
-    "tsc": "npx tsc && chmod +x ./dist/bin/*.js",
+    "tsc": "npx tsc",
+    "grant-exec-perms": "chmod +x ./dist/bin/*.js",
+    "build": "npm run tsc && npm run grant-exec-perms",
     "test": "node ./dist/test"
   },
   "bin": {

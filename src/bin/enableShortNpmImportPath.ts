@@ -92,7 +92,7 @@ async function run(params: { pathToTargetModule: string; }) {
         )
     ) {
 
-        throw new Error(`Cant include file from ${srcDirPath} in the NPM module`);
+        throw new Error(`Can't include file from ${srcDirPath} in the NPM module`);
 
     }
 
@@ -100,6 +100,7 @@ async function run(params: { pathToTargetModule: string; }) {
     await exec(`rm -r ${denoDistPath}`);
 
     await moveContentUpOneLevel({ "dirPath": tsconfigOutDir });
+
 
     {
 
@@ -117,7 +118,7 @@ async function run(params: { pathToTargetModule: string; }) {
                     )
                 } : {}),
                 ...(!!packageJsonFilesResolved ? {
-                    "files":
+                    "files": 
                         packageJsonFilesResolved
                             .map(fileOrDirPath =>
                                 !isInsideOrIsDir({

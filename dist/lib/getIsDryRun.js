@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 function getIsDryRun() {
-    var isDryRun = !(process.env["DRY_RUN"] === "0");
+    const isDryRun = !(process.env["DRY_RUN"] === "0");
     if (isDryRun) {
         console.log([
             "Executing the script in dry mode, no operation will be actually performed.",
@@ -9,6 +9,6 @@ function getIsDryRun() {
             ""
         ].join("\n"));
     }
-    return { isDryRun: isDryRun };
+    return { isDryRun };
 }
 exports.getIsDryRun = getIsDryRun;

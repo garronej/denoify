@@ -1,24 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var glob = require("glob");
+const glob = require("glob");
 function globProxyFactory(params) {
-    var cwdAndRood = params.cwdAndRood;
+    const { cwdAndRood } = params;
     function globProxy(params) {
-        var pathWithWildcard = params.pathWithWildcard;
-        return new Promise(function (resolve, reject) {
-            return glob(pathWithWildcard, {
-                "cwd": cwdAndRood,
-                "root": cwdAndRood,
-                "dot": true
-            }, function (er, files) {
-                if (!!er) {
-                    reject(er);
-                    return;
-                }
-                resolve(files);
-            });
-        });
+        const { pathWithWildcard } = params;
+        return new Promise((resolve, reject) => glob(pathWithWildcard, {
+            "cwd": cwdAndRood,
+            "root": cwdAndRood,
+            "dot": true
+        }, (er, files) => {
+            if (!!er) {
+                reject(er);
+                return;
+            }
+            resolve(files);
+        }));
     }
-    return { globProxy: globProxy };
+    return { globProxy };
 }
 exports.globProxyFactory = globProxyFactory;

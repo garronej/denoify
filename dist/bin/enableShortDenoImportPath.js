@@ -50,5 +50,6 @@ async function run(params) {
     }
 }
 if (require.main === module) {
+    process.once("unhandledRejection", error => { throw error; });
     run({ "pathToTargetModule": "." });
 }

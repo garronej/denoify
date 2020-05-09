@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const commanderStatic = require("commander");
 const denoify_1 = require("../lib/denoify");
+process.once("unhandledRejection", error => { throw error; });
 commanderStatic
     .description(`
     For NPM module authors that would like to support Deno but do not want to write and maintain a port.

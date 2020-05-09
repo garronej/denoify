@@ -3,6 +3,8 @@
 import * as commanderStatic from "commander";
 import { denoify } from "../lib/denoify";
 
+process.once("unhandledRejection", error => { throw error; });
+
 commanderStatic
     .description(`
     For NPM module authors that would like to support Deno but do not want to write and maintain a port.

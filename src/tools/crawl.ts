@@ -11,9 +11,7 @@ export const crawl = (() => {
 
             const file_path = path.join(dir_path, file_name);
 
-            const ls_stat = fs.lstatSync(file_path);
-
-            if (ls_stat.isDirectory()) {
+            if (fs.lstatSync(file_path).isDirectory()) {
 
                 crawlRec(file_path, paths);
 

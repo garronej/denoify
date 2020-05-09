@@ -7,7 +7,7 @@ function moveContentUpOneLevelFactory(params) {
     const { exec } = exec_1.execFactory({ isDryRun });
     async function moveContentUpOneLevel(params) {
         const dirPath = params.dirPath.replace(/\/$/, "");
-        await exec(`mv ${dirPath}/* ${dirPath}/.[^.]* ${path.join(dirPath, "..")}`);
+        await exec(`mv ${dirPath}/* ${dirPath}/.[^.]* ${path.join(dirPath, "..")} || true`);
         await exec(`rm -r ${dirPath}`);
     }
     return { moveContentUpOneLevel };

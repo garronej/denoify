@@ -37,7 +37,15 @@ export function removeFromGitignore(
 
                 for (const fileOrDirPathToAccept of fileOrDirPathsToAccept) {
 
-                    if (fs.lstatSync(fileOrDirPathToAccept).isDirectory()) {
+                    if (
+                        fs.existsSync(fileOrDirPathToAccept) ?
+                            fs.lstatSync(fileOrDirPathToAccept).isDirectory()
+                            :
+                            (
+                                fileOrDirPathToAccept.endsWith("/") ||
+                                !fileOrDirPathToAccept.match(/\.[^\.]{1,6}$/)
+                            )
+                    ) {
 
                         if (isInsideOrIsDir({
                             "dirPath": fileOrDirPathToAccept,

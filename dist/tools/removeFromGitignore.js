@@ -16,7 +16,11 @@ function removeFromGitignore(params) {
     let fixedGitignoreRaw = crawl_1.crawl(pathToTargetModule)
         .filter(filePath => {
         for (const fileOrDirPathToAccept of fileOrDirPathsToAccept) {
-            if (fs.lstatSync(fileOrDirPathToAccept).isDirectory()) {
+            if (fs.existsSync(fileOrDirPathToAccept) ?
+                fs.lstatSync(fileOrDirPathToAccept).isDirectory()
+                :
+                    (fileOrDirPathToAccept.endsWith("/") ||
+                        !fileOrDirPathToAccept.match(/\.[^\.]{1,6}$/))) {
                 if (isInsideOrIsDir_1.isInsideOrIsDir({
                     "dirPath": fileOrDirPathToAccept,
                     "fileOrDirPath": filePath

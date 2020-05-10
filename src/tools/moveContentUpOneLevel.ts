@@ -20,8 +20,6 @@ export function moveContentUpOneLevelFactory(
 
         const dirPath = params.dirPath.replace(/\/$/, "");
 
-        await exec(`mv ${dirPath}/* ${dirPath}/.[^.]* ${path.join(dirPath, "..")} || true`);
-
         for (const file_name of fs.readdirSync(dirPath)) {
 
             const file_path = path.join(dirPath, file_name);

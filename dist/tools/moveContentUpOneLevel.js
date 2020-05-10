@@ -8,14 +8,13 @@ function moveContentUpOneLevelFactory(params) {
     const { exec } = exec_1.execFactory({ isDryRun });
     async function moveContentUpOneLevel(params) {
         const dirPath = params.dirPath.replace(/\/$/, "");
-        for (const file_name of fs.readdirSync(dirPath)) {
-            const file_path = path.join(dirPath, file_name);
-            await exec([
+        {
+            const upDirPath = path.join(dirPath, "..");
+            await Promise.all(fs.readdirSync(dirPath).map(fileName => exec([
                 "mv",
-                ...(fs.lstatSync(file_path).isDirectory() ? ["-r"] : []),
-                file_path,
-                "."
-            ].join(" "));
+                path.join(dirPath, fileName),
+                upDirPath
+            ].join(" "))));
         }
         await exec(`rm -r ${dirPath}`);
     }

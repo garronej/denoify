@@ -11,6 +11,7 @@ const exec_1 = require("../tools/exec");
 const getIsDryRun_1 = require("../lib/getIsDryRun");
 const crawl_1 = require("../tools/crawl");
 const fs = require("fs");
+const commentJson = require("comment-json");
 /**
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
  * This function Change change the working directory.
@@ -46,7 +47,15 @@ async function run(params) {
                     .map(filePath => path.join(fileOrDirPath, filePath)))
             .reduce(...flat));
     })();
-    const { srcDirPath, denoDistPath, tsconfigOutDir } = modTsFile_1.modTsFile.parseMetadata({ "projectPath": "." });
+    const { srcDirPath, denoDistPath, tsconfigOutDir } = fs.existsSync("./mod.ts") ?
+        modTsFile_1.modTsFile.parseMetadata({ "projectPath": "." })
+        :
+            {
+                "srcDirPath": "./src",
+                "denoDistPath": undefined,
+                "tsconfigOutDir": commentJson.parse(fs.readFileSync("./tsconfig.json")
+                    .toString("utf8"))["compilerOptions"]["outDir"]
+            };
     if (pathDepth_1.pathDepth(tsconfigOutDir) != 1) {
         throw new Error("tsconfig out dir must be a directory at the root of the project for this script to work");
     }
@@ -58,7 +67,9 @@ async function run(params) {
         throw new Error(`Can't include file from ${srcDirPath} in the NPM module`);
     }
     await exec(`rm -r ${srcDirPath}`);
-    await exec(`rm -r ${denoDistPath}`);
+    if (!!denoDistPath) {
+        await exec(`rm -r ${denoDistPath}`);
+    }
     await moveContentUpOneLevel({ "dirPath": tsconfigOutDir });
     {
         const newPackageJsonRaw = JSON.stringify(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, packageJsonParsed), { "main": path.relative(tsconfigOutDir, packageJsonParsed.main) }), ("types" in packageJsonParsed ? {

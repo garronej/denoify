@@ -10,6 +10,7 @@ import { execFactory } from "../tools/exec";
 import { getIsDryRun } from "../lib/getIsDryRun";
 import { crawl } from "../tools/crawl";
 import * as fs from "fs";
+import * as commentJson from "comment-json";
 
 
 
@@ -76,7 +77,19 @@ async function run(params: { pathToTargetModule: string; }) {
 
     })();
 
-    const { srcDirPath, denoDistPath, tsconfigOutDir } = modTsFile.parseMetadata({ "projectPath": "." });
+    const { srcDirPath, denoDistPath, tsconfigOutDir } = fs.existsSync("./mod.ts") ?
+        modTsFile.parseMetadata({ "projectPath": "." })
+        :
+        { // Only so that this script can be used as a standalone ( with module that do not uses denoify )
+            "srcDirPath": "./src",
+            "denoDistPath": undefined,
+            "tsconfigOutDir": commentJson.parse(
+                fs.readFileSync("./tsconfig.json")
+                    .toString("utf8")
+            )["compilerOptions"]["outDir"] as string
+        }
+        ;
+
 
     if (pathDepth(tsconfigOutDir) != 1) {
         throw new Error("tsconfig out dir must be a directory at the root of the project for this script to work");
@@ -97,7 +110,12 @@ async function run(params: { pathToTargetModule: string; }) {
     }
 
     await exec(`rm -r ${srcDirPath}`);
-    await exec(`rm -r ${denoDistPath}`);
+
+    if (!!denoDistPath) {
+
+        await exec(`rm -r ${denoDistPath}`);
+
+    }
 
     await moveContentUpOneLevel({ "dirPath": tsconfigOutDir });
 
@@ -118,7 +136,7 @@ async function run(params: { pathToTargetModule: string; }) {
                     )
                 } : {}),
                 ...(!!packageJsonFilesResolved ? {
-                    "files": 
+                    "files":
                         packageJsonFilesResolved
                             .map(fileOrDirPath =>
                                 !isInsideOrIsDir({

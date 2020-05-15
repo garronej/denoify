@@ -20,7 +20,38 @@ export function denoifySingleFileFactory(
 
         const { fileDirPath, sourceCode } = params;
 
-        let out = sourceCode;
+        let modifiedSourceCode = sourceCode;
+
+        if (usesBuiltIn("__dirname", sourceCode)) {
+
+            modifiedSourceCode = [
+                `const __filename = (()=>{`,
+                `    const {url: urlStr}= import.meta;`,
+                `    const url= new URL(urlStr);`,
+                `    return url.protocol === "file:" ? url.pathname : urlStr;`,
+                `})();`,
+                '',
+                modifiedSourceCode
+            ].join("\n");
+
+
+        }
+
+        if (usesBuiltIn("__dirname", sourceCode)) {
+
+            modifiedSourceCode = [
+                `const __dirname = (()=>{`,
+                `    const {url: urlStr}= import.meta;`,
+                `    const url= new URL(urlStr);`,
+                `    const __filename = url.protocol === "file:" ? url.pathname : urlStr;`,
+                `    return __filename.replace(/[/][^/]*$/, '');`,
+                `})();`,
+                ``,
+                modifiedSourceCode
+            ].join("\n");
+
+
+        }
 
         for (const quoteSymbol of [`"`, `'`]) {
 
@@ -52,8 +83,8 @@ export function denoifySingleFileFactory(
                 `[^a-zA-Z\._0-9$]import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)`, //type Foo = import("...").Foo
             ]) {
 
-                out = await replaceAsync(
-                    out,
+                modifiedSourceCode = await replaceAsync(
+                    modifiedSourceCode,
                     new RegExp(regExpStr, "mg"),
                     replacerAsync
                 );
@@ -62,7 +93,7 @@ export function denoifySingleFileFactory(
 
         }
 
-        return out;
+        return modifiedSourceCode;
 
     }
 
@@ -71,6 +102,17 @@ export function denoifySingleFileFactory(
 
 
 }
+
+//TODO: Improve!
+function usesBuiltIn(
+        builtIn: "__filename" | "__dirname" | "require" | "Buffer",
+        sourceCode: string
+): boolean {
+
+    return sourceCode.indexOf(builtIn) >= 0;
+
+}
+
 
 
 

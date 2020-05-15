@@ -6,7 +6,30 @@ function denoifySingleFileFactory(params) {
     /** Returns source code with deno imports replaced */
     async function denoifySingleFile(params) {
         const { fileDirPath, sourceCode } = params;
-        let out = sourceCode;
+        let modifiedSourceCode = sourceCode;
+        if (usesBuiltIn("__dirname", sourceCode)) {
+            modifiedSourceCode = [
+                `const __filename = (()=>{`,
+                `    const {url: urlStr}= import.meta;`,
+                `    const url= new URL(urlStr);`,
+                `    return url.protocol === "file:" ? url.pathname : urlStr;`,
+                `})();`,
+                '',
+                modifiedSourceCode
+            ].join("\n");
+        }
+        if (usesBuiltIn("__dirname", sourceCode)) {
+            modifiedSourceCode = [
+                `const __dirname = (()=>{`,
+                `    const {url: urlStr}= import.meta;`,
+                `    const url= new URL(urlStr);`,
+                `    const __filename = url.protocol === "file:" ? url.pathname : urlStr;`,
+                `    return __filename.replace(/[/][^/]*$/, '');`,
+                `})();`,
+                ``,
+                modifiedSourceCode
+            ].join("\n");
+        }
         for (const quoteSymbol of [`"`, `'`]) {
             const strRegExpInQuote = `${quoteSymbol}[^${quoteSymbol}]+${quoteSymbol}`;
             const replacerAsync = (() => {
@@ -24,11 +47,15 @@ function denoifySingleFileFactory(params) {
                 `import\\s*${strRegExpInQuote}`,
                 `[^a-zA-Z\._0-9$]import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)`,
             ]) {
-                out = await replaceAsync_1.replaceAsync(out, new RegExp(regExpStr, "mg"), replacerAsync);
+                modifiedSourceCode = await replaceAsync_1.replaceAsync(modifiedSourceCode, new RegExp(regExpStr, "mg"), replacerAsync);
             }
         }
-        return out;
+        return modifiedSourceCode;
     }
     return { denoifySingleFile };
 }
 exports.denoifySingleFileFactory = denoifySingleFileFactory;
+//TODO: Improve!
+function usesBuiltIn(builtIn, sourceCode) {
+    return sourceCode.indexOf(builtIn) >= 0;
+}

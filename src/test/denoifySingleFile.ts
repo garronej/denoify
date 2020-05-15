@@ -2,6 +2,7 @@
 import { denoifySingleFileFactory } from "../lib/denoifySingleFile";
 import { assert } from "evt/dist/tools/typeSafety";
 
+{
 
 const sourceCode = `
 import 
@@ -50,5 +51,51 @@ const { denoifySingleFile } = denoifySingleFileFactory({
     console.log("PASS");
 
 })();
+
+}
+
+
+{
+
+    const sourceCode = `
+console.log(__dirname,__filename);
+`;
+
+    const expected = `
+const __dirname = (()=>{
+    const {url: urlStr}= import.meta;
+    const url= new URL(urlStr);
+    const __filename = url.protocol === "file:" ? url.pathname : urlStr;
+    return __filename.replace(/[/][^/]*$/, '');
+})();
+
+const __filename = (()=>{
+    const {url: urlStr}= import.meta;
+    const url= new URL(urlStr);
+    return url.protocol === "file:" ? url.pathname : urlStr;
+})();
+
+
+console.log(__dirname,__filename);
+`.replace(/^\n/,"");
+
+    const { denoifySingleFile } = denoifySingleFileFactory({
+        "denoifyImportArgument": () => { throw new Error("never"); }
+    });
+
+    (async () => {
+
+        const modifiedSourceCode = await denoifySingleFile({
+            sourceCode,
+            "fileDirPath": "whatever"
+        });
+
+        assert(modifiedSourceCode === expected, "message");
+
+        console.log("PASS");
+
+    })();
+
+}
 
 

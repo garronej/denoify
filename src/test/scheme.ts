@@ -68,6 +68,33 @@ assert(
     )
 );
 
+assert(
+    inDepth.same(
+        Scheme.parse("https://deno.land/std@master/node/events.ts"),
+        {
+            type: 'url',
+            urlType: 'deno.land',
+            baseUrlWithoutBranch: 'https://deno.land/std',
+            branch: 'master',
+            pathToIndex: 'node/events.ts'
+        }
+    )
+);
+
+assert(
+    inDepth.same(
+        Scheme.parse("https://deno.land/x/foo@1.2.3/mod.js"),
+        {
+            type: 'url',
+            urlType: 'deno.land',
+            baseUrlWithoutBranch: 'https://deno.land/x/foo',
+            branch: '1.2.3',
+            pathToIndex: 'mod.js'
+        }
+
+    )
+);
+
 {
 
     const expected = {

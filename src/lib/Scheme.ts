@@ -117,14 +117,12 @@ export namespace Scheme {
         export namespace DenoLand {
 
             export function matchStr(strScheme: string): boolean {
-                return /^https?:\/\/deno\.land\/(?:(?:std)|(?:x))\//.test(strScheme);
-
+                return /^https?:\/\/deno\.land\/(?:(?:std)|(?:x))[\/|@]/.test(strScheme);
             }
 
             export function parse(strScheme: string): DenoLand {
 
-
-                const match = /^https?:\/\/deno\.land\/std\//.test(strScheme) ?
+                const match = /^https?:\/\/deno\.land\/std/.test(strScheme) ?
                     strScheme.match(/^(https?:\/\/deno\.land\/std)([@\/].*)$/)! :
                     strScheme.match(/^(https?:\/\/deno\.land\/x\/[^@\/]+)([@\/].*)$/)!
                     ;
@@ -220,7 +218,7 @@ export namespace Scheme {
         if (Url.matchStr(strScheme)) {
             return Url.parse(strScheme);
         }
-        throw new Error(`${strScheme} scheme not supported`);
+        throw new Error(`${strScheme} scheme not supported by Denoify`);
     }
 
     export function buildUrl(

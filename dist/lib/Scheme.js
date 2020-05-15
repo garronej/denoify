@@ -57,11 +57,11 @@ var Scheme;
         let DenoLand;
         (function (DenoLand) {
             function matchStr(strScheme) {
-                return /^https?:\/\/deno\.land\/(?:(?:std)|(?:x))\//.test(strScheme);
+                return /^https?:\/\/deno\.land\/(?:(?:std)|(?:x))[\/|@]/.test(strScheme);
             }
             DenoLand.matchStr = matchStr;
             function parse(strScheme) {
-                const match = /^https?:\/\/deno\.land\/std\//.test(strScheme) ?
+                const match = /^https?:\/\/deno\.land\/std/.test(strScheme) ?
                     strScheme.match(/^(https?:\/\/deno\.land\/std)([@\/].*)$/) :
                     strScheme.match(/^(https?:\/\/deno\.land\/x\/[^@\/]+)([@\/].*)$/);
                 // https://deno.land/std@master/node/querystring.ts
@@ -127,7 +127,7 @@ var Scheme;
         if (Url.matchStr(strScheme)) {
             return Url.parse(strScheme);
         }
-        throw new Error(`${strScheme} scheme not supported`);
+        throw new Error(`${strScheme} scheme not supported by Denoify`);
     }
     Scheme.parse = parse;
     function buildUrl(scheme, params) {

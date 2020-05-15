@@ -33,7 +33,7 @@ Modules that have been made cross-runtime using Denoify:
 - [evt](https://evt.land)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 
-# Will it work with my existing module ?
+# Will it work with my module ?
 
 - Does your user need to have ``@types/node`` installed to use your module ? 
   If yes then, unfortunately, your module is not denoifiable as it is. 
@@ -61,11 +61,17 @@ The project is at an early stage. Current TODO list;
 
 Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up your Denoify with your repo.
 
-## Starting from scratch
+## Starting a project from scratch
 
-Check out [denoify_ci](https://github.com/garronej/denoify_ci) a template that:
-- Will setup itself: Just give your module a name and a description, a bot will push a commit setting everything up for you.
-- Automate testing ( with github action ): Every commit pushed will be automatically tested on docker containers against many Node and Deno version, if everything passes you'll get a green label on the readme.
-- Publish for you on NPM and Deno.land third party module repository: Each time you'll change the version number in ``package.json`` a workflow that will publish for you on NPM and [deno.land](https://deno.land/x/) will trigger. The CHANGELOG.md will be automatically updated based on commit messages since last release.
-- Enable you to only track sources on the main branch: With this template you won't have to track ``dist/`` and ``deno_dist`` on your main branch.
-- Enable short import path and path consistency between NPM and Deno: No more ``import 'my_module/dist/lib/theFileNeeded'`` your users will be able to ``import 'my_module/theFileNeeded'``.  
+![denoify_ci](https://user-images.githubusercontent.com/6702424/82036935-c52a3480-96a1-11ea-9794-e982a23e5612.png)
+
+[denoify_ci](https://github.com/garronej/denoify_ci) is a template repo that automate the boring and tedious tasks of:
+- Filling up the ``package.json``
+- Setting up Typescript and [Denoify](https://github.com/garronej/denoify).
+- Writing a [README.md](https://github.com/garronej/denoify_ci/blob/dev/README.template.md) with decent presentation and instructions on how to install/import your module.
+- Testing on multiples ``Node`` and ``Deno`` version before publishing.
+- Maintaining a CHANGELOG
+- Publishing on NPM and [deno.land/x](https://deno.land/x) on your behalf.
+
+All you have to do is write the code.
+

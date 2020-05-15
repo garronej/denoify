@@ -7,7 +7,7 @@ function denoifySingleFileFactory(params) {
     async function denoifySingleFile(params) {
         const { fileDirPath, sourceCode } = params;
         let modifiedSourceCode = sourceCode;
-        if (usesBuiltIn("__dirname", sourceCode)) {
+        if (usesBuiltIn("__filename", sourceCode)) {
             modifiedSourceCode = [
                 `const __filename = (()=>{`,
                 `    const {url: urlStr}= import.meta;`,

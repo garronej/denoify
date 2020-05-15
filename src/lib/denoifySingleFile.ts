@@ -22,7 +22,7 @@ export function denoifySingleFileFactory(
 
         let modifiedSourceCode = sourceCode;
 
-        if (usesBuiltIn("__dirname", sourceCode)) {
+        if (usesBuiltIn("__filename", sourceCode)) {
 
             modifiedSourceCode = [
                 `const __filename = (()=>{`,

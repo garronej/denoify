@@ -6,7 +6,7 @@
     <i>🦕 Support Deno and release on NPM with a single codebase. 🦕</i>
     <br>
     <br>
-    <img src="https://github.com/#{USER_OR_ORG}#/#{REPO_NAME}#/workflows/ci/badge.svg">
+    <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
 </p>
 <br>
 

@@ -36,6 +36,8 @@ jobs:
     needs: update_changelog_and_sync_package_lock_version
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Remove branch 'latest' 
       continue-on-error: true
       run: |

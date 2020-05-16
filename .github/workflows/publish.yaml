@@ -39,7 +39,7 @@ jobs:
     - name: Remove branch 'latest' 
       continue-on-error: true
       run: |
-        git branch -d latest
+        git branch -d latest || true
         git push origin :latest
     - name: Create the new 'latest' branch
       run: |

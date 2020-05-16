@@ -35,7 +35,7 @@ Modules that have been made cross-runtime using Denoify:
 
 # Will it work with my module ?
 
-- Does your user need to have ``@types/node`` installed to use your module ? 
+- Does your users need to have ``@types/node`` installed to use your module ? 
   If yes then, unfortunately, your module is not denoifiable as it is. 
   Even if you are allowed to use (some, not all) node builtins
   such as ``fs``, ``path`` or ``event`` you will need to remove all Node reference from your exposed API before you can use Denoify. 

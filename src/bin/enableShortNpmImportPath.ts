@@ -125,10 +125,12 @@ async function run(params: { pathToTargetModule: string; }) {
         const newPackageJsonRaw = JSON.stringify(
             {
                 ...packageJsonParsed,
-                "main": path.relative(
-                    tsconfigOutDir,
-                    packageJsonParsed.main
-                ),
+                ...("main" in packageJsonParsed ? {
+                    "main": path.relative(
+                        tsconfigOutDir,
+                        packageJsonParsed.main
+                    )
+                } : {}),
                 ...("types" in packageJsonParsed ? {
                     "types": path.relative(
                         tsconfigOutDir,

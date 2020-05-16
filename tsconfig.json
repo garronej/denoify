@@ -17,7 +17,9 @@
 		"src/**/*"
 	],
 	"exclude": [
-		"node_modules",
-		"dist/**/*"
-	]
+        "node_modules",
+        "res/**/*",
+        "dist/**/*",
+        "my_dummy_npm_and_deno_module"
+    ]
 }

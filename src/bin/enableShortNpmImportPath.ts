@@ -137,6 +137,31 @@ async function run(params: { pathToTargetModule: string; }) {
                         packageJsonParsed.types
                     )
                 } : {}),
+                ...("bin" in packageJsonParsed ? {
+                    "bin": (() => {
+
+                        const out: Record<string, string> = {};
+
+                        Object.keys(packageJsonParsed.bin)
+                            .map(binName => [binName, packageJsonParsed.bin[binName]] as const)
+                            .forEach(([binName, binFilePath]) =>
+                                out[binName] = !isInsideOrIsDir({
+                                    "dirPath": tsconfigOutDir,
+                                    "fileOrDirPath": binFilePath
+                                }) ?
+                                    binFilePath
+                                    :
+                                    path.relative(
+                                        tsconfigOutDir,
+                                        binFilePath
+                                    )
+                            )
+                            ;
+
+                        return out;
+
+                    })()
+                } : {}),
                 ...(!!packageJsonFilesResolved ? {
                     "files":
                         packageJsonFilesResolved

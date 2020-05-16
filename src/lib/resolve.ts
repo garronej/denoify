@@ -1,10 +1,11 @@
 
 import * as st from "scripting-tools";
 import * as path from "path";
-import { id } from "evt/dist/tools/typeSafety";
+import { id } from "evt/dist/tools/typeSafety";
 import { Scheme } from "./Scheme";
 import { getTsconfigOutDirIfDenoified } from "./getTsconfigOutDirIfDenoified";
 import * as commentJson from "comment-json";
+import { getProjectRoot } from "../tools/getProjectRoot";
 import * as fs from "fs";
 
 const knownPorts: { [nodeModuleName: string]: string; } = (() => {
@@ -12,7 +13,7 @@ const knownPorts: { [nodeModuleName: string]: string; } = (() => {
     const { third_party, builtins } =
         commentJson.parse(
             fs.readFileSync(
-                path.join(__dirname, "..", "..", "knownPorts.jsonc")
+                path.join(getProjectRoot(), "knownPorts.jsonc")
             ).toString("utf8")
         );
 

@@ -1,6 +1,6 @@
 {
   "name": "denoify",
-  "version": "0.2.3",
+  "version": "0.2.2",
   "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
   "repository": {
     "type": "git",
@@ -10,14 +10,15 @@
     "tsc": "npx tsc",
     "grant-exec-perms": "chmod +x ./dist/bin/*.js",
     "build": "npm run tsc && npm run grant-exec-perms",
-    "test": "node ./dist/test"
+    "test": "node ./dist/test",
+    "enable_short_import_path": "node ./dist/bin/enableShortNpmImportPath.js"
   },
   "bin": {
     "denoify": "./dist/bin/denoify.js",
     "denoify_enable_short_npm_import_path": "./dist/bin/enableShortNpmImportPath.js",
     "denoify_enable_short_deno_import_path": "./dist/bin/enableShortDenoImportPath.js"
   },
-  "author": "Joseph Garrone",
+  "author": "u/garronej",
   "license": "MIT",
   "dependencies": {
     "@types/comment-json": "^1.1.1",
@@ -36,14 +37,19 @@
     "cjs",
     "CommonJs"
   ],
+  "files": [
+    "/dist/lib/",
+    "/dist/tools/",
+    "/dist/bin/"
+  ],
   "devDependencies": {
     "@types/glob": "^7.1.1",
     "@types/js-yaml": "^3.12.3",
     "@types/node": "^8.10.59",
     "@types/node-fetch": "^2.5.6",
     "@types/url-join": "^4.0.0",
-    "evt": "^1.6.8",
+    "evt": "~1.6.8",
     "js-yaml": "^3.13.1",
-    "typescript": "^3.7.5"
+    "typescript": "^3.9.0"
   }
 }

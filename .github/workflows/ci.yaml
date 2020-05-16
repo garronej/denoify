@@ -1,0 +1,78 @@
+name: ci
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+
+  test_node:
+    runs-on: ubuntu-latest
+    if: ${{ !github.event.created }}
+    strategy:
+      matrix:
+        node: [ '13', '12', '11', '10', '8' ]
+    name: Test with Node v${{ matrix.node }}
+    steps:
+
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - run: npm install
+    - run: npm run build
+    - run: npm run test
+
+
+  trigger_publish:
+    name: Trigger publish.yaml workflow if package.json version updated ( and secrets.PAT is set ).
+    runs-on: ubuntu-latest
+    env:
+      PAT: ${{secrets.PAT}}
+    if: github.event_name == 'push' && github.event.head_commit.author.name != 'ts_ci'
+    needs: test_node
+    steps:
+
+    - name: Get version on branch 'latest'
+      id: v_latest
+      uses: garronej/github_actions_toolkit@master
+      with: 
+        action_name: get_package_json_version
+        owner: ${{github.repository_owner}}
+        repo: ${{github.event.repository.name}}
+        branch: latest
+        compare_to_version: '0.0.0'
+
+
+    - name: Get version on master
+      id: v_master
+      uses: garronej/github_actions_toolkit@master
+      with: 
+        action_name: get_package_json_version
+        owner: ${{github.repository_owner}}
+        repo: ${{github.event.repository.name}}
+        branch: ${{ github.sha }}
+        compare_to_version: ${{steps.v_latest.outputs.version || '0.0.0'}}
+
+    - name: 'Trigger the ''publish'' workflow if newer version' 
+      if: ${{ !!env.PAT && steps.v_master.outputs.compare_result == '1' }}
+      uses: garronej/github_actions_toolkit@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.PAT }} 
+      with:
+        action_name: dispatch_event
+        owner: ${{github.repository_owner}}
+        repo: ${{github.event.repository.name}}
+        event_type: publish
+        client_payload_json: |
+          ${{
+            format(
+              '{{"from_version":"{0}","to_version":"{1}","repo":"{2}"}}',
+              steps.v_latest.outputs.version,
+              steps.v_master.outputs.version,
+              github.event.repository.name
+            )
+          }}

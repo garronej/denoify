@@ -4,6 +4,9 @@
 </p>
 <p align="center">
     <i>🦕 Support Deno and release on NPM with a single codebase. 🦕</i>
+    <br>
+    <br>
+    <img src="https://github.com/#{USER_OR_ORG}#/#{REPO_NAME}#/workflows/ci/badge.svg">
 </p>
 <br>
 
@@ -20,7 +23,6 @@ This tool takes as input a TypeScript codebase that was meant to target node and
 # What it isn't
 
 A way to import node modules in Deno projects. For that purpose you can try [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading)
-
 
 # Motivations
 

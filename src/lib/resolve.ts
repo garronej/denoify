@@ -1,7 +1,7 @@
 
 import * as st from "scripting-tools";
 import * as path from "path";
-import { id } from "../tools/id";
+import { id } from "evt/dist/tools/typeSafety";
 import { Scheme } from "./Scheme";
 import { getTsconfigOutDirIfDenoified } from "./getTsconfigOutDirIfDenoified";
 import * as commentJson from "comment-json";

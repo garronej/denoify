@@ -1,25 +1,23 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "ES2017",
-        "declaration": true,
-        "outDir": "./dist",
-        "strictNullChecks": true,
-        "sourceMap": false,
-        "newLine": "LF",
-        "noUnusedLocals": true,
-        "noUnusedParameters": false,
-        "strictPropertyInitialization": true,
-        "strictFunctionTypes": true,
-        "noImplicitAny": true
-    },
-    "filesGlob": [
-        "src/**/*"
-    ],
-    "exclude": [
-        "node_modules",
-        "res/**/*",
-        "dist/**/*",
-        "my_dummy_npm_and_deno_module"
-    ]
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es5",
+		"lib": [ "es2015" ],
+		"declaration": true,
+		"outDir": "./dist",
+		"sourceMap": true,
+		"newLine": "LF",
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"incremental": true,
+		"strict": true,
+		"downlevelIteration": true
+	},
+	"filesGlob": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"dist/**/*"
+	]
 }

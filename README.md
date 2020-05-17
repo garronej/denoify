@@ -43,7 +43,7 @@ Modules that have been made cross-runtime using Denoify:
   such as ``fs``, ``path`` or ``event`` you will need to remove all Node reference from your exposed API before you can use Denoify. 
   You can't for example expose a class that extends ``EventEmitter`` or if you do you will have to export a type definition for ``EventEmitter``.
 - You will need to provide a Deno polyfill for each of your project dependencies that are not known by Denoify.
-  [Here is the list](https://github.com/garronej/denoify/blob/master/knownPorts.jsonc) of modules for which Denoify has already a polyfill for.
+  [Here is the list](https://github.com/garronej/denoify/blob/master/known-ports.jsonc) of modules for which Denoify has already a polyfill for.
   *Note that Denoify work recursively meaning that you can fork your dependencies repo and Denoify them yourself.  
   However, depending on how deep your dependency tree goes it might not be feasible.*
 - Is your module a vanilla JS project? If yes you will have to port it into TypeScript first.

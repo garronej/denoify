@@ -38,7 +38,7 @@
         "CommonJs"
     ],
     "files": [
-        "/knownPorts.jsonc",
+        "/known-ports.jsonc",
         "/dist/lib/",
         "/dist/tools/",
         "/dist/bin/"

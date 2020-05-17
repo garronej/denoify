@@ -13,7 +13,7 @@ const knownPorts: { [nodeModuleName: string]: string; } = (() => {
     const { third_party, builtins } =
         commentJson.parse(
             fs.readFileSync(
-                path.join(getProjectRoot(), "knownPorts.jsonc")
+                path.join(getProjectRoot(), "known-ports.jsonc")
             ).toString("utf8")
         );
 

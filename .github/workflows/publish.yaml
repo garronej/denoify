@@ -49,7 +49,7 @@ jobs:
         git checkout latest
         git push origin latest
     - uses: actions/setup-node@v1
-    - run: npm install
+    - run: npm ci
 
     - run: npm run enable_short_import_path
       env:

@@ -145,16 +145,14 @@ async function run(params: { pathToTargetModule: string; }) {
                         Object.keys(packageJsonParsed.bin)
                             .map(binName => [binName, packageJsonParsed.bin[binName]] as const)
                             .forEach(([binName, binFilePath]) =>
-                                out[binName] = !isInsideOrIsDir({
-                                    "dirPath": tsconfigOutDir,
-                                    "fileOrDirPath": binFilePath
-                                }) ?
+                                out[binName] = path.relative(
+                                    isInsideOrIsDir({
+                                        "dirPath": tsconfigOutDir,
+                                        "fileOrDirPath": binFilePath
+                                    }) ?
+                                        tsconfigOutDir : ".",
                                     binFilePath
-                                    :
-                                    path.relative(
-                                        tsconfigOutDir,
-                                        binFilePath
-                                    )
+                                )
                             )
                             ;
 
@@ -166,16 +164,14 @@ async function run(params: { pathToTargetModule: string; }) {
                     "files":
                         packageJsonFilesResolved
                             .map(fileOrDirPath =>
-                                !isInsideOrIsDir({
-                                    "dirPath": tsconfigOutDir,
-                                    fileOrDirPath
-                                }) ?
-                                    fileOrDirPath
-                                    :
-                                    path.relative(
-                                        tsconfigOutDir, // ./dist
-                                        fileOrDirPath // ./dist/lib
-                                    ) // ./lib
+                                path.relative(
+                                    isInsideOrIsDir({
+                                        "dirPath": tsconfigOutDir,
+                                        fileOrDirPath
+                                    }) ?
+                                        tsconfigOutDir : ".", // ./dist : .
+                                    fileOrDirPath // ./dist/lib
+                                ) // ./lib
                             )
                 } : {}),
                 "scripts": undefined

@@ -1,3 +1,10 @@
+### **0.2.7** (2020-05-17)  
+  
+- fix know-ports.jsonc not included in NPM package  
+- rename knownPorts.jsonc -> known-ports.jsonc  
+- use npm ci instead of npm install in workflow  
+- edit changelog    
+  
 ### **0.2.6** (2020-05-17)  
   
 - Use a specific version of garronej/scripting-tools  

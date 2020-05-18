@@ -239,7 +239,13 @@ export namespace Scheme {
     export async function resolveVersion(
         scheme: Scheme,
         params: { version: string }
-    ): Promise<{ scheme: Scheme; warning: string | undefined; }> {
+    ): Promise<{ 
+        couldConnect: true;
+        scheme: Scheme; 
+        notTheExactVersionWarning: string | undefined; 
+    } | {
+        couldConnect: false;
+    }> {
 
         const { version } = params;
 
@@ -259,7 +265,7 @@ export namespace Scheme {
                 continue;
             }
 
-            const warning = ((branch ?? "").search(version) < 0) ? [
+            const notTheExactVersionWarning = ((branch ?? "").search(version) < 0) ? [
                 `WARNING: Specific version ${version} could not be found\n`,
                 ...urls404.map(url => `GET ${url} 404\n`),
                 `Falling back to ${branch ?? "master"} branch\n`,
@@ -273,12 +279,15 @@ export namespace Scheme {
                 ...(!!branch ? { branch } : {})
             };
 
-            return { "scheme": schemeOut, warning };
+            return { 
+                "couldConnect": true, 
+                "scheme": schemeOut, 
+                notTheExactVersionWarning
+            };
 
         }
 
-
-        throw new Error(`Can't connect to ${JSON.stringify(scheme)}`);
+        return { "couldConnect": false };
 
     }
 

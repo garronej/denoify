@@ -281,20 +281,6 @@ export function resolveFactory(
         }
 
 
-
-        // node_modules/js-yaml
-        const targetModulePath = getTargetModulePath(nodeModuleName);
-
-        const packageJsonParsed = JSON.parse(
-            fs.readFileSync(
-                path.join(targetModulePath, "package.json")
-            ).toString("utf8")
-        );
-
-        const {
-            version // 3.13.1 (version installed)
-        } = packageJsonParsed;
-
         const wrap = await (async () => {
 
             let scheme: Scheme;
@@ -311,10 +297,19 @@ export function resolveFactory(
                 } as const;
             }
 
-            scheme = (await Scheme.resolveVersion(
+            const resolveResult = await Scheme.resolveVersion(
                 scheme,
                 { "version": scheme.branch ?? "master" }
-            )).scheme;
+            );
+
+            if (!resolveResult.couldConnect) {
+                return {
+                    "isSuccess": false,
+                    "tryRepositoryField": false
+                } as const;
+            }
+
+            scheme = resolveResult.scheme;
 
             const { tsconfigOutDir } = await getTsconfigOutDirIfDenoified({ scheme });
 
@@ -341,13 +336,26 @@ export function resolveFactory(
             return wrap.result;
         }
 
+        const {
+            version, // 3.13.1 (version installed)
+            repository
+        } = JSON.parse(
+            fs.readFileSync(
+                path.join(
+                    getTargetModulePath(nodeModuleName), // node_modules/js-yaml
+                    "package.json"
+                )
+            ).toString("utf8")
+        );
+
         const result = await (async () => {
 
             if (!wrap.tryRepositoryField) {
                 return undefined;
             }
 
-            const repositoryUrl = packageJsonParsed["repository"]?.["url"];
+
+            const repositoryUrl = repository?.["url"];
 
             if (!repositoryUrl) {
                 return undefined;
@@ -365,10 +373,16 @@ export function resolveFactory(
                 return undefined;
             }
 
-            const { scheme, warning } = await Scheme.resolveVersion(
+            const resolveResult = await Scheme.resolveVersion(
                 Scheme.parse(`github:${userOrOrg}/${repositoryName}`),
                 { version }
             );
+
+            if (!resolveResult.couldConnect) {
+                return undefined;
+            }
+
+            const { scheme, notTheExactVersionWarning } = resolveResult;
 
             const { tsconfigOutDir } = await getTsconfigOutDirIfDenoified({ scheme });
 
@@ -376,8 +390,8 @@ export function resolveFactory(
                 return undefined;
             }
 
-            if (warning) {
-                log(warning);
+            if (notTheExactVersionWarning) {
+                log(notTheExactVersionWarning);
             }
 
             return id<Result>({
@@ -398,18 +412,31 @@ export function resolveFactory(
             return result;
         }
 
+        walk: {
 
-        if (nodeModuleName in denoPorts) {
+            if (!(nodeModuleName in denoPorts)) {
+                break walk;
+            }
 
-            const { scheme, warning } = await Scheme.resolveVersion(
+            const resolveResult = await Scheme.resolveVersion(
                 Scheme.parse(denoPorts[nodeModuleName]),
                 { version }
             );
 
-            if (!!warning) {
-                log(warning);
+            if (!resolveResult.couldConnect) {
+                log([
+                    `WARNING: Even if the port ${denoPorts[nodeModuleName]}`,
+                    `was specified for ${nodeModuleName} we couldn't connect to the repo`
+                ]);
+                break walk;
             }
 
+
+            const { scheme, notTheExactVersionWarning } = resolveResult;
+
+            if (!!notTheExactVersionWarning) {
+                log(notTheExactVersionWarning);
+            }
 
             return {
                 "type": "HANDMADE PORT",
@@ -417,6 +444,7 @@ export function resolveFactory(
             }
 
         }
+
 
         if (devDependenciesNames.includes(nodeModuleName)) {
             return {

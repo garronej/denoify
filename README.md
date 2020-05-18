@@ -5,6 +5,7 @@
 <p align="center">
     <i>🦕 Support Deno and release on NPM with a single codebase. 🦕</i>
     <br>
+    <br>
     <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
 </p>
 <br>

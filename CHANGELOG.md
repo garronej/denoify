@@ -1,3 +1,8 @@
+### **0.2.8** (2020-05-17)  
+  
+- merge  
+- Use published version of scripting-tool    
+  
 ### **0.2.7** (2020-05-17)  
   
 - fix know-ports.jsonc not included in NPM package  

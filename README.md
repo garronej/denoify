@@ -11,7 +11,7 @@
 <br>
 
 
-**WARNING**: This is a pre-release that might be broken in some way. Polished release coming soon.
+**WARNING**: This is a pre-release that might be broken in some ways. Stay tuned.
 
 
 # What it is
@@ -26,16 +26,19 @@ A way to import node modules in Deno projects. For that purpose you can try [Com
 
 # Motivations
 
-Although it is quite easy to port a module to Deno it is a chore to maintain two codebases.
+- Although it is quite easy to port a module to Deno it is a chore to maintain two codebases.
+- Wouldn't it be great to have a tool able to make all the major NPM modules cross-compatible with Deno?
 
 # Example of modules using Denoify
 
 Modules that have been made cross-runtime using Denoify:
 
-- [evt](https://evt.land)
+- [EVT](https://evt.land)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 
 # Will it work with my module ?
+
+At this stage of it's devloppement, Denoify set quite restrictive requirements:   
 
 - Does your users need to have ``@types/node`` installed to use your module ? 
   If yes then, unfortunately, your module is not denoifiable as it is. 
@@ -50,18 +53,16 @@ Modules that have been made cross-runtime using Denoify:
 
 # Roadmap to 1.0
 
-The project is at an early stage. Current TODO list; 
-
-- Allows require() ( synchronous dynamic loading of modules )
+- Allows ``require()`` ( synchronous dynamic loading of modules )
 - Using the typescript compiler API to parse source files instead of making the change with RegExps. [ts-morph](https://github.com/dsherret/ts-morph) seems to be a good option here.
-- Polyfills global node API that are not imported like Buffer and process. ( Language parsing must land first. )
-
+- Polyfills global node API that are not imported like Buffer and process. (\__dirname and \__filename already supported)
+- Support Javascript projects.
 
 # TUTORIALS
 
 ## Porting an existing project
 
-Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up your Denoify with your repo.
+Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up Denoify in your project.
 
 ## Starting a project from scratch
 
@@ -74,6 +75,4 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 - Testing on multiples ``Node`` and ``Deno`` version before publishing.
 - Maintaining a CHANGELOG
 - Publishing on NPM and [deno.land/x](https://deno.land/x) on your behalf.
-
-All you have to do is write the code.
 

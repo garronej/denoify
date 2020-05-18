@@ -33,7 +33,7 @@ A way to import node modules in Deno projects. For that purpose you can try [Com
 
 Modules that have been made cross-runtime using Denoify:
 
-- [evt](https://evt.land)
+- [EVT](https://evt.land)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 
 # Will it work with my module ?

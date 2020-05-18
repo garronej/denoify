@@ -53,7 +53,7 @@ At this stage of it's devloppement, Denoify set quite restrictive requirements:
 
 # Roadmap to 1.0
 
-- Allows ``require() ( synchronous dynamic loading of modules )
+- Allows ``require()`` ( synchronous dynamic loading of modules )
 - Using the typescript compiler API to parse source files instead of making the change with RegExps. [ts-morph](https://github.com/dsherret/ts-morph) seems to be a good option here.
 - Polyfills global node API that are not imported like Buffer and process. (\__dirname and \__filename already supported)
 - Support Javascript projects.

@@ -1,3 +1,9 @@
+### **0.2.9** (2020-05-18)  
+  
+- ammend changeglog  
+- Merge branch 'master' of https://github.com/garronej/denoify  
+- bug fix: EVT is a hard dependency, not a dev-dep    
+  
 ### **0.2.8** (2020-05-17)  
   
 - Use published version of scripting-tool    

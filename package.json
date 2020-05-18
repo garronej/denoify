@@ -1,6 +1,6 @@
 {
     "name": "denoify",
-    "version": "0.2.8",
+    "version": "0.2.9",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
     "repository": {
         "type": "git",
@@ -29,7 +29,8 @@
         "node-fetch": "^2.6.0",
         "path-depth": "^1.0.0",
         "scripting-tools": "0.19.12",
-        "url-join": "^4.0.1"
+        "url-join": "^4.0.1",
+        "evt": "1.6.8"
     },
     "keywords": [
         "deno",
@@ -49,7 +50,6 @@
         "@types/node": "^8.10.59",
         "@types/node-fetch": "^2.5.6",
         "@types/url-join": "^4.0.0",
-        "evt": "~1.6.8",
         "js-yaml": "^3.13.1",
         "typescript": "^3.9.0"
     }

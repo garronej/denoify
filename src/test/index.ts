@@ -3,10 +3,16 @@ import * as child_process from "child_process";
 import * as path from "path";
 import { Deferred } from "evt/dist/tools/Deferred";
 
+const names = [
+    "scheme",
+    "resolve",
+    "denoifyImportArgument",
+    "denoifySingleFile"
+];
 
 (async () => {
 
-    if( !!process.env.FORK ){
+    if (!!process.env.FORK) {
 
         process.once("unhandledRejection", error => { throw error; });
 
@@ -16,12 +22,7 @@ import { Deferred } from "evt/dist/tools/Deferred";
 
     }
 
-    for (const name of [
-        "scheme",
-        "resolve",
-        "denoifyImportArgument",
-        "denoifySingleFile"
-    ]) {
+    for (const name of names) {
 
         console.log(`Running: ${name}`);
 
@@ -33,7 +34,7 @@ import { Deferred } from "evt/dist/tools/Deferred";
             { "env": { "FORK": path.join(__dirname, name) } }
         )
             .on("message", console.log)
-            .once("exit", code => dExitCode.resolve(code))
+            .once("exit", code => dExitCode.resolve(code ?? 1))
             ;
 
         const exitCode = await dExitCode.pr;

@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es5",
+		"target": "ES2018",
 		"lib": [ "es2015" ],
 		"declaration": true,
 		"outDir": "./dist",
@@ -19,7 +19,6 @@
 	"exclude": [
         "node_modules",
         "res/**/*",
-        "dist/**/*",
-        "my_dummy_npm_and_deno_module"
+        "dist/**/*"
     ]
 }

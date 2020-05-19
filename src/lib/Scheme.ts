@@ -98,7 +98,7 @@ export namespace Scheme {
                     "baseUrlWithoutBranch": match[1]
                         .replace(
                             /^https?:\/\/raw\.github(?:usercontent)?/,
-                            "https://raw.github.com"
+                            "https://raw.github"
                         ),
                     "branch": match[2],
                     "pathToIndex": match[3]

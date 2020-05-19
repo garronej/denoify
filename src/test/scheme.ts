@@ -101,7 +101,7 @@ assert(
         type: 'url',
         urlType: 'github',
         baseUrlWithoutBranch:
-            'https://raw.github.com.com/KSXGitHub/simple-js-yaml-port-for-deno/',
+            'https://raw.github.com/KSXGitHub/simple-js-yaml-port-for-deno/',
         branch: '3.12.1',
         pathToIndex: 'js-yaml.js'
     } as const;
@@ -116,6 +116,33 @@ assert(
     assert(
         inDepth.same(
             Scheme.parse("https://raw.githubusercontent.com/KSXGitHub/simple-js-yaml-port-for-deno/3.12.1/js-yaml.js"),
+            expected
+        )
+    );
+
+}
+
+{
+
+    const expected = {
+        type: 'url',
+        urlType: 'github',
+        baseUrlWithoutBranch:
+            'https://raw.github.com/garronej/deno/',
+        branch: 'master',
+        pathToIndex: 'std/node/util.ts'
+    } as const;
+
+    assert(
+        inDepth.same(
+            Scheme.parse("https://raw.github.com/garronej/deno/master/std/node/util.ts"),
+            expected
+        )
+    );
+
+    assert(
+        inDepth.same(
+            Scheme.parse("https://raw.githubusercontent.com/garronej/deno/master/std/node/util.ts"),
             expected
         )
     );

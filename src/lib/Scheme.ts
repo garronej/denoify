@@ -99,10 +99,28 @@ export namespace Scheme {
                         .replace(
                             /^https?:\/\/raw\.github(?:usercontent)?/,
                             "https://raw.github"
-                        ),
+                        )
+                        .replace(/\/$/, "")
+                        ,
                     "branch": match[2],
                     "pathToIndex": match[3]
                 };
+
+            }
+
+            export function buildUrl(
+                scheme: Url.GitHub,
+                params: {
+                    pathToFile?: string;
+                    branch?: string;
+                }
+            ): string {
+
+                return urlJoin(
+                    scheme.baseUrlWithoutBranch.replace(/\/$/, ""),
+                    params.branch ?? scheme.branch ?? "master",
+                    params.pathToFile ?? scheme.pathToIndex
+                );
 
             }
 
@@ -167,6 +185,26 @@ export namespace Scheme {
 
             }
 
+            export function buildUrl(
+                scheme: Url.DenoLand,
+                params: {
+                    pathToFile?: string;
+                    branch?: string;
+                }
+            ): string {
+
+                const branch = params.branch ?? scheme.branch;
+
+                return urlJoin(
+                    [
+                        scheme.baseUrlWithoutBranch.replace(/\/$/, ""),
+                        !!branch ? `@${branch}` : ""
+                    ].join(""),
+                    params.pathToFile ?? scheme.pathToIndex
+                );
+
+            }
+
 
 
         }
@@ -197,15 +235,10 @@ export namespace Scheme {
             }
         ): string {
 
-            const branch = params.branch ?? scheme.branch;
-
-            return urlJoin(
-                [
-                    scheme.baseUrlWithoutBranch.replace(/\/$/, ""),
-                    !!branch ? `@${branch}` : ""
-                ].join(""),
-                params.pathToFile ?? scheme.pathToIndex
-            );
+            switch(scheme.urlType){
+                case "deno.land": return DenoLand.buildUrl(scheme, params);
+                case "github": return GitHub.buildUrl(scheme, params);
+            }
 
         }
 
@@ -239,10 +272,10 @@ export namespace Scheme {
     export async function resolveVersion(
         scheme: Scheme,
         params: { version: string }
-    ): Promise<{ 
+    ): Promise<{
         couldConnect: true;
-        scheme: Scheme; 
-        notTheExactVersionWarning: string | undefined; 
+        scheme: Scheme;
+        notTheExactVersionWarning: string | undefined;
     } | {
         couldConnect: false;
     }> {
@@ -279,9 +312,9 @@ export namespace Scheme {
                 ...(!!branch ? { branch } : {})
             };
 
-            return { 
-                "couldConnect": true, 
-                "scheme": schemeOut, 
+            return {
+                "couldConnect": true,
+                "scheme": schemeOut,
                 notTheExactVersionWarning
             };
 

@@ -79,7 +79,7 @@ export function denoifyImportArgumentFactory(
             const out=  Scheme.buildUrl(resolveResult.scheme, {});
 
             if (await is404(out)) {
-                throw new Error(`${out} 404 not found.`);
+                throw new Error(`${out} 404 not found !`);
             }
 
             return out;

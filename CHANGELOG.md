@@ -6,13 +6,7 @@
 - Include TextEncode and TextDecode in node 'util' port  
 - Remove useless downlevelIteration when targetting es2018  
 - fix resolution  
-- Merge branch 'master' of https://github.com/garronej/denoify  
 - target ES2018  
-- Update README.md  
-- Update README.md  
-- Update README.md  
-- Update README.md  
-- Update readme    
   
 ### **0.2.9** (2020-05-18)  
   

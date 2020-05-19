@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "ES2018",
-		"lib": [ "es2015" ],
+		"lib": [ "es2018" ],
 		"declaration": true,
 		"outDir": "./dist",
 		"sourceMap": true,
@@ -10,8 +10,7 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"incremental": true,
-		"strict": true,
-		"downlevelIteration": true
+		"strict": true
 	},
 	"filesGlob": [
 		"src/**/*"

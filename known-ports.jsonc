@@ -7,7 +7,8 @@
         "process": "https://deno.land/std@master/node/process.ts", //Partial
         "querystring": "https://deno.land/std@master/node/querystring.ts",
         "timers": "https://deno.land/std@master/node/timers.ts",
-        "util": "https://deno.land/std@master/node/util.ts", //Partial
+        //"util": "https://deno.land/std@master/node/util.ts", //Partial
+        "util": "https://raw.github.com/garronej/deno/master/std/node/util.ts", //Partial, temporary util merged
         "global": "https://deno.land/std@master/node/global.ts"
         /*
         Important: built in missing: Buffer, http, https, stream...

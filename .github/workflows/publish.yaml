@@ -39,6 +39,8 @@ jobs:
       with:
         fetch-depth: 0
         ref: 'master'
+    - name: 'Remove GH Actions workflows, useless on latest branch'
+      run: rm -r .github
     - name: Remove branch 'latest' 
       continue-on-error: true
       run: |

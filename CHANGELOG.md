@@ -1,3 +1,19 @@
+### **0.2.10** (2020-05-19)  
+  
+- new minor version  
+- Fix version version resolution  
+- Fix bug ing GitHub url in url parsing  
+- Include TextEncode and TextDecode in node 'util' port  
+- Remove useless downlevelIteration when targetting es2018  
+- fix resolution  
+- Merge branch 'master' of https://github.com/garronej/denoify  
+- target ES2018  
+- Update README.md  
+- Update README.md  
+- Update README.md  
+- Update README.md  
+- Update readme    
+  
 ### **0.2.9** (2020-05-18)  
   
 - bug fix: EVT is a hard dependency, not a dev-dep    

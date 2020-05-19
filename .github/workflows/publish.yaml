@@ -38,6 +38,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        ref: 'master'
     - name: Remove branch 'latest' 
       continue-on-error: true
       run: |

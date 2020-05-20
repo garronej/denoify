@@ -10,9 +10,7 @@
 </p>
 <br>
 
-
 **WARNING**: This is a pre-release that might be broken in some ways. Stay tuned.
-
 
 # What it is
 
@@ -26,8 +24,8 @@ A way to import node modules in Deno projects. For that purpose you can try [Com
 
 # Motivations
 
-- Although it is quite easy to port a module to Deno it is a chore to maintain two codebases.
-- Wouldn't it be great to have a tool able to make all the major NPM modules cross-compatible with Deno?
+- Although it is quite easy to port a module to Deno it is a chore to maintain two codebase.
+- Wouldn't it be great to have a tool able to make all the major NPM modules available to Deno?
 
 # Example of modules using Denoify
 
@@ -38,7 +36,7 @@ Modules that have been made cross-runtime using Denoify:
 
 # Will it work with my module ?
 
-At this stage of it's devloppement, Denoify set quite restrictive requirements:   
+At this stage of it's development, Denoify set quite restrictive requirements:   
 
 - Does your users need to have ``@types/node`` installed to use your module ? 
   If yes then, unfortunately, your module is not denoifiable as it is. 
@@ -53,14 +51,27 @@ At this stage of it's devloppement, Denoify set quite restrictive requirements:
 
 # Roadmap to 1.0
 
-- Allows ``require()`` ( synchronous dynamic loading of modules )
-- Using the typescript compiler API to parse source files instead of making the change with RegExps. [ts-morph](https://github.com/dsherret/ts-morph) seems to be a good option here.
-- Polyfills global node API that are not imported like Buffer and process. (\__dirname and \__filename already supported)
-- Support Javascript projects.
+These are the milestone that, when achieved, will enable Denoify to work transparently on most NPM modules:  
 
-# TUTORIALS
+- Supporting all node builtins, everything on [this list](https://deno.land/std/node#supported-builtins) should be
+  checked ( help more than welcome ).
+- Supporting ``require()`` and ``fs`` ( synchronously or not ) for dynamically accessing files of the project
+  ( files that sits in the node_modules directory in Node ). Note that ``fs`` for the most part is already functional
+  but the problem arises when trying to access files that are not present on the disk. In Deno unlike in Node,
+  the packages files are not present on the disk at runtime. Fetching them synchronously is not a satisfactory solution
+  for obvious reasons. We can do it the way Browserify is doing it but this approach works only if the paths 
+  can be analyzed statically. The solution would be to provide a way for the user to define the files that are
+  susceptible to be accessed synchronously at runtime or by default pre-loading everything in a single files if the
+  project is using ``require`` or ``fs``.
+- The changes are currently performed with RegExp, we need to use the TypeScript compiler API if we want
+  the tool to be fully reliable. [ts-morph](https://github.com/dsherret/ts-morph) seems to be a good option here.
+- Support Javascript projects and automatically bundle types from ``DefinitelyTyped`` ( also applicable for 
+  ``@types/node`` ).
+- Automatically Denoify dependencies ( require all the previous milestone ).
 
-## Porting an existing project
+# GUIDES
+
+## Setting up on an existing project
 
 Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up Denoify in your project.
 
@@ -75,4 +86,3 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 - Testing on multiples ``Node`` and ``Deno`` version before publishing.
 - Maintaining a CHANGELOG
 - Publishing on NPM and [deno.land/x](https://deno.land/x) on your behalf.
-

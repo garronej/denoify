@@ -85,4 +85,4 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 - Writing a [README.md](https://github.com/garronej/denoify_ci/blob/dev/README.template.md) with decent presentation and instructions on how to install/import your module.
 - Testing on multiples ``Node`` and ``Deno`` version before publishing.
 - Maintaining a CHANGELOG
-- Publishing on NPM and [deno.land/x](https://deno.land/x) on your behalf.
+- Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).

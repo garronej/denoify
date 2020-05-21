@@ -1,3 +1,10 @@
+### **0.2.11** (2020-05-21)  
+  
+- improve resolve mechanism  
+- Inform that __filename and __dirname are supported  
+- Update README.md  
+- Defines chalanges and set goals    
+  
 ### **0.2.10** (2020-05-19)  
   
 - new minor version  

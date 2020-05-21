@@ -7,6 +7,7 @@ import { getTsconfigOutDirIfDenoified } from "./getTsconfigOutDirIfDenoified";
 import * as commentJson from "comment-json";
 import { getProjectRoot } from "../tools/getProjectRoot";
 import * as fs from "fs";
+import { assert } from "evt/dist/tools/typeSafety/assert";
 
 const knownPorts: { [nodeModuleName: string]: string; } = (() => {
 
@@ -118,7 +119,7 @@ export type Result = {
  * -> 
  * 
  * The resolution goes as follow:
- * - The entry "js-yaml" in package.json is not a "github:xxx" scheme. Skip
+ * - The entry "ts-md5" in package.json is not a "github:xxx" scheme. Skip
  * - We use "./node_modules/ts-md5/package.json" repository field to lookup
  *   the github repo hosting the module: cotag/ts-md5.
  *   We found out that it is not a denoified module. Skip
@@ -184,7 +185,7 @@ export type Result = {
  * - The entry "run-exclusive" in package.json is not a "github:xxx" scheme. Skip
  * - We use "./node_modules/ts-md5/package.json" repository field to lookup
  *   the github repo hosting the module: garronej/run-exclusive.
- *   https://raw.github.com/garronej/ts-md5/v2.1.12/mod.ts is not a 404
+ *   https://raw.github.com/garronej/ts-md5/2.1.12/mod.ts is not a 404
  *   and contain the word "denoify". Done
  * 
  * We lookup the "outDir" in https://raw.github.com/garronej/run-exclusive/v2.1.12/tsconfig.json,
@@ -195,7 +196,7 @@ export type Result = {
  *     "type": "github", 
  *     "userOrOrg": "garronej",
  *     "repositoryName": "run-exclusive",
- *     "branch": "v2.1.12"
+ *     "branch": "2.1.12"
  * },
  * "tsconfigOutDir": "dist" 
  * }
@@ -280,65 +281,35 @@ export function resolveFactory(
 
         }
 
+        let repo: { 
+            repositoryName: string; 
+            userOrOrg: string; 
+        } | undefined = undefined;
 
-        const wrap = await (async () => {
+        walk: {
 
-            let scheme: Scheme;
+            let scheme: Scheme.GitHub;
 
-            try {
-
-                scheme = Scheme.parse(allDependencies[nodeModuleName]);
-
-            } catch{
-                // ^1.2.3
-                return {
-                    "isSuccess": false,
-                    "tryRepositoryField": true
-                } as const;
+            //TODO: Refactor
+            if( Scheme.GitHub.matchStr(allDependencies[nodeModuleName])){
+            //  allDependencies[nodeModuleName] === "github:garronej/ts-md5#1.2.7"
+                scheme = await Scheme.GitHub.parse(allDependencies[nodeModuleName]);
+            }else{
+                //  allDependencies[nodeModuleName] === "^1.2.3"
+                break walk;
             }
 
-            const resolveResult = await Scheme.resolveVersion(
-                scheme,
-                { "version": scheme.branch ?? "master" }
-            );
+            assert(scheme.type === "github");
 
-            if (!resolveResult.couldConnect) {
-                return {
-                    "isSuccess": false,
-                    "tryRepositoryField": false
-                } as const;
-            }
+            repo = scheme;
 
-            scheme = resolveResult.scheme;
-
-            const { tsconfigOutDir } = await getTsconfigOutDirIfDenoified({ scheme });
-
-            if (!tsconfigOutDir) {
-                return {
-                    "isSuccess": false,
-                    "tryRepositoryField": false
-                } as const;
-            }
-
-            return {
-                "isSuccess": true,
-                "result": id<Result>({
-                    "type": "DENOIFIED MODULE",
-                    scheme,
-                    tsconfigOutDir
-                })
-            } as const;
-
-
-        })();
-
-        if (wrap.isSuccess) {
-            return wrap.result;
         }
+
+
 
         const {
             version, // 3.13.1 (version installed)
-            repository
+            repository: repositoryEntryOfPackageJson
         } = JSON.parse(
             fs.readFileSync(
                 path.join(
@@ -348,14 +319,9 @@ export function resolveFactory(
             ).toString("utf8")
         );
 
-        const result = await (async () => {
+        repo = !!repo ? repo : (()=>{
 
-            if (!wrap.tryRepositoryField) {
-                return undefined;
-            }
-
-
-            const repositoryUrl = repository?.["url"];
+            const repositoryUrl = repositoryEntryOfPackageJson?.["url"];
 
             if (!repositoryUrl) {
                 return undefined;
@@ -373,13 +339,26 @@ export function resolveFactory(
                 return undefined;
             }
 
+            return { repositoryName, userOrOrg };
+
+
+        })();
+
+        walk: {
+
+            if( repo === undefined ){
+                break walk;
+            }
+
+            const { repositoryName, userOrOrg } = repo;
+
             const resolveResult = await Scheme.resolveVersion(
                 Scheme.parse(`github:${userOrOrg}/${repositoryName}`),
                 { version }
             );
 
             if (!resolveResult.couldConnect) {
-                return undefined;
+                break walk;
             }
 
             const { scheme, notTheExactVersionWarning } = resolveResult;
@@ -387,11 +366,15 @@ export function resolveFactory(
             const { tsconfigOutDir } = await getTsconfigOutDirIfDenoified({ scheme });
 
             if (!tsconfigOutDir) {
-                return undefined;
+                break walk;
             }
 
             if (notTheExactVersionWarning) {
                 log(notTheExactVersionWarning);
+            }
+
+            if (isInUserProvidedPort(nodeModuleName)) {
+                log(`NOTE: ${nodeModuleName} is a denoified module, there is no need for an entry for in package.json denoPorts`);
             }
 
             return id<Result>({
@@ -400,16 +383,6 @@ export function resolveFactory(
                 tsconfigOutDir
             });
 
-
-        })();
-
-        if (!!result) {
-
-            if (isInUserProvidedPort(nodeModuleName)) {
-                log(`NOTE: ${nodeModuleName} is a denoified module, there is no need for an entry for in package.json denoPorts`);
-            }
-
-            return result;
         }
 
         walk: {

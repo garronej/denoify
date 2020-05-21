@@ -28,10 +28,10 @@ import { assert } from "evt/dist/tools/typeSafety";
 
             assert(
                 inDepth.same(
-                    Scheme.parse(`${prefix}garronej/ts-md5#v1.2.7`),
+                    Scheme.parse(`${prefix}garronej/ts-md5#1.2.7`),
                     {
                         ...expectedScheme,
-                        "branch": "v1.2.7"
+                        "branch": "1.2.7"
                     }
                 )
             );
@@ -48,15 +48,18 @@ import { assert } from "evt/dist/tools/typeSafety";
         assert(
             Scheme.buildUrl(expectedScheme,
                 {
-                    "branch": "v1.2.7",
+                    "branch": "1.2.7",
                     "pathToFile": "deno_dist/parallel_hasher.ts"
                 }
             )
             ===
-            "https://raw.github.com/garronej/ts-md5/v1.2.7/deno_dist/parallel_hasher.ts"
+            "https://raw.github.com/garronej/ts-md5/1.2.7/deno_dist/parallel_hasher.ts"
         );
 
-        for (const version of ["1.2.7", "v1.2.7"]) {
+
+        {
+
+            const version = "1.2.7";
 
             assert(
                 inDepth.same(
@@ -68,7 +71,7 @@ import { assert } from "evt/dist/tools/typeSafety";
                         "couldConnect": true,
                         "scheme": {
                             ...expectedScheme,
-                            "branch": "v1.2.7"
+                            "branch": version
                         },
                         "notTheExactVersionWarning": undefined
                     }
@@ -86,10 +89,11 @@ import { assert } from "evt/dist/tools/typeSafety";
 
                     assert(resolveVersionResult.couldConnect);
                     assert(!!resolveVersionResult.notTheExactVersionWarning);
+
                     return resolveVersionResult.scheme;
 
                 }),
-                expectedScheme
+                { ...expectedScheme, "branch": "master" }
             )
         );
 
@@ -122,7 +126,7 @@ import { assert } from "evt/dist/tools/typeSafety";
             "urlType": "deno.land",
             "baseUrlWithoutBranch": "https://deno.land/x/evt",
             "pathToIndex": "mod.ts",
-            "branch": undefined
+            "branch": "master"
         } as const;
 
         const inputUrl = "https://deno.land/x/evt/mod.ts";
@@ -134,7 +138,7 @@ import { assert } from "evt/dist/tools/typeSafety";
             )
         );
 
-        for (const branch of ["master", "v1.6.8"]) {
+        for (const branch of ["master", "1.7.0"]) {
 
             assert(
                 inDepth.same(
@@ -154,19 +158,28 @@ import { assert } from "evt/dist/tools/typeSafety";
             inputUrl
         );
 
-        assert(
-            Scheme.buildUrl(
-                expectedScheme,
-                {
-                    "branch": "v1.6.8",
-                    "pathToFile": "deno_dist/tools/typeSafety/assert.ts"
-                }
-            )
-            ===
-            "https://deno.land/x/evt@v1.6.8/deno_dist/tools/typeSafety/assert.ts"
-        );
+        {
 
-        for (const version of ["1.6.8", "v1.6.8"]) {
+            const branch = "1.7.0";
+            const pathToFile = "tools/typeSafety/assert.ts";
+
+            assert(
+                Scheme.buildUrl(
+                    expectedScheme,
+                    {
+                        branch,
+                        pathToFile
+                    }
+                )
+                ===
+                `https://deno.land/x/evt@${branch}/${pathToFile}`
+            );
+
+        }
+
+        {
+
+            const version = "1.6.8";
 
             assert(
                 inDepth.same(
@@ -178,7 +191,7 @@ import { assert } from "evt/dist/tools/typeSafety";
                         "couldConnect": true,
                         "scheme": {
                             ...expectedScheme,
-                            "branch": "v1.6.8"
+                            "branch": `v${version}`
                         },
                         "notTheExactVersionWarning": undefined
                     }
@@ -212,11 +225,11 @@ import { assert } from "evt/dist/tools/typeSafety";
             "urlType": "github",
             "baseUrlWithoutBranch":
                 "https://raw.github.com/garronej/my_dummy_npm_and_deno_module",
-            "branch": "v0.1.0",
+            "branch": "0.2.0",
             "pathToIndex": "mod.ts"
         };
 
-        const inputUrl = "https://raw.github.com/garronej/my_dummy_npm_and_deno_module/v0.1.0/mod.ts";
+        const inputUrl = "https://raw.github.com/garronej/my_dummy_npm_and_deno_module/0.2.0/mod.ts";
 
         assert(
             inDepth.same(
@@ -240,7 +253,7 @@ import { assert } from "evt/dist/tools/typeSafety";
         assert(
             inDepth.same(
                 Scheme.parse(
-                    inputUrl.replace("v0.1.0", "master")
+                    inputUrl.replace("0.2.0", "master")
                 ),
                 {
                     ...expectedScheme,
@@ -270,13 +283,15 @@ import { assert } from "evt/dist/tools/typeSafety";
                 )
                 ===
                 inputUrl
-                    .replace("v0.1.0", branch)
+                    .replace("0.2.0", branch)
                     .replace("mod.ts", pathToFile)
             );
 
         }
 
-        for (const version of ["0.1.0", "v0.1.0"]) {
+        {
+
+            const version = "0.2.0";
 
             assert(
                 inDepth.same(
@@ -288,7 +303,7 @@ import { assert } from "evt/dist/tools/typeSafety";
                         "couldConnect": true,
                         "scheme": {
                             ...expectedScheme,
-                            "branch": "v0.1.0"
+                            "branch": version
                         },
                         "notTheExactVersionWarning": undefined
                     }
@@ -324,7 +339,7 @@ import { assert } from "evt/dist/tools/typeSafety";
                 "type": "url",
                 "urlType": "deno.land",
                 "baseUrlWithoutBranch": "https://deno.land/x/js_yaml_port",
-                "branch": undefined,
+                "branch": "master",
                 "pathToIndex": "js-yaml.js"
             }
         )

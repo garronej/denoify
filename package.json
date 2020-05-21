@@ -1,6 +1,6 @@
 {
     "name": "denoify",
-    "version": "0.2.10",
+    "version": "0.2.11",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
     "repository": {
         "type": "git",

@@ -67,7 +67,7 @@ import { assert } from "evt/dist/tools/typeSafety";
                     type: 'url',
                     urlType: 'deno.land',
                     baseUrlWithoutBranch: 'https://deno.land/x/js_yaml_port',
-                    branch: undefined,
+                    branch: "master",
                     pathToIndex: 'js-yaml.js'
                 }
             }
@@ -77,7 +77,6 @@ import { assert } from "evt/dist/tools/typeSafety";
             `WARNING: Specific version 3.13.0 could not be found
 GET https://deno.land/x/js_yaml_port@v3.13.0/js-yaml.js 404
 GET https://deno.land/x/js_yaml_port@3.13.0/js-yaml.js 404
-GET https://deno.land/x/js_yaml_port@latest/js-yaml.js 404
 Falling back to master branch
 This mean that the Node and the Deno distribution of your module will not run the same version of this dependency.`;
 
@@ -108,7 +107,7 @@ This mean that the Node and the Deno distribution of your module will not run th
                     type: 'github',
                     userOrOrg: 'garronej',
                     repositoryName: 'ts-md5',
-                    branch: 'v1.2.7'
+                    branch: '1.2.7'
                 }
             }
 
@@ -126,7 +125,7 @@ This mean that the Node and the Deno distribution of your module will not run th
 
         const { resolve } = resolveFactory({
             "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_4"),
-            "dependencies": { "my-dummy-npm-and-deno-module": "0.1.0" },
+            "dependencies": { "my-dummy-npm-and-deno-module": "0.2.0" },
             "devDependencies": {},
             "userProvidedPorts": {},
             "log": (...args: any[]) => std_out += args.join(" ")
@@ -141,7 +140,7 @@ This mean that the Node and the Deno distribution of your module will not run th
                     type: 'github',
                     userOrOrg: 'garronej',
                     repositoryName: 'my_dummy_npm_and_deno_module',
-                    branch: "v0.1.0"
+                    branch: "0.2.0"
                 },
                 tsconfigOutDir: './dist'
             }
@@ -174,7 +173,7 @@ This mean that the Node and the Deno distribution of your module will not run th
                     type: 'github',
                     userOrOrg: 'garronej',
                     repositoryName: 'ts-md5',
-                    branch: 'v1.2.7'
+                    branch: '1.2.7'
                 },
                 tsconfigOutDir: './dist'
             }

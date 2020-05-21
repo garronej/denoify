@@ -2,10 +2,24 @@
 import { is404 } from "../tools/is404";
 import { urlJoin } from "../tools/urlJoin";
 
+
 export type Scheme = Scheme.GitHub | Scheme.Url;
 
 export namespace Scheme {
 
+    
+    /** 
+     * Parsed from "github:userOrOrg/repositoryName#branch" found in
+     * package.json: 
+     * "dependencies": {
+     *     "module_name": "github:userOrOrg/repositoryName#branch"
+     * }
+     * 
+     * The 'github:' prefix is not mandatory.
+     * #branch is not mandatory ( if not specified NPM will resolve the 
+     * default branch, branch that is not necessary master )
+     * 
+     */
     export type GitHub = {
         type: "github";
         userOrOrg: string;
@@ -19,6 +33,7 @@ export namespace Scheme {
             return /^(?:github:)?[^\/]+\/[^\/]+$/.test(strScheme)
         }
 
+        //NOTE: async because need to fetch for the default branch 
         export function parse(
             strScheme: string
             // KSXGitHub/simple-js-yaml-port-for-deno or
@@ -71,11 +86,11 @@ export namespace Scheme {
             type: "url";
             baseUrlWithoutBranch: string;
             pathToIndex: string;
+            branch: string;
         }
 
         export type GitHub = Common & {
             urlType: "github";
-            branch: string;
         };
 
         export namespace GitHub {
@@ -101,7 +116,7 @@ export namespace Scheme {
                             "https://raw.github"
                         )
                         .replace(/\/$/, "")
-                        ,
+                    ,
                     "branch": match[2],
                     "pathToIndex": match[3]
                 };
@@ -129,7 +144,6 @@ export namespace Scheme {
 
         export type DenoLand = Common & {
             urlType: "deno.land";
-            branch?: string;
         };
 
         export namespace DenoLand {
@@ -179,7 +193,7 @@ export namespace Scheme {
                     "type": "url",
                     "urlType": "deno.land",
                     "baseUrlWithoutBranch": match[1],
-                    branch,
+                    "branch": branch ?? "master",
                     pathToIndex
                 };
 
@@ -198,7 +212,7 @@ export namespace Scheme {
                 return urlJoin(
                     [
                         scheme.baseUrlWithoutBranch.replace(/\/$/, ""),
-                        !!branch ? `@${branch}` : ""
+                        branch !== "master" ? `@${branch}` : ""
                     ].join(""),
                     params.pathToFile ?? scheme.pathToIndex
                 );
@@ -235,7 +249,7 @@ export namespace Scheme {
             }
         ): string {
 
-            switch(scheme.urlType){
+            switch (scheme.urlType) {
                 case "deno.land": return DenoLand.buildUrl(scheme, params);
                 case "github": return GitHub.buildUrl(scheme, params);
             }
@@ -286,9 +300,8 @@ export namespace Scheme {
 
         for (const branch of [
             ...["v", ""].map(prefix => `${prefix}${version}`),
-            "latest",
             ...(!!scheme.branch ? [scheme.branch] : []),
-            undefined
+            "master"
         ]) {
 
             const url = buildUrl(scheme, { branch });

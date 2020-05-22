@@ -76,8 +76,8 @@ import { assert } from "evt/dist/tools/typeSafety";
 
         const expected_std_out =
             `WARNING: Specific version 3.13.0 could not be found
-GET https://deno.land/x/js_yaml_port@v3.13.0/js-yaml.js 404
 GET https://deno.land/x/js_yaml_port@3.13.0/js-yaml.js 404
+GET https://deno.land/x/js_yaml_port@v3.13.0/js-yaml.js 404
 Falling back to master branch
 This mean that the Node and the Deno distribution of your module will not run the same version of this dependency.`;
 

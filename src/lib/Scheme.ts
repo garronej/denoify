@@ -299,7 +299,7 @@ export namespace Scheme {
         const urls404: string[] = [];
 
         for (const branch of [
-            ...["v", ""].map(prefix => `${prefix}${version}`),
+            ...["", "v"].map(prefix => `${prefix}${version}`),
             ...(!!scheme.branch ? [scheme.branch] : []),
             "master"
         ]) {

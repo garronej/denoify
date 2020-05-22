@@ -3,7 +3,7 @@
 - improve resolve mechanism  
 - Inform that __filename and __dirname are supported  
 - Update README.md  
-- Defines chalanges and set goals    
+- Defines challenges and set goals    
   
 ### **0.2.10** (2020-05-19)  
   
@@ -11,7 +11,7 @@
 - Fix version version resolution  
 - Fix bug ing GitHub url in url parsing  
 - Include TextEncode and TextDecode in node 'util' port  
-- Remove useless downlevelIteration when targetting es2018  
+- Remove useless downlevelIteration when targeting es2018  
 - fix resolution  
 - target ES2018  
   

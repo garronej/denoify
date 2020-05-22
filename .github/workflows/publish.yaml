@@ -70,17 +70,28 @@ jobs:
         rm .npmrc
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Release commit message
+      id: id_rcm
+      run: |
+        if [ "$FROM_VERSION" = "" ]; then
+            echo "::set-output name=message::'🚀'"
+        else
+            echo "::set-output name=message::'📋 https://github.com/$OWNER/$REPO/blob/$REF/CHANGELOG.md'"
+        fi
+      env: 
+        FROM_VERSION: ${{ github.event.client_payload.from_version }}
+        OWNER: ${{github.repository_owner}}
+        REPO: ${{github.event.client_payload.repo}}
+        REF: ${{github.event.client_payload.to_version}}
     - name: Commit changes
+      env:
+        COMMIT_MESSAGE: ${{steps.id_rcm.outputs.message}}
       run: |
         git config --local user.email "ts_ci@github.com"
         git config --local user.name "ts_ci"
         git add -A
-        git commit -am "Moving dist files to root for shorter import statements."
-    - name: Push changes
-      uses: ad-m/github-push-action@v0.5.0
-      with:
-        github_token: ${{ secrets.PAT }}
-        branch: latest
+        git commit -am "$COMMIT_MESSAGE"
+
     - name: Create Release
       uses: garronej/create-release@master
       env:

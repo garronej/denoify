@@ -1,8 +1,8 @@
 
 import { resolveFactory } from "../lib/resolve";
 import * as path from "path";
-import * as inDepth from "evt/dist/tools/inDepth";
-import { assert } from "evt/dist/tools/typeSafety";
+import * as inDepth from "evt/tools/inDepth";
+import { assert } from "evt/tools/typeSafety";
 
 
 (async () => {

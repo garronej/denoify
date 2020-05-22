@@ -1,6 +1,6 @@
 
 import { denoifySingleFileFactory } from "../lib/denoifySingleFile";
-import { assert } from "evt/dist/tools/typeSafety";
+import { assert } from "evt/tools/typeSafety";
 
 {
 

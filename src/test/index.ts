@@ -1,7 +1,7 @@
 
 import * as child_process from "child_process";
 import * as path from "path";
-import { Deferred } from "evt/dist/tools/Deferred";
+import { Deferred } from "evt/tools/Deferred";
 
 const names = [
     "scheme",

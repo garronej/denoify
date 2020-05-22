@@ -1,13 +1,12 @@
 
 import * as st from "scripting-tools";
 import * as path from "path";
-import { id } from "evt/dist/tools/typeSafety";
+import { id, assert } from "evt/tools/typeSafety";
 import { Scheme } from "./Scheme";
 import { getTsconfigOutDirIfDenoified } from "./getTsconfigOutDirIfDenoified";
 import * as commentJson from "comment-json";
 import { getProjectRoot } from "../tools/getProjectRoot";
 import * as fs from "fs";
-import { assert } from "evt/dist/tools/typeSafety/assert";
 
 const knownPorts: { [nodeModuleName: string]: string; } = (() => {
 

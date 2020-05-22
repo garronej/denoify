@@ -28,9 +28,9 @@
         "glob": "^7.1.6",
         "node-fetch": "^2.6.0",
         "path-depth": "^1.0.0",
-        "scripting-tools": "0.19.12",
+        "scripting-tools": "^0.19.12",
         "url-join": "^4.0.1",
-        "evt": "1.6.8"
+        "evt": "^1.7.4"
     },
     "keywords": [
         "deno",

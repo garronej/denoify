@@ -9,6 +9,7 @@ import { assert } from "evt/dist/tools/typeSafety";
 
     console.log("NOTE: This test require an internet connection");
 
+
     {
 
         let std_out = "";
@@ -182,6 +183,40 @@ This mean that the Node and the Deno distribution of your module will not run th
 
         assert(std_out === "");
 
+
+    }
+
+    {
+
+        let std_out = "";
+
+        const { resolve } = resolveFactory({
+            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_6"),
+            "dependencies": {
+                "minimal-polyfills": "~2.0.0"
+            },
+            "devDependencies": {},
+            "userProvidedPorts": {},
+            "log": (...args: any[]) => std_out += args.join(" ")
+        });
+
+
+        assert(inDepth.same(
+            await resolve({ "nodeModuleName": "minimal-polyfills" }),
+            {
+                type: 'DENOIFIED MODULE',
+                scheme:
+                {
+                    type: 'github',
+                    userOrOrg: 'garronej',
+                    repositoryName: 'minimal_polyfills',
+                    branch: '2.0.1'
+                },
+                tsconfigOutDir: './dist'
+            }
+        ));
+
+        assert(std_out === "");
 
     }
 

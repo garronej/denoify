@@ -29,7 +29,7 @@ export function moveContentUpOneLevelFactory(
         for (const beforeMovedFilePath of beforeMovedFilePaths) {
 
             console.log([
-                `${isDryRun ? "(dry)" : ""}Moving`,
+                `${isDryRun ? "(dry) " : ""}Moving`,
                 path.join(dirPath, beforeMovedFilePath),
                 `to ${path.join(upDirPath, beforeMovedFilePath)}`
             ].join(" "));

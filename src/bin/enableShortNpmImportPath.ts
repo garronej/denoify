@@ -118,9 +118,6 @@ async function run(params: { pathToTargetModule: string; }) {
 
 
     })();
-
-    console.log(beforeMovedFilePaths);
-
     
     const getAfterMovedFilePath = (params: { beforeMovedFilePath: string})=> {
 
@@ -148,7 +145,7 @@ async function run(params: { pathToTargetModule: string; }) {
     };
 
     beforeMovedFilePaths
-        .map(beforeMovedFilePath => getAfterMovedFilePath({ beforeMovedFilePath }))
+        .map(isDryRun ? (x => x) : (beforeMovedFilePath => getAfterMovedFilePath({ beforeMovedFilePath })))
         .filter(afterMovedFilePath => /\.js\.map$/.test(afterMovedFilePath))
         .forEach(sourceMapFilePath => {
 
@@ -161,7 +158,11 @@ async function run(params: { pathToTargetModule: string; }) {
                 .map(filePath => path.basename(filePath))
                 ;
 
-            console.log(`Fixing ${sourceMapFilePath}: ${JSON.stringify({ sources })}`);
+            console.log([
+                `${isDryRun ? "(dry) " : ""}Editing ${path.basename(sourceMapFilePath)}:`,
+                JSON.stringify({ "sources": sourceMapParsed.sources }),
+                `-> ${JSON.stringify({ sources })}`
+            ].join(" "));
 
             walk: {
 

@@ -1,3 +1,7 @@
+### **0.2.13** (2020-05-23)  
+  
+- Fix: Do not introduce absolute path in modified package.json ( enableShortNpmImportPath.ts )    
+  
 ### **0.2.12** (2020-05-23)  
   
 - Not using deprecated raw.github.com, using raw.githubusercontent.com instead  

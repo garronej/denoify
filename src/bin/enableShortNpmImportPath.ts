@@ -5,7 +5,6 @@ import { globProxyFactory } from "../tools/globProxy";
 import { modTsFile } from "../lib/modTsFile";
 import { pathDepth } from "../tools/pathDepth";
 import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel"
-import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
 import { execFactory } from "../tools/exec";
 import { getIsDryRun } from "../lib/getIsDryRun";
 import { crawl } from "../tools/crawl";
@@ -32,9 +31,12 @@ async function run(params: { pathToTargetModule: string; }) {
         throw new Error(".npmignore not supported, please use package.json 'files' instead");
     }
 
-    const packageJsonParsed = JSON.parse(
+    const packageJsonRaw= 
         fs.readFileSync("package.json")
             .toString("utf8")
+
+    const packageJsonParsed = JSON.parse(
+        packageJsonRaw
     );
 
     const packageJsonFilesResolved: string[] | undefined = await (() => {
@@ -92,24 +94,10 @@ async function run(params: { pathToTargetModule: string; }) {
 
 
     if (pathDepth(tsconfigOutDir) != 1) {
-        throw new Error("tsconfig out dir must be a directory at the root of the project for this script to work");
+        throw new Error("For this script to work tsconfig out dir must be a directory at the root of the project");
     }
 
-    if (
-        !!packageJsonFilesResolved &&
-        packageJsonFilesResolved.find(
-            fileOrDirPath => isInsideOrIsDir({
-                "dirPath": srcDirPath,
-                fileOrDirPath
-            })
-        )
-    ) {
 
-        throw new Error(`Can't include file from ${srcDirPath} in the NPM module`);
-
-    }
-
-    await exec(`rm -r ${srcDirPath}`);
 
     if (!!denoDistPath) {
 
@@ -117,7 +105,88 @@ async function run(params: { pathToTargetModule: string; }) {
 
     }
 
-    await moveContentUpOneLevel({ "dirPath": tsconfigOutDir });
+    const beforeMovedFilePaths = await (async ()=>{
+
+        const moveAndReplace= (dirPath: string)=> moveContentUpOneLevel({ dirPath })
+            .then(({ beforeMovedFilePaths }) => beforeMovedFilePaths.map(filePath => path.join(dirPath, filePath)))
+            ;
+
+        return [
+            ...(await moveAndReplace(tsconfigOutDir)),
+            ...(await moveAndReplace(srcDirPath))
+        ];
+
+
+    })();
+
+    console.log(beforeMovedFilePaths);
+
+    
+    const getAfterMovedFilePath = (params: { beforeMovedFilePath: string})=> {
+
+        const beforeMovedFilePath = beforeMovedFilePaths.find(
+            beforeMovedFilePath => path.relative(
+                beforeMovedFilePath, 
+                params.beforeMovedFilePath
+            ) === ""
+        );
+
+        if( beforeMovedFilePath === undefined ){
+            return params.beforeMovedFilePath;
+        }
+
+
+        const afterMovedFilePath = beforeMovedFilePath
+            .replace(/^\.\//, "")
+            .split(path.sep)
+            .filter((...[,index])=> index !== 0)
+            .join(path.sep)
+            ;
+
+        return afterMovedFilePath ;
+
+    };
+
+    beforeMovedFilePaths
+        .map(beforeMovedFilePath => getAfterMovedFilePath({ beforeMovedFilePath }))
+        .filter(afterMovedFilePath => /\.js\.map$/.test(afterMovedFilePath))
+        .forEach(sourceMapFilePath => {
+
+            const sourceMapParsed: { sources: string[] } = JSON.parse(
+                fs.readFileSync(sourceMapFilePath)
+                    .toString("utf8")
+            );
+
+            const sources = sourceMapParsed.sources
+                .map(filePath => path.basename(filePath))
+                ;
+
+            console.log(`Fixing ${sourceMapFilePath}: ${JSON.stringify({ sources })}`);
+
+            walk: {
+
+                if (isDryRun) {
+                    break walk;
+                }
+
+                fs.writeFileSync(
+                    sourceMapFilePath,
+                    Buffer.from(
+                        JSON.stringify(
+                            {
+                                ...sourceMapParsed,
+                                sources
+                            }
+                        )
+                        ,
+                        "utf8"
+                    )
+                );
+
+            }
+
+        })
+        ;
 
 
     {
@@ -144,15 +213,8 @@ async function run(params: { pathToTargetModule: string; }) {
 
                         Object.keys(packageJsonParsed.bin)
                             .map(binName => [binName, packageJsonParsed.bin[binName]] as const)
-                            .forEach(([binName, binFilePath]) =>
-                                out[binName] = path.relative(
-                                    isInsideOrIsDir({
-                                        "dirPath": tsconfigOutDir,
-                                        "fileOrDirPath": binFilePath
-                                    }) ?
-                                        tsconfigOutDir : ".",
-                                    binFilePath
-                                )
+                            .forEach(([binName, beforeMovedBinFilePath]) =>
+                                out[binName] = getAfterMovedFilePath({ "beforeMovedFilePath": beforeMovedBinFilePath })
                             )
                             ;
 
@@ -161,28 +223,51 @@ async function run(params: { pathToTargetModule: string; }) {
                     })()
                 } : {}),
                 ...(!!packageJsonFilesResolved ? {
-                    "files":
-                        packageJsonFilesResolved
-                            .map(fileOrDirPath =>
-                                path.relative(
-                                    isInsideOrIsDir({
-                                        "dirPath": tsconfigOutDir,
-                                        fileOrDirPath
-                                    }) ?
-                                        tsconfigOutDir : ".", // ./dist : .
-                                    fileOrDirPath // ./dist/lib
-                                ) // ./lib
-                            )
+                    "files": (() => {
+
+                        const out = packageJsonFilesResolved
+                            .map(beforeMovedFilesFilePath => getAfterMovedFilePath({
+                                "beforeMovedFilePath": beforeMovedFilesFilePath
+                            }))
+                            ;
+
+                        //If corresponding source file is not included do not include source file.
+                        {
+
+                            const srcFilePaths = out
+                                .filter(filePath => /\.ts$/i.test(filePath))
+                                .map(filePath => filePath.replace(/\.ts$/, ".ts"))
+                                ;
+
+                            [...out]
+                                .filter(filePath => /\.js\.map$/.test(filePath))
+                                .filter(filePath => !srcFilePaths.includes(filePath.replace(/\.js\.map$/, ".ts")))
+                                .forEach(filePath => out.splice(out.indexOf(filePath), 1))
+                                ;
+
+                        }
+
+                        return out;
+
+                    })()
                 } : {}),
                 "scripts": undefined
             },
             null,
-            2
-        );
+            (packageJsonRaw
+                .replace(/\t/g, "    ")
+                .match(/^(\s*)\"name\"/m) ?? [{ "length": 2 }])[1].length
+        ) + packageJsonRaw.match(/}([\r\n]*)$/)![1];
+
 
         console.log(`${isDryRun ? "(dry)" : ""} package.json:\n${newPackageJsonRaw}`);
 
-        if (!isDryRun) {
+        walk: {
+
+            if (isDryRun) {
+                break walk;
+            }
+
 
             fs.writeFileSync(
                 "package.json",
@@ -190,6 +275,7 @@ async function run(params: { pathToTargetModule: string; }) {
             );
 
         }
+
 
     }
 

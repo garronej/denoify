@@ -1,7 +1,8 @@
 
 import * as path from "path";
 import { execFactory } from "./exec";
-import * as fs from "fs";
+import * as st from "scripting-tools";
+import { crawl } from "./crawl";
 
 export function moveContentUpOneLevelFactory(
     params: {
@@ -15,27 +16,44 @@ export function moveContentUpOneLevelFactory(
 
     async function moveContentUpOneLevel(params: {
         dirPath: string;
-    }) {
+    }): Promise<{
+        beforeMovedFilePaths: string[]; //Path expressed relative to dirPath
+    }> {
 
         const dirPath = params.dirPath.replace(/\/$/, "");
 
-        {
+        const upDirPath = path.join(dirPath, "..");
 
-            const upDirPath = path.join(dirPath, "..");
+        const beforeMovedFilePaths = crawl(dirPath);
 
-            await Promise.all(
-                fs.readdirSync(dirPath).map(
-                    fileName => exec([
-                        "mv",
-                        path.join(dirPath, fileName),
-                        upDirPath
-                    ].join(" "))
-                )
-            );
+        for (const beforeMovedFilePath of beforeMovedFilePaths) {
+
+            console.log([
+                `${isDryRun ? "(dry)" : ""}Moving`,
+                path.join(dirPath, beforeMovedFilePath),
+                `to ${path.join(upDirPath, beforeMovedFilePath)}`
+            ].join(" "));
+
+            walk: {
+
+                if (isDryRun) {
+                    break walk;
+                }
+
+                st.fs_move(
+                    "MOVE",
+                    dirPath,
+                    upDirPath,
+                    beforeMovedFilePath
+                );
+
+            }
 
         }
 
         await exec(`rm -r ${dirPath}`);
+
+        return { beforeMovedFilePaths };
 
     }
 

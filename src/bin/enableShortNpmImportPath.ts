@@ -129,7 +129,7 @@ async function run(params: { pathToTargetModule: string; }) {
         );
 
         if( beforeMovedFilePath === undefined ){
-            return params.beforeMovedFilePath;
+            return path.relative(".", params.beforeMovedFilePath);
         }
 
 

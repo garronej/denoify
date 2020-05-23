@@ -1,3 +1,10 @@
+### **0.2.12** (2020-05-23)  
+  
+- Not using deprecated raw.github.com, using raw.githubusercontent.com instead  
+- Track missing files  
+- enableShortNpmImportPath move source as well and support source map  
+- Performance improvement    
+  
 ### **0.2.11** (2020-05-21)  
   
 - improve resolve mechanism  

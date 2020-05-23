@@ -124,10 +124,10 @@ export type Result = {
  *   We found out that it is not a denoified module. Skip
  * - There is no entry "ts-md5" in package.json "denoPorts". Skip
  * - There is an entry { "ts-md5": "garronej/ts-md5" }
- *   in knownPort.json, GET https://raw.github.com/garronej/ts-md5/v1.2.7/mod.ts is not a 404
+ *   in knownPort.json, GET https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/mod.ts is not a 404
  *   and contain the word denoify. Done
  * 
- * We lookup the "outDir" in https://raw.github.com/garronej/ts-md5/v1.2.7/tsconfig.json,
+ * We lookup the "outDir" in https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/tsconfig.json,
  * we need it so import "ts-md5/dist/md5_worker" can be replaced by "ts-md5/deno_dist/md5_worker.ts" later on.
  * 
  * { 
@@ -153,10 +153,10 @@ export type Result = {
  * 
  * The resolution goes as follow:
  * - The entry "js-yaml" in package.json ("garronej/ts-md5") is a "github:xxx" scheme.
- *   GET https://raw.github.com/garronej/ts-md5/v1.2.7/mod.ts is not a 404 and the file 
+ *   GET https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/mod.ts is not a 404 and the file 
  *   contains the word "denoify". Done
  * 
- * We lookup the "outDir" in https://raw.github.com/garronej/ts-md5/v1.2.7/tsconfig.json,
+ * We lookup the "outDir" in https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/tsconfig.json,
  * 
  * { 
  * "type": "DENOIFIED MODULE", 
@@ -184,10 +184,10 @@ export type Result = {
  * - The entry "run-exclusive" in package.json is not a "github:xxx" scheme. Skip
  * - We use "./node_modules/ts-md5/package.json" repository field to lookup
  *   the github repo hosting the module: garronej/run-exclusive.
- *   https://raw.github.com/garronej/ts-md5/2.1.12/mod.ts is not a 404
+ *   https://raw.githubusercontent.com/garronej/ts-md5/2.1.12/mod.ts is not a 404
  *   and contain the word "denoify". Done
  * 
- * We lookup the "outDir" in https://raw.github.com/garronej/run-exclusive/v2.1.12/tsconfig.json,
+ * We lookup the "outDir" in https://raw.githubusercontent.com/garronej/run-exclusive/v2.1.12/tsconfig.json,
  * 
  * { 
  * "type": "DENOIFIED MODULE", 

@@ -67,7 +67,7 @@ export namespace Scheme {
         ): string {
 
             return urlJoin(
-                "https://raw.github.com",
+                "https://raw.githubusercontent.com",
                 scheme.userOrOrg,
                 scheme.repositoryName,
                 params.branch ?? scheme.branch ?? "master",
@@ -113,7 +113,7 @@ export namespace Scheme {
                     "baseUrlWithoutBranch": match[1]
                         .replace(
                             /^https?:\/\/raw\.github(?:usercontent)?/,
-                            "https://raw.github"
+                            "https://raw.githubusercontent"
                         )
                         .replace(/\/$/, "")
                     ,

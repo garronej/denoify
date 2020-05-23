@@ -42,7 +42,7 @@ import { assert } from "evt/tools/typeSafety";
         assert(
             Scheme.buildUrl(expectedScheme, {})
             ===
-            "https://raw.github.com/garronej/ts-md5/master/mod.ts"
+            "https://raw.githubusercontent.com/garronej/ts-md5/master/mod.ts"
         );
 
         assert(
@@ -53,7 +53,7 @@ import { assert } from "evt/tools/typeSafety";
                 }
             )
             ===
-            "https://raw.github.com/garronej/ts-md5/1.2.7/deno_dist/parallel_hasher.ts"
+            "https://raw.githubusercontent.com/garronej/ts-md5/1.2.7/deno_dist/parallel_hasher.ts"
         );
 
 
@@ -224,12 +224,12 @@ import { assert } from "evt/tools/typeSafety";
             "type": "url",
             "urlType": "github",
             "baseUrlWithoutBranch":
-                "https://raw.github.com/garronej/my_dummy_npm_and_deno_module",
+                "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module",
             "branch": "0.2.0",
             "pathToIndex": "mod.ts"
         };
 
-        const inputUrl = "https://raw.github.com/garronej/my_dummy_npm_and_deno_module/0.2.0/mod.ts";
+        const inputUrl = "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/0.2.0/mod.ts";
 
         assert(
             inDepth.same(
@@ -242,8 +242,8 @@ import { assert } from "evt/tools/typeSafety";
             inDepth.same(
                 Scheme.parse(
                     inputUrl.replace(
-                        "github",
-                        "githubusercontent"
+                        "githubusercontent",
+                        "github"
                     )
                 ),
                 expectedScheme
@@ -377,14 +377,14 @@ import { assert } from "evt/tools/typeSafety";
         const expected = {
             "type": "url",
             "urlType": "github",
-            "baseUrlWithoutBranch": "https://raw.github.com/KSXGitHub/simple-js-yaml-port-for-deno",
+            "baseUrlWithoutBranch": "https://raw.githubusercontent.com/KSXGitHub/simple-js-yaml-port-for-deno",
             "branch": "3.12.1",
             "pathToIndex": "js-yaml.js"
         } as const;
 
         assert(
             inDepth.same(
-                Scheme.parse("https://raw.github.com/KSXGitHub/simple-js-yaml-port-for-deno/3.12.1/js-yaml.js"),
+                Scheme.parse("https://raw.githubusercontent.com/KSXGitHub/simple-js-yaml-port-for-deno/3.12.1/js-yaml.js"),
                 expected
             )
         );
@@ -403,14 +403,14 @@ import { assert } from "evt/tools/typeSafety";
         const expected = {
             "type": "url",
             "urlType": "github",
-            "baseUrlWithoutBranch": "https://raw.github.com/garronej/deno",
+            "baseUrlWithoutBranch": "https://raw.githubusercontent.com/garronej/deno",
             "branch": "master",
             "pathToIndex": "std/node/util.ts"
         } as const;
 
         assert(
             inDepth.same(
-                Scheme.parse("https://raw.github.com/garronej/deno/master/std/node/util.ts"),
+                Scheme.parse("https://raw.githubusercontent.com/garronej/deno/master/std/node/util.ts"),
                 expected
             )
         );

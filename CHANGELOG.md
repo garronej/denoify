@@ -1,3 +1,7 @@
+### **0.2.15** (2020-05-25)  
+  
+- Pre NPM publish script: Infer if we should move the .ts files alongside the .js files from the package.json's types argument, by default do not move    
+  
 ### **0.2.14** (2020-05-25)  
   
 - NPM publish script: Let the user decide if using the source .ts files or .d.ts. Better debugging experience vs TS version retrocompat

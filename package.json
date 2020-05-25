@@ -11,7 +11,7 @@
         "grant-exec-perms": "chmod +x ./dist/bin/*.js",
         "build": "npm run tsc && npm run grant-exec-perms",
         "test": "node ./dist/test",
-        "enable_short_import_path": "npm run build && node ./dist/bin/enableShortNpmImportPath.js"
+        "enable_short_import_path": "npm run build && node ./dist/bin/enableShortNpmImportPath.js --.ts_alongside_.js=false"
     },
     "bin": {
         "denoify": "./dist/bin/denoify.js",
@@ -30,7 +30,7 @@
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.12",
         "url-join": "^4.0.1",
-        "evt": "^1.7.4"
+        "evt": "^1.7.10"
     },
     "keywords": [
         "deno",
@@ -42,7 +42,10 @@
         "/known-ports.jsonc",
         "/dist/lib/",
         "/dist/tools/",
-        "/dist/bin/"
+        "/dist/bin/",
+        "/src/lib/",
+        "/src/tools/",
+        "/src/bin/"
     ],
     "devDependencies": {
         "@types/glob": "^7.1.1",

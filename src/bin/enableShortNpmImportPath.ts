@@ -1,37 +1,42 @@
 #!/usr/bin/env node
 
 import * as path from "path";
-import { globProxyFactory } from "../tools/globProxy";
-import { modTsFile } from "../lib/modTsFile";
-import { pathDepth } from "../tools/pathDepth";
+import { globProxyFactory } from "../tools/globProxy";
+import { modTsFile } from "../lib/modTsFile";
+import { pathDepth } from "../tools/pathDepth";
 import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel"
-import { execFactory } from "../tools/exec";
-import { getIsDryRun } from "../lib/getIsDryRun";
-import { crawl } from "../tools/crawl";
+import { execFactory } from "../tools/exec";
+import { getIsDryRun } from "../lib/getIsDryRun";
+import { crawl } from "../tools/crawl";
 import * as fs from "fs";
 import * as commentJson from "comment-json";
-
-
 
 /** 
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
  * This function Change change the working directory.
  * */
-async function run(params: { pathToTargetModule: string; }) {
+async function run(
+    params: {
+        pathToTargetModule: string;
+        moveSourceFiles: boolean;
+        isDryRun: boolean;
+    }
+) {
 
-    const { isDryRun } = getIsDryRun();
+    const { moveSourceFiles, isDryRun } = params;
 
-    const { exec } = execFactory({ isDryRun });
+    const { exec } = execFactory({ isDryRun });
     const { moveContentUpOneLevel } = moveContentUpOneLevelFactory({ isDryRun });
-
 
     process.chdir(params.pathToTargetModule);
 
-    if( fs.existsSync(".npmignore") ){
+    console.log({ moveSourceFiles });
+
+    if (fs.existsSync(".npmignore")) {
         throw new Error(".npmignore not supported, please use package.json 'files' instead");
     }
 
-    const packageJsonRaw= 
+    const packageJsonRaw =
         fs.readFileSync("package.json")
             .toString("utf8")
 
@@ -54,22 +59,22 @@ async function run(params: { pathToTargetModule: string; }) {
 
 
         const flat = [
-            (prev: string[], curr: string[]) => [...prev, ...curr], 
+            (prev: string[], curr: string[]) => [...prev, ...curr],
             [] as string[]
         ] as const;
 
-        return  Promise.all(
+        return Promise.all(
             pathWithWildcards
                 .map(pathWithWildcard => globProxy({ pathWithWildcard }))
         ).then(
-            arrOfArr => 
+            arrOfArr =>
                 arrOfArr
                     .reduce(...flat)
                     .map(
-                        fileOrDirPath => 
-                        !fs.lstatSync(fileOrDirPath).isDirectory() ? 
+                        fileOrDirPath =>
+                            !fs.lstatSync(fileOrDirPath).isDirectory() ?
                                 [fileOrDirPath]
-                                : 
+                                :
                                 crawl(fileOrDirPath)
                                     .map(filePath => path.join(fileOrDirPath, filePath))
                     )
@@ -105,30 +110,31 @@ async function run(params: { pathToTargetModule: string; }) {
 
     }
 
-    const beforeMovedFilePaths = await (async ()=>{
+    const beforeMovedFilePaths = await (async () => {
 
-        const moveAndReplace= (dirPath: string)=> moveContentUpOneLevel({ dirPath })
+        const moveAndReplace = (dirPath: string) => moveContentUpOneLevel({ dirPath })
             .then(({ beforeMovedFilePaths }) => beforeMovedFilePaths.map(filePath => path.join(dirPath, filePath)))
             ;
 
         return [
             ...(await moveAndReplace(tsconfigOutDir)),
-            ...(await moveAndReplace(srcDirPath))
+            ...(moveSourceFiles ? await moveAndReplace(srcDirPath) : [])
         ];
 
 
     })();
-    
-    const getAfterMovedFilePath = (params: { beforeMovedFilePath: string})=> {
+
+    const getAfterMovedFilePath = (params: { beforeMovedFilePath: string }) => {
 
         const beforeMovedFilePath = beforeMovedFilePaths.find(
             beforeMovedFilePath => path.relative(
-                beforeMovedFilePath, 
+                beforeMovedFilePath,
                 params.beforeMovedFilePath
             ) === ""
         );
 
-        if( beforeMovedFilePath === undefined ){
+        if (beforeMovedFilePath === undefined) {
+            //NOTE: In case the path would be absolute.
             return path.relative(".", params.beforeMovedFilePath);
         }
 
@@ -136,30 +142,46 @@ async function run(params: { pathToTargetModule: string; }) {
         const afterMovedFilePath = beforeMovedFilePath
             .replace(/^\.\//, "")
             .split(path.sep)
-            .filter((...[,index])=> index !== 0)
+            .filter((...[, index]) => index !== 0)
             .join(path.sep)
             ;
 
-        return afterMovedFilePath ;
+        return afterMovedFilePath;
 
     };
 
     beforeMovedFilePaths
-        .map(isDryRun ? (x => x) : (beforeMovedFilePath => getAfterMovedFilePath({ beforeMovedFilePath })))
-        .filter(afterMovedFilePath => /\.js\.map$/.test(afterMovedFilePath))
-        .forEach(sourceMapFilePath => {
+        .filter(beforeMovedFilePath => /\.js\.map$/.test(beforeMovedFilePath))
+        .forEach(beforeMovedSourceMapFilePath => {
+
+            const afterMovedSourceMapFilePath = getAfterMovedFilePath({
+                "beforeMovedFilePath": beforeMovedSourceMapFilePath
+            });
 
             const sourceMapParsed: { sources: string[] } = JSON.parse(
-                fs.readFileSync(sourceMapFilePath)
-                    .toString("utf8")
+                fs.readFileSync(
+                    isDryRun ?
+                        beforeMovedSourceMapFilePath :
+                        afterMovedSourceMapFilePath
+                ).toString("utf8")
             );
 
             const sources = sourceMapParsed.sources
-                .map(filePath => path.basename(filePath))
+                .map(
+                    filePath => path.relative(
+                        path.dirname(afterMovedSourceMapFilePath),
+                        getAfterMovedFilePath({
+                            "beforeMovedFilePath": path.join(
+                                path.dirname(beforeMovedSourceMapFilePath),
+                                filePath
+                            )
+                        })
+                    )
+                )
                 ;
 
             console.log([
-                `${isDryRun ? "(dry) " : ""}Editing ${path.basename(sourceMapFilePath)}:`,
+                `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
                 JSON.stringify({ "sources": sourceMapParsed.sources }),
                 `-> ${JSON.stringify({ sources })}`
             ].join(" "));
@@ -171,15 +193,14 @@ async function run(params: { pathToTargetModule: string; }) {
                 }
 
                 fs.writeFileSync(
-                    sourceMapFilePath,
+                    beforeMovedSourceMapFilePath,
                     Buffer.from(
                         JSON.stringify(
                             {
                                 ...sourceMapParsed,
                                 sources
                             }
-                        )
-                        ,
+                        ),
                         "utf8"
                     )
                 );
@@ -189,8 +210,7 @@ async function run(params: { pathToTargetModule: string; }) {
         })
         ;
 
-
-    {
+    walk: {
 
         const newPackageJsonRaw = JSON.stringify(
             {
@@ -224,33 +244,11 @@ async function run(params: { pathToTargetModule: string; }) {
                     })()
                 } : {}),
                 ...(!!packageJsonFilesResolved ? {
-                    "files": (() => {
-
-                        const out = packageJsonFilesResolved
+                    "files":
+                        packageJsonFilesResolved
                             .map(beforeMovedFilesFilePath => getAfterMovedFilePath({
                                 "beforeMovedFilePath": beforeMovedFilesFilePath
                             }))
-                            ;
-
-                        //If corresponding source file is not included do not include source file.
-                        {
-
-                            const srcFilePaths = out
-                                .filter(filePath => /\.ts$/i.test(filePath))
-                                .map(filePath => filePath.replace(/\.ts$/, ".ts"))
-                                ;
-
-                            [...out]
-                                .filter(filePath => /\.js\.map$/.test(filePath))
-                                .filter(filePath => !srcFilePaths.includes(filePath.replace(/\.js\.map$/, ".ts")))
-                                .forEach(filePath => out.splice(out.indexOf(filePath), 1))
-                                ;
-
-                        }
-
-                        return out;
-
-                    })()
                 } : {}),
                 "scripts": undefined
             },
@@ -260,23 +258,16 @@ async function run(params: { pathToTargetModule: string; }) {
                 .match(/^(\s*)\"name\"/m) ?? [{ "length": 2 }])[1].length
         ) + packageJsonRaw.match(/}([\r\n]*)$/)![1];
 
-
         console.log(`${isDryRun ? "(dry)" : ""} package.json:\n${newPackageJsonRaw}`);
 
-        walk: {
-
-            if (isDryRun) {
-                break walk;
-            }
-
-
-            fs.writeFileSync(
-                "package.json",
-                Buffer.from(newPackageJsonRaw, "utf8")
-            );
-
+        if (isDryRun) {
+            break walk;
         }
 
+        fs.writeFileSync(
+            "package.json",
+            Buffer.from(newPackageJsonRaw, "utf8")
+        );
 
     }
 
@@ -285,5 +276,37 @@ async function run(params: { pathToTargetModule: string; }) {
 
 if (require.main === module) {
     process.once("unhandledRejection", error => { throw error; });
-    run({ "pathToTargetModule": "." });
+
+    let moveSourceFiles = undefined as any as boolean;
+
+    walk: {
+
+        const arg = process.argv[2];
+
+        if (arg === undefined) {
+            break walk;
+        }
+
+        const match = arg.match(/^--\.ts_alongside_\.js=(true|false)$/);
+
+        console.log({ match });
+
+        if (match === null) {
+            console.log(`Argument accepted: --.ts_alongside_.js=false|true`);
+            process.exit(1);
+        }
+
+        moveSourceFiles = match[1] === "true";
+
+    }
+
+    console.log({ moveSourceFiles });
+
+    const { isDryRun } = getIsDryRun();
+
+    run({
+        "pathToTargetModule": ".",
+        moveSourceFiles,
+        isDryRun
+    });
 }

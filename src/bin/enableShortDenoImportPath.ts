@@ -13,10 +13,9 @@ import * as fs from "fs";
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
  * This function Change change the working directory.
  * */
-async function run(params: { pathToTargetModule: string; }) {
+async function run(params: { pathToTargetModule: string; isDryRun: boolean; }) {
 
-    const { isDryRun } = getIsDryRun();
-
+    const { isDryRun } = params;
 
     const { exec } = execFactory({ isDryRun });
     const { moveContentUpOneLevel } = moveContentUpOneLevelFactory({ isDryRun });
@@ -72,7 +71,12 @@ async function run(params: { pathToTargetModule: string; }) {
 }
 
 if (require.main === module) {
+
     process.once("unhandledRejection", error => { throw error; });
-    run({ "pathToTargetModule": "." });
+
+    const { isDryRun } = getIsDryRun();
+
+    run({ "pathToTargetModule": ".", isDryRun });
+
 }
 

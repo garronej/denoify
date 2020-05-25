@@ -57,7 +57,7 @@ jobs:
         branch: ${{ github.sha }}
         compare_to_version: ${{steps.v_latest.outputs.version || '0.0.0'}}
 
-    - name: 'Trigger the ''publish'' workflow if newer version' 
+    - name: '(Maybe) Trigger ''publish'' (if newer version)' 
       if: ${{ !!env.PAT && steps.v_master.outputs.compare_result == '1' }}
       uses: garronej/github_actions_toolkit@master
       env:

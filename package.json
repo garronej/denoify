@@ -30,7 +30,7 @@
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.12",
         "url-join": "^4.0.1",
-        "evt": "^1.7.10"
+        "evt": "^1.7.11"
     },
     "keywords": [
         "deno",

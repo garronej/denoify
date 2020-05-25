@@ -18,19 +18,16 @@ import * as commentJson from "comment-json";
 async function run(
     params: {
         pathToTargetModule: string;
-        moveSourceFiles: boolean;
         isDryRun: boolean;
     }
 ) {
 
-    const { moveSourceFiles, isDryRun } = params;
+    const { isDryRun } = params;
 
     const { exec } = execFactory({ isDryRun });
     const { moveContentUpOneLevel } = moveContentUpOneLevelFactory({ isDryRun });
 
     process.chdir(params.pathToTargetModule);
-
-    console.log({ moveSourceFiles });
 
     if (fs.existsSync(".npmignore")) {
         throw new Error(".npmignore not supported, please use package.json 'files' instead");
@@ -40,9 +37,7 @@ async function run(
         fs.readFileSync("package.json")
             .toString("utf8")
 
-    const packageJsonParsed = JSON.parse(
-        packageJsonRaw
-    );
+    const packageJsonParsed = JSON.parse(packageJsonRaw);
 
     const packageJsonFilesResolved: string[] | undefined = await (() => {
 
@@ -109,6 +104,19 @@ async function run(
         await exec(`rm -r ${denoDistPath}`);
 
     }
+
+    const moveSourceFiles =
+        "types" in packageJsonParsed ?
+            !packageJsonParsed["types"].match(/\.d\.ts$/i)
+            :
+            false
+        ;
+
+    console.log(
+        moveSourceFiles ? 
+            "Putting .ts files alongside .js files" : 
+            "Leaving .ts file in the src/ directory"
+    );
 
     const beforeMovedFilePaths = await (async () => {
 
@@ -216,16 +224,14 @@ async function run(
             {
                 ...packageJsonParsed,
                 ...("main" in packageJsonParsed ? {
-                    "main": path.relative(
-                        tsconfigOutDir,
-                        packageJsonParsed.main
-                    )
+                    "main": getAfterMovedFilePath({ 
+                        "beforeMovedFilePath": packageJsonParsed["main"] 
+                    })
                 } : {}),
                 ...("types" in packageJsonParsed ? {
-                    "types": path.relative(
-                        tsconfigOutDir,
-                        packageJsonParsed.types
-                    )
+                    "types": getAfterMovedFilePath({ 
+                        "beforeMovedFilePath": packageJsonParsed["types"] 
+                    })
                 } : {}),
                 ...("bin" in packageJsonParsed ? {
                     "bin": (() => {
@@ -235,7 +241,9 @@ async function run(
                         Object.keys(packageJsonParsed.bin)
                             .map(binName => [binName, packageJsonParsed.bin[binName]] as const)
                             .forEach(([binName, beforeMovedBinFilePath]) =>
-                                out[binName] = getAfterMovedFilePath({ "beforeMovedFilePath": beforeMovedBinFilePath })
+                                out[binName] = getAfterMovedFilePath({ 
+                                    "beforeMovedFilePath": beforeMovedBinFilePath 
+                                })
                             )
                             ;
 
@@ -277,36 +285,10 @@ async function run(
 if (require.main === module) {
     process.once("unhandledRejection", error => { throw error; });
 
-    let moveSourceFiles = undefined as any as boolean;
-
-    walk: {
-
-        const arg = process.argv[2];
-
-        if (arg === undefined) {
-            break walk;
-        }
-
-        const match = arg.match(/^--\.ts_alongside_\.js=(true|false)$/);
-
-        console.log({ match });
-
-        if (match === null) {
-            console.log(`Argument accepted: --.ts_alongside_.js=false|true`);
-            process.exit(1);
-        }
-
-        moveSourceFiles = match[1] === "true";
-
-    }
-
-    console.log({ moveSourceFiles });
-
     const { isDryRun } = getIsDryRun();
 
     run({
         "pathToTargetModule": ".",
-        moveSourceFiles,
         isDryRun
     });
 }

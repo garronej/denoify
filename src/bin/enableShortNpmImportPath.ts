@@ -193,7 +193,7 @@ async function run(
                 }
 
                 fs.writeFileSync(
-                    beforeMovedSourceMapFilePath,
+                    afterMovedSourceMapFilePath,
                     Buffer.from(
                         JSON.stringify(
                             {

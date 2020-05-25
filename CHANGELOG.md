@@ -1,3 +1,7 @@
+### **0.2.14** (2020-05-25)  
+  
+  
+  
 ### **0.2.13** (2020-05-23)  
   
 - Fix: Do not introduce absolute path in modified package.json ( enableShortNpmImportPath.ts )    

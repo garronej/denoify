@@ -1,7 +1,3 @@
-### **0.2.14** (2020-05-25)  
-  
-- NPM publish script: Let the user decide if using the source .ts files or .d.ts. Better debugging experience vs TS version retrocompat    
-  
 ### **0.2.13** (2020-05-23)  
   
 - Fix: Do not introduce absolute path in modified package.json ( enableShortNpmImportPath.ts )    

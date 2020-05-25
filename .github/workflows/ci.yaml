@@ -28,7 +28,7 @@ jobs:
 
 
   trigger_publish:
-    name: Trigger publish.yaml workflow if package.json version updated ( and secrets.PAT is set ).
+    name: '(Maybe) Trigger ''publish'' (if newer version)'
     runs-on: ubuntu-latest
     env:
       PAT: ${{secrets.PAT}}
@@ -57,7 +57,7 @@ jobs:
         branch: ${{ github.sha }}
         compare_to_version: ${{steps.v_latest.outputs.version || '0.0.0'}}
 
-    - name: '(Maybe) Trigger ''publish'' (if newer version)' 
+    - name: Trigger publish.yaml workflow if package.json version updated ( and secrets.PAT is set ). 
       if: ${{ !!env.PAT && steps.v_master.outputs.compare_result == '1' }}
       uses: garronej/github_actions_toolkit@master
       env:

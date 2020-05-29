@@ -1,3 +1,7 @@
+### **0.2.17** (2020-05-29)  
+  
+- Preparing readme for meetup groups    
+  
 ### **0.2.16** (2020-05-29)  
   
 - Removes from README warning against exposing API using Node.js's builtins. ( No longer relevant )  

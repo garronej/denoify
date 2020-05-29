@@ -1,3 +1,9 @@
+### **0.2.16** (2020-05-29)  
+  
+- Removes from README warning against exposing API using Node.js's builtins. ( No longer relevant )  
+- Remove the warning  
+- Update EVT    
+  
 ### **0.2.15** (2020-05-25)  
   
 - Pre NPM publish script: Infer if we should move the .ts files alongside the .js files from the package.json's types argument, by default do not move    

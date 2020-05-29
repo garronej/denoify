@@ -38,11 +38,6 @@ Modules that have been made cross-runtime using Denoify:
 
 At this stage of it's development, Denoify set quite restrictive requirements:   
 
-- Does your users need to have ``@types/node`` installed to use your module ? 
-  If yes then, unfortunately, your module is not denoifiable as it is. 
-  Even if you are allowed to use (some, not all) node builtins
-  such as ``fs``, ``path`` or ``event`` you will need to remove all Node reference from your exposed API before you can use Denoify. 
-  You can't for example expose a class that extends ``EventEmitter`` or if you do you will have to export a type definition for ``EventEmitter``.
 - You will need to provide a Deno polyfill for each of your project dependencies that are not known by Denoify.
   [Here is the list](https://github.com/garronej/denoify/blob/master/known-ports.jsonc) of modules for which Denoify has already a polyfill for.
   *Note that Denoify work recursively meaning that you can fork your dependencies repo and Denoify them yourself.  

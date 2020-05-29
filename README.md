@@ -10,8 +10,6 @@
 </p>
 <br>
 
-**WARNING**: This is a pre-release that might be broken in some ways. Stay tuned.
-
 # What it is
 
 This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files that are ready to be deployed as a Deno module.  

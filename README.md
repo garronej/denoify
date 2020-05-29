@@ -10,6 +10,9 @@
 </p>
 <br>
 
+The tool will be officially introduced at the next [Deno Paris](https://deno.paris) and 
+[Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) meetups.
+
 # What it is
 
 This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files that are ready to be deployed as a Deno module.  
@@ -22,7 +25,7 @@ A way to import node modules in Deno projects. For that purpose you can try [Com
 
 # Motivations
 
-- Although it is quite easy to port a module to Deno it is a chore to maintain two codebase.
+- Although it is quite easy to port a module to Deno no wants to maintain two codebase.
 - Wouldn't it be great to have a tool able to make all the major NPM modules available to Deno?
 
 # Example of modules using Denoify
@@ -32,39 +35,40 @@ Modules that have been made cross-runtime using Denoify:
 - [EVT](https://evt.land)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 
-# Will it work with my module ?
+# Limitations
 
-At this stage of it's development, Denoify set quite restrictive requirements:   
+Coming up next is a detailed guide on how to set up denoify with your project and how
+to publish on [deno.land/x](https://deno.land/x) but before anything
+here are the current limitations you need to be aware of.
 
-- You will need to provide a Deno polyfill for each of your project dependencies that are not known by Denoify.
-  [Here is the list](https://github.com/garronej/denoify/blob/master/known-ports.jsonc) of modules for which Denoify has already a polyfill for.
-  *Note that Denoify work recursively meaning that you can fork your dependencies repo and Denoify them yourself.  
-  However, depending on how deep your dependency tree goes it might not be feasible.*
-- Is your module a vanilla JS project? If yes you will have to port it into TypeScript first.
+- If your module is vanilla JS it needs to be ported to TypeScript first. (1)
+- Not all Node's builtin are supported yet. (2)
+- You will need to fork and denoify(3) manually each of the dependency 
+  your module depend on. 
+- For the dependencies that can't easily be denoified you will need to write a
+  partial Deno port of the bits your module needs.
+- `require()` is not yet supported.
+- You can't (yet) `fs.readFile` files that are part of the module ( files 
+  inside a ``res/`` directory for example ). (4)
 
-# Roadmap to 1.0
+(1) *Don't be afraid, renaming your source with ``.ts`` and dropping some ``any`` here 
+and there will do the trick.
+You will be able to pull it off even if you aren't familiar with typescript. [Ref](https://github.com/garronej/my_dummy_npm_and_deno_module#enable-strict-mode-and-fixes-errors-if-any)*
 
-These are the milestone that, when achieved, will enable Denoify to work transparently on most NPM modules:  
+(2) *You can consult [here](https://deno.land/std/node#supported-builtins) the current state of the Node's builtin support.*
 
-- Supporting all node builtins, everything on [this list](https://deno.land/std/node#supported-builtins) should be
-  checked ( help more than welcome ).
-- Supporting ``require()`` and ``fs`` ( synchronously or not ) for dynamically accessing files of the project
-  ( files that sits in the node_modules directory in Node ). Note that ``fs`` for the most part is already functional
-  but the problem arises when trying to access files that are not present on the disk. In Deno unlike in Node,
-  the packages files are not present on the disk at runtime. Fetching them synchronously is not a satisfactory solution
-  for obvious reasons. We can do it the way Browserify is doing it but this approach works only if the paths 
-  can be analyzed statically. The solution would be to provide a way for the user to define the files that are
-  susceptible to be accessed synchronously at runtime or by default pre-loading everything in a single files if the
-  project is using ``require`` or ``fs``.
-- The changes are currently performed with RegExp, we need to use the TypeScript compiler API if we want
-  the tool to be fully reliable. [ts-morph](https://github.com/dsherret/ts-morph) seems to be a good option here.
-- Support Javascript projects and automatically bundle types from ``DefinitelyTyped`` ( also applicable for 
-  ``@types/node`` ).
-- Automatically Denoify dependencies ( require all the previous milestone ).
+(3) *Glossary: To 'denoify' a module is the fact of using this tool to generate a deno 
+distribution of a module and to publish this distribution on GitHub. 
+How to do that is documented in great details.*
+
+(4) *In Deno the files that form your module won’t be pre-fetched and 
+placed in ``node_module`` so you won’t be able to access files that are not 
+on the disk.
+
 
 # GUIDES
 
-## Setting up on an existing project
+## Setting up an existing project
 
 Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up Denoify in your project.
 
@@ -72,10 +76,10 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 
 ![denoify_ci](https://user-images.githubusercontent.com/6702424/82036935-c52a3480-96a1-11ea-9794-e982a23e5612.png)
 
-[denoify_ci](https://github.com/garronej/denoify_ci) is a template repo that automate the boring and tedious tasks of:
+[denoify_ci](https://github.com/garronej/denoify_ci) is a template repo that automates the boring and tedious tasks of:
 - Filling up the ``package.json``
 - Setting up Typescript and [Denoify](https://github.com/garronej/denoify).
 - Writing a [README.md](https://github.com/garronej/denoify_ci/blob/dev/README.template.md) with decent presentation and instructions on how to install/import your module.
-- Testing on multiples ``Node`` and ``Deno`` version before publishing.
+- Testing on multiple ``Node`` and ``Deno`` version before publishing.
 - Maintaining a CHANGELOG
 - Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).

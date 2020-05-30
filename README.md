@@ -10,12 +10,12 @@
 </p>
 <br>
 
-_NOTICE_: The tool will be officially introduced at the next [Deno Paris](https://deno.paris) and 
-[Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) meetups.
+**NOTICE**: The tool will be officially introduced at the next [Deno Paris](https://deno.paris) and 
+[Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetups.
 
 # What it is
 
-This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files that are ready to be deployed as a Deno module.  
+This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
   
 **Denoify does for Deno what browserify does for the browser.**
 

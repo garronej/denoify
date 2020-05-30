@@ -58,11 +58,11 @@ You will be able to pull it off even if you aren't familiar with typescript. [Re
 
 (3) *Glossary: To 'denoify' a module is the process of using this tool to generate a deno 
 distribution of a module and to publish this distribution on GitHub. 
-How to do that is documented in great details.*
+How to do that is documented in great details.*  
 
 (4) *In Deno the files that form your module won’t be pre-fetched and 
 placed in ``node_module`` like in node so you won’t be able to access files that are not 
-on the disk.
+on the disk.*
 
 # GUIDES
 

@@ -41,13 +41,20 @@ export async function denoify(
         throw new Error("tsconfig.json must specify an outDir");
     }
 
-    if( 
-        !isInsideOrIsDir({ 
-            "dirPath": tsconfigOutDir, 
-            "fileOrDirPath": packageJsonParsed.main 
+    if (!("main" in packageJsonParsed)) {
+        throw new Error([
+            "A main field in package.json need to be specified",
+            "otherwise we don't know what file the mod.ts should export."
+        ].join(" "));
+    }
+
+    if (
+        !isInsideOrIsDir({
+            "dirPath": tsconfigOutDir,
+            "fileOrDirPath": packageJsonParsed.main
         })
     ) {
-        throw new Error(`The package.json main should point to a file inside ${tsconfigOutDir}`) 
+        throw new Error(`The package.json main should point to a file inside ${tsconfigOutDir}`)
     }
 
     const { denoifySingleFile } = denoifySingleFileFactory((() => {

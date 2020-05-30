@@ -57,7 +57,7 @@ You will be able to pull it off even if you aren't familiar with typescript. [Re
 (2) *You can consult [here](https://deno.land/std/node#supported-builtins) the current state of the Node's builtin support.*
 
 (3) *Glossary: To 'denoify' a module is the process of using this tool to generate a deno 
-distribution of a module and to publish this distribution on GitHub. 
+distribution of a module and to publish it on GitHub. 
 How to do that is documented in great details.*  
 
 (4) *In Deno the files that form your module won’t be pre-fetched and 

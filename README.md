@@ -10,7 +10,7 @@
 </p>
 <br>
 
-The tool will be officially introduced at the next [Deno Paris](https://deno.paris) and 
+_NOTICE_: The tool will be officially introduced at the next [Deno Paris](https://deno.paris) and 
 [Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) meetups.
 
 # What it is
@@ -43,13 +43,12 @@ here are the current limitations you need to be aware of.
 
 - If your module is vanilla JS it needs to be ported to TypeScript first. (1)
 - Not all Node's builtin are supported yet. (2)
-- You will need to fork and denoify(3) manually each of the dependency 
-  your module depend on. 
+- You will need to fork and denoify(3) manually each of your module's (not dev) dependencies. 
 - For the dependencies that can't easily be denoified you will need to write a
   partial Deno port of the bits your module needs.
 - `require()` is not yet supported.
-- You can't (yet) `fs.readFile` files that are part of the module ( files 
-  inside a ``res/`` directory for example ). (4)
+- You can't (yet) `fs.readFile` files that are part of the module ( files inside a ``res/`` 
+  directory for example ). (4)
 
 (1) *Don't be afraid, renaming your source with ``.ts`` and dropping some ``any`` here 
 and there will do the trick.
@@ -57,14 +56,13 @@ You will be able to pull it off even if you aren't familiar with typescript. [Re
 
 (2) *You can consult [here](https://deno.land/std/node#supported-builtins) the current state of the Node's builtin support.*
 
-(3) *Glossary: To 'denoify' a module is the fact of using this tool to generate a deno 
+(3) *Glossary: To 'denoify' a module is the process of using this tool to generate a deno 
 distribution of a module and to publish this distribution on GitHub. 
 How to do that is documented in great details.*
 
 (4) *In Deno the files that form your module won’t be pre-fetched and 
-placed in ``node_module`` so you won’t be able to access files that are not 
+placed in ``node_module`` like in node so you won’t be able to access files that are not 
 on the disk.
-
 
 # GUIDES
 
@@ -78,8 +76,9 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 
 [denoify_ci](https://github.com/garronej/denoify_ci) is a template repo that automates the boring and tedious tasks of:
 - Filling up the ``package.json``
-- Setting up Typescript and [Denoify](https://github.com/garronej/denoify).
-- Writing a [README.md](https://github.com/garronej/denoify_ci/blob/dev/README.template.md) with decent presentation and instructions on how to install/import your module.
-- Testing on multiple ``Node`` and ``Deno`` version before publishing.
-- Maintaining a CHANGELOG
-- Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).
+- Setting up TypeScript and [Denoify](https://github.com/garronej/denoify).
+- Writing a [README.md](https://github.com/garronej/denoify_ci/blob/dev/README.template.md) with decent presentation and instructions on how to install/import your module in different environments.
+- Testing with multiple ``Node`` and ``Deno`` versions before publishing.
+- Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).  
+
+[Get started](https://github.com/garronej/denoify_ci)

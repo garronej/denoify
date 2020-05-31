@@ -27,6 +27,9 @@ export async function transformCodebase(
                 .map(base => path.join(base, file_relative_path))
                 ;
 
+
+            fs.mkdirSync(path.dirname(dest), { "recursive": true });
+
             fs.copyFileSync(src, dest);
 
         }

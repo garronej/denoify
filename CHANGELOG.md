@@ -1,6 +1,6 @@
 ### **0.2.20** (2020-05-31)  
   
-- Fix previous boken release #5    
+- Fix previous broken release #5    
   
 ### **0.2.19** (2020-05-31)  
   

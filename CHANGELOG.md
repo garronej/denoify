@@ -1,3 +1,11 @@
+### **0.2.18** (2020-05-30)  
+  
+- Improve error message #4  
+- Minor readme fixes  
+- Rephrase  
+- fmt  
+- Improve readme    
+  
 ### **0.2.17** (2020-05-29)  
   
 - Preparing readme for meetup groups    

@@ -1,3 +1,7 @@
+### **0.2.19** (2020-05-31)  
+  
+- Windows compat #5    
+  
 ### **0.2.18** (2020-05-30)  
   
 - Improve error message #4  

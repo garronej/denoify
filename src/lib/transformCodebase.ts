@@ -1,11 +1,7 @@
 
-
-import * as st from "scripting-tools";
 import * as fs from "fs";
 import * as path from "path";
 import { crawl } from "../tools/crawl";
-
-
 
 /** Apply a transformation function to every file of directory */
 export async function transformCodebase(
@@ -25,12 +21,15 @@ export async function transformCodebase(
 
     for (const file_relative_path of crawl(srcDirPath)) {
 
-        st.fs_move(
-            "COPY",
-            srcDirPath,
-            destDirPath,
-            file_relative_path
-        );
+        {
+
+            const [src, dest] = [srcDirPath, destDirPath]
+                .map(base => path.join(base, file_relative_path))
+                ;
+
+            fs.copyFileSync(src, dest);
+
+        }
 
         const file_path = path.join(destDirPath, file_relative_path);
 

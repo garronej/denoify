@@ -143,7 +143,7 @@ This mean that the Node and the Deno distribution of your module will not run th
                     repositoryName: 'my_dummy_npm_and_deno_module',
                     branch: "0.2.0"
                 },
-                tsconfigOutDir: './dist'
+                tsconfigOutDir: path.normalize('./dist')
             }
         ));
 
@@ -176,7 +176,7 @@ This mean that the Node and the Deno distribution of your module will not run th
                     repositoryName: 'ts-md5',
                     branch: '1.2.7'
                 },
-                tsconfigOutDir: './dist'
+                tsconfigOutDir: path.normalize('./dist')
             }
 
         ));
@@ -212,7 +212,7 @@ This mean that the Node and the Deno distribution of your module will not run th
                     repositoryName: 'minimal_polyfills',
                     branch: '2.0.1'
                 },
-                tsconfigOutDir: './dist'
+                tsconfigOutDir: path.normalize('./dist')
             }
         ));
 

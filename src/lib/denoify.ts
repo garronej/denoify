@@ -32,7 +32,7 @@ export async function denoify(
             .toString("utf8")
     );
 
-    const tsconfigOutDir: string | undefined = commentJson.parse(
+    let tsconfigOutDir: string | undefined = commentJson.parse(
         fs.readFileSync("./tsconfig.json")
             .toString("utf8")
     )["compilerOptions"]["outDir"]; // ./dist
@@ -40,6 +40,8 @@ export async function denoify(
     if (!tsconfigOutDir) {
         throw new Error("tsconfig.json must specify an outDir");
     }
+
+    tsconfigOutDir= path.normalize(tsconfigOutDir);
 
     if (!("main" in packageJsonParsed)) {
         throw new Error([
@@ -51,7 +53,7 @@ export async function denoify(
     if (
         !isInsideOrIsDir({
             "dirPath": tsconfigOutDir,
-            "fileOrDirPath": packageJsonParsed.main
+            "fileOrDirPath": path.normalize(packageJsonParsed["main"])
         })
     ) {
         throw new Error(`The package.json main should point to a file inside ${tsconfigOutDir}`)
@@ -102,7 +104,7 @@ export async function denoify(
             denoDistPath,
             path.relative(
                 tsconfigOutDir,
-                packageJsonParsed.main // ./dist/lib/index.js
+                path.normalize(packageJsonParsed["main"]) // ./dist/lib/index.js
             ) // ./lib/index.js
         ) // ./deno_dist/lib/index.js
             .replace(/\.js$/i, ".ts"), // ./deno_dist/lib/index.ts,

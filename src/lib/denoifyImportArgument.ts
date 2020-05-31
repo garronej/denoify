@@ -50,7 +50,7 @@ export function denoifyImportArgumentFactory(
                 return `${importStr}.ts`;
             }
 
-            const out = path.join(importStr, "index.ts");
+            const out = path.posix.join(importStr, "index.ts");
 
             return out.startsWith(".") ? out : `./${out}`;
 
@@ -89,8 +89,10 @@ export function denoifyImportArgumentFactory(
         for (const tsconfigOutDir of [
             (() => {
                 switch (resolveResult.type) {
-                    case "DENOIFIED MODULE": return resolveResult.tsconfigOutDir;
-                    case "HANDMADE PORT": return "dist";
+                    case "DENOIFIED MODULE": 
+                        return resolveResult.tsconfigOutDir.replace(/\\/g, "/");
+                    case "HANDMADE PORT": 
+                        return "dist";
                 }
             })(),
             undefined
@@ -104,12 +106,12 @@ export function denoifyImportArgumentFactory(
                         (tsconfigOutDir === undefined ?
                             specificImportPath
                             :
-                            path.join(
-                                path.join(
-                                    path.dirname(tsconfigOutDir), // .
-                                    `deno_${path.basename(tsconfigOutDir)}`//deno_dist
+                            path.posix.join(
+                                path.posix.join(
+                                    path.posix.dirname(tsconfigOutDir), // .
+                                    `deno_${path.posix.basename(tsconfigOutDir)}`//deno_dist
                                 ), // deno_dist
-                                path.relative(
+                                path.posix.relative(
                                     tsconfigOutDir,
                                     specificImportPath // dest/tools/typeSafety
                                 ) //  tools/typeSafety

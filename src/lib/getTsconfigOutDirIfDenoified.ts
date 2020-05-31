@@ -2,6 +2,7 @@
 import { Scheme } from "./Scheme";
 import * as commentJson from "comment-json";
 import fetch from "node-fetch";
+import * as path from "path";
 
 export const { getTsconfigOutDirIfDenoified } = (() => {
 
@@ -49,14 +50,16 @@ export const { getTsconfigOutDirIfDenoified } = (() => {
         const { scheme } = params;
 
         return {
-            "tsconfigOutDir": commentJson.parse(
-                await fetch(
-                    Scheme.buildUrl(
-                        scheme,
-                        { "pathToFile": "tsconfig.json" }
-                    )
-                ).then(res => res.text())
-            )["compilerOptions"]["outDir"]
+            "tsconfigOutDir": path.normalize(
+                commentJson.parse(
+                    await fetch(
+                        Scheme.buildUrl(
+                            scheme,
+                            { "pathToFile": "tsconfig.json" }
+                        )
+                    ).then(res => res.text())
+                )["compilerOptions"]["outDir"]
+            )
         };
 
     }

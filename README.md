@@ -3,7 +3,7 @@
     <img src="https://user-images.githubusercontent.com/6702424/79351107-900eb300-7f38-11ea-8272-91ff725d29f3.png">
 </p>
 <p align="center">
-    <i>🦕 Support Deno and release on NPM with a single codebase. 🦕</i>
+    <i>🦕 Support Deno and release on NPM with a single codebase.🦕</i>
     <br>
     <br>
     <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
@@ -19,9 +19,12 @@ This tool takes as input a TypeScript codebase that was meant to target node and
   
 **Denoify does for Deno what browserify does for the browser.**
 
-# What it isn't
+If you are just looking for a quick way to load NPM modules in your Deno project
+you can check out [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading)
+unlike Denoify, it won't give you types definitions, it will involve `node_modules/`
+and require `--allow-read` but it will also be easier to get working.
 
-A way to import node modules in Deno projects. For that purpose you can try [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading)
+This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their module and doing so without introducing breaking changes.
 
 # Motivations
 

@@ -17,7 +17,7 @@
 
 This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
   
-**Denoify does for Deno what browserify does for the browser.**
+![what_denoify_does](https://user-images.githubusercontent.com/6702424/83460547-f3ac5b80-a466-11ea-84a9-026dfe225398.png)  
 
 If you are just looking for a quick way to load NPM modules in your Deno project
 you can check out [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading),

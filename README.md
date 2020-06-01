@@ -63,7 +63,7 @@ You will be able to pull it off even if you aren't familiar with typescript. [Re
 distribution of a module and to publish it on GitHub. 
 How to do that is documented in great details.*  
 
-(4) *In Deno the files that form your module won’t be pre-fetched and 
+(4) *In Deno the files that forms your module won’t be pre-fetched and 
 placed in ``node_module`` like in node so you won’t be able to access files that are not 
 on the disk.*
 

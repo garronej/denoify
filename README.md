@@ -15,7 +15,7 @@
 
 # What it is
 
-This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
+A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
   
 ![what_denoify_does](https://user-images.githubusercontent.com/6702424/83460547-f3ac5b80-a466-11ea-84a9-026dfe225398.png)  
 
@@ -28,8 +28,8 @@ This tool is mainly for NPM module maintainer, to enable them to bring first-cla
 
 # Motivations
 
-- Although it is quite easy to port a module to Deno no wants to maintain two codebase.
-- Wouldn't it be great to have a tool able to make all the major NPM modules available to Deno?
+- Although it is quite easy to port a module to Deno no one wants to maintain two codebase.
+- Wouldn't it be great to have a tool able to bring Deno support to NPM modules?
 
 # Example of modules using Denoify
 
@@ -61,7 +61,7 @@ You will be able to pull it off even if you aren't familiar with typescript. [Re
 
 (3) *Glossary: To 'denoify' a module is the process of using this tool to generate a deno 
 distribution of a module and to publish it on GitHub. 
-How to do that is documented in great details.*  
+How to do that is documented in details.*  
 
 (4) *In Deno the files that forms your module won’t be pre-fetched and 
 placed in ``node_module`` like in node so you won’t be able to access files that are not 

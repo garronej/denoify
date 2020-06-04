@@ -10,8 +10,7 @@
 </p>
 <br>
 
-**NOTICE**: The tool will be officially introduced at the next [Deno Paris](https://deno.paris) and 
-[Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetups.
+**NOTICE**: The tool will be presented at the next [Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetup.
 
 # What it is
 

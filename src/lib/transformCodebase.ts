@@ -2,6 +2,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { crawl } from "../tools/crawl";
+import { createDirectoryIfNotExistsRecursive } from "../tools/createDirectoryIfNotExistsRecursive";
 
 /** Apply a transformation function to every file of directory */
 export async function transformCodebase(
@@ -27,8 +28,8 @@ export async function transformCodebase(
                 .map(base => path.join(base, file_relative_path))
                 ;
 
-
-            fs.mkdirSync(path.dirname(dest), { "recursive": true });
+            //fs.mkdirSync(path.dirname(dest), { "recursive": true });
+            await createDirectoryIfNotExistsRecursive(path.dirname(dest));
 
             fs.copyFileSync(src, dest);
 

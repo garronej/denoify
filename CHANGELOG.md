@@ -1,3 +1,7 @@
+### **0.2.21** (2020-06-01)  
+  
+- Generated import path consistency Windows/Posix    
+  
 ### **0.2.20** (2020-05-31)  
   
 - Fix previous broken release #5    

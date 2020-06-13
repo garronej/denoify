@@ -3,30 +3,32 @@
     <img src="https://user-images.githubusercontent.com/6702424/79351107-900eb300-7f38-11ea-8272-91ff725d29f3.png">
 </p>
 <p align="center">
-    <i>🦕 Support Deno and release on NPM with a single codebase. 🦕</i>
+    <i>🦕 Support Deno and release on NPM with a single codebase.🦕</i>
     <br>
     <br>
     <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
 </p>
 <br>
 
-**NOTICE**: The tool will be officially introduced at the next [Deno Paris](https://deno.paris) and 
-[Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetups.
+**NOTICE**: The tool will be presented at the next [Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetup.  
 
 # What it is
 
-This tool takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
+A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
   
-**Denoify does for Deno what browserify does for the browser.**
+![what_denoify_does](https://user-images.githubusercontent.com/6702424/83460547-f3ac5b80-a466-11ea-84a9-026dfe225398.png)  
 
-# What it isn't
+If you are just looking for a quick way to load NPM modules in your Deno project
+you can check out [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading),
+unlike Denoify, it won't give you types definitions, it will involve `node_modules/`
+and require `--allow-read` but it will also be easier to get working.
 
-A way to import node modules in Deno projects. For that purpose you can try [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading)
+This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their module and doing so without introducing breaking changes.
 
 # Motivations
 
-- Although it is quite easy to port a module to Deno no wants to maintain two codebase.
-- Wouldn't it be great to have a tool able to make all the major NPM modules available to Deno?
+- Although it is quite easy to port a module to Deno no one wants to maintain two codebase.
+- Wouldn't it be great to have a tool able to bring Deno support to NPM modules?
 
 # Example of modules using Denoify
 
@@ -58,9 +60,9 @@ You will be able to pull it off even if you aren't familiar with typescript. [Re
 
 (3) *Glossary: To 'denoify' a module is the process of using this tool to generate a deno 
 distribution of a module and to publish it on GitHub. 
-How to do that is documented in great details.*  
+How to do that is documented in details.*  
 
-(4) *In Deno the files that form your module won’t be pre-fetched and 
+(4) *In Deno the files that forms your module won’t be pre-fetched and 
 placed in ``node_module`` like in node so you won’t be able to access files that are not 
 on the disk.*
 

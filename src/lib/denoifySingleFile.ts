@@ -53,6 +53,15 @@ export function denoifySingleFileFactory(
 
         }
 
+        if (usesBuiltIn("Buffer", sourceCode)) {
+
+            modifiedSourceCode = [
+                `import { Buffer } from "buffer";`,
+                modifiedSourceCode
+            ].join("\n");
+
+        }
+
         for (const quoteSymbol of [`"`, `'`]) {
 
             const strRegExpInQuote = `${quoteSymbol}[^${quoteSymbol}]+${quoteSymbol}`;
@@ -103,11 +112,41 @@ export function denoifySingleFileFactory(
 
 }
 
-//TODO: Improve!
+/*
+TODO: This is really at proof of concept stage.
+
+In the current implementation if any of those keyword appear in the source
+regardless of the context (including comments) the polyfills will be included.
+
+For now this implementation will do the trick, priority goes to polyfilling the
+node's builtins but this need to be improved later on.
+
+*/
 function usesBuiltIn(
-        builtIn: "__filename" | "__dirname" | "require" | "Buffer",
+        builtIn: "__filename" | "__dirname" | "Buffer",
         sourceCode: string
 ): boolean {
+
+    walk: {
+
+        if (builtIn !== "Buffer") {
+            break walk;
+        }
+
+        //We should return false for example
+        //if we have an import from the browserify polyfill
+        //e.g.: import { Buffer } from "buffer";
+        const match = sourceCode.match(
+            /import\s*{[^}]*Buffer[^}]*}\s*from\s*["'][^"']+["']/
+        );
+
+        if( match === null ){
+            break walk;
+        }
+
+        return false;
+
+    }
 
     return sourceCode.indexOf(builtIn) >= 0;
 

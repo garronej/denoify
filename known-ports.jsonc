@@ -8,9 +8,10 @@
         "querystring": "https://deno.land/std@master/node/querystring.ts",
         "timers": "https://deno.land/std@master/node/timers.ts",
         "util": "https://deno.land/std@master/node/util.ts", //Partial
-        "global": "https://deno.land/std@master/node/global.ts"
+        "global": "https://deno.land/std@master/node/global.ts",
+        "buffer": "https://deno.land/std@master/node/buffer.ts" //Partial
         /*
-        Important: built in missing: Buffer, http, https, stream...
+        Important: built in missing: http, https, stream...
         Follow evolution of support here: https://deno.land/std/node/README.md
         __filename and __dirname supported.
         */

@@ -10,7 +10,7 @@
 </p>
 <br>
 
-**NOTICE**: The tool will be presented at the next [Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetup.
+**NOTICE**: The tool will be presented at the next [Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetup.  
 **NOTICE**: ‘‘Buffer‘‘ support coming soon!
 # What it is
 

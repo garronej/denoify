@@ -11,7 +11,7 @@
 <br>
 
 **NOTICE**: The tool will be presented at the next [Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetup.  
-**NOTICE**: ‘‘Buffer‘‘ support coming soon!
+**NOTICE**: `Buffer` support coming soon!
 # What it is
 
 A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  

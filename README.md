@@ -23,7 +23,7 @@ you can check out [CommonJS module Loading](https://github.com/denoland/deno/tre
 unlike Denoify, it won't give you types definitions, it will involve `node_modules/`
 and require `--allow-read` but it will also be easier to get working.
 
-This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their module and doing so without introducing breaking changes.
+This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their modules and doing so without introducing breaking changes.
 
 # Motivations
 

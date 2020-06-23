@@ -137,7 +137,7 @@ function usesBuiltIn(
             return false;
         }
 
-        return !!sourceCode.match(/(?:^|\s)Buffer/);
+        return !!sourceCode.match(/(?:^|[\s\(;])Buffer/);
 
         } break;
         case "__dirname":

@@ -1,3 +1,14 @@
+### **0.2.22** (2020-06-13)  
+  
+- add Buffer support  
+- Support for node < v10  
+- Generated import path consistency Windows/Posix  
+- Notice about Buffer support  
+- Fix tipo  
+- Adding visual demo of what denoify does  
+- Fix typo  
+- What it isn't wasn't rellevent    
+  
 ### **0.2.21** (2020-06-01)  
   
 - Generated import path consistency Windows/Posix    

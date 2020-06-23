@@ -2,5 +2,5 @@
 import fetch from "node-fetch";
 
 export function is404(url: string): Promise<boolean> {
-    return fetch(url).then(({ status }) => status === 404);
+    return fetch(url).then(({ status }) => (status === 404 || status === 400));
 }

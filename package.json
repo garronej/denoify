@@ -30,7 +30,9 @@
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.12",
         "url-join": "^4.0.1",
-        "evt": "^1.7.11"
+        "evt": "^1.7.13",
+        "get-github-default-branch-name": "^0.0.4",
+        "@octokit/rest": "^18.0.0"
     },
     "keywords": [
         "deno",
@@ -54,6 +56,6 @@
         "@types/node-fetch": "^2.5.6",
         "@types/url-join": "^4.0.0",
         "js-yaml": "^3.13.1",
-        "typescript": "^3.9.0"
+        "typescript": "^3.9.5"
     }
 }

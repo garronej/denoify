@@ -84,3 +84,14 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 - Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).  
 
 [Get started](https://github.com/garronej/denoify_ci)
+
+# TODO LIST / Things that need to change
+
+- [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
+- [ ] Add cli option for specifying the output directory.
+
+
+   
+
+  
+

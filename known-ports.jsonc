@@ -1,15 +1,15 @@
 {
     "builtins": {
-        "events": "https://deno.land/std@master/node/events.ts",
-        "fs": "https://deno.land/std@master/node/fs.ts", //Partial
-        "os": "https://deno.land/std@master/node/os.ts", //Partial
-        "path": "https://deno.land/std@master/node/path.ts",
-        "process": "https://deno.land/std@master/node/process.ts", //Partial
-        "querystring": "https://deno.land/std@master/node/querystring.ts",
-        "timers": "https://deno.land/std@master/node/timers.ts",
-        "util": "https://deno.land/std@master/node/util.ts", //Partial
-        "global": "https://deno.land/std@master/node/global.ts",
-        "buffer": "https://deno.land/std@master/node/buffer.ts" //Partial
+        "events": "https://deno.land/std/node/events.ts",
+        "fs": "https://deno.land/std/node/fs.ts", //Partial
+        "os": "https://deno.land/std/node/os.ts", //Partial
+        "path": "https://deno.land/std/node/path.ts",
+        "process": "https://deno.land/std/node/process.ts", //Partial
+        "querystring": "https://deno.land/std/node/querystring.ts",
+        "timers": "https://deno.land/std/node/timers.ts",
+        "util": "https://deno.land/std/node/util.ts", //Partial
+        "global": "https://deno.land/std/node/global.ts",
+        "buffer": "https://deno.land/std/node/buffer.ts" //Partial
         /*
         Important: built in missing: http, https, stream...
         Follow evolution of support here: https://deno.land/std/node/README.md

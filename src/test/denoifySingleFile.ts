@@ -107,7 +107,7 @@ Buffer.from("hello");
 `;
 
     const expected = `
-import { Buffer } from "https://deno.land/std/node/buffer.ts";
+import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
 
 Buffer.from("hello");
 `;
@@ -117,7 +117,7 @@ Buffer.from("hello");
 
             assert(importArgument === "buffer");
 
-            return Promise.resolve("https://deno.land/std/node/buffer.ts");
+            return Promise.resolve("https://deno.land/std/xxx/buffer.ts");
 
 
         }
@@ -138,42 +138,3 @@ Buffer.from("hello");
     })();
 
 }
-
-{
-
-    const sourceCode = `
-Buffer.from("hello");
-`;
-
-    const expected = `
-import { Buffer } from "https://deno.land/std/node/buffer.ts";
-
-Buffer.from("hello");
-`.replace(/^\n/,"");
-
-    const { denoifySingleFile } = denoifySingleFileFactory({
-        "denoifyImportArgument": ({ importArgument }) => {
-
-            assert(importArgument === "buffer");
-
-            return Promise.resolve("https://deno.land/std/node/buffer.ts");
-
-        }
-    });
-
-    (async () => {
-
-        const modifiedSourceCode = await denoifySingleFile({
-            sourceCode,
-            "fileDirPath": "whatever"
-        });
-
-        assert(modifiedSourceCode === expected);
-
-        console.log("PASS");
-
-    })();
-
-}
-
-

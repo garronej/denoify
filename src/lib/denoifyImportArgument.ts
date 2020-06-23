@@ -1,10 +1,7 @@
 
 import * as path from "path";
-import { addCache } from "../tools/addCache";
-import { Scheme } from "./Scheme";
 import * as fs from "fs";
-import { is404 } from "../tools/is404";
-import type { Result as ResolveResult } from "./resolve";
+import type { NodeToDenoModuleResolutionResult } from "./resolveNodeModuleToDenoModule";
 
 /**
  * examples: 
@@ -14,11 +11,11 @@ import type { Result as ResolveResult } from "./resolve";
  */
 export function denoifyImportArgumentFactory(
     params: {
-        resolve(params: { nodeModuleName: string; }): Promise<ResolveResult>;
+        resolveNodeModuleToDenoModule(params: { nodeModuleName: string; }): Promise<NodeToDenoModuleResolutionResult>;
     }
 ) {
 
-    const resolve = addCache(params.resolve);
+    const { resolveNodeModuleToDenoModule } = params;
 
     async function denoifyImportArgument(
         params: {
@@ -68,89 +65,19 @@ export function denoifyImportArgumentFactory(
 
         })();
 
-        const resolveResult = await resolve({ nodeModuleName });
+        const nodeToDenoModuleResolutionResult = await resolveNodeModuleToDenoModule({ nodeModuleName });
 
-        if (resolveResult.type === "NON-FATAL UNMET DEPENDENCY") {
-            return `${importStr} DENOIFY: DEPENDENCY UNMET (${resolveResult.kind})`
+        if( nodeToDenoModuleResolutionResult.result === "NON-FATAL UNMET DEPENDENCY" ){
+            return `${importStr} DENOIFY: DEPENDENCY UNMET (${nodeToDenoModuleResolutionResult.kind})`
         }
 
-        if (!specificImportPath) {
+        const { getValidImportUrl } = nodeToDenoModuleResolutionResult;
 
-            const out=  Scheme.buildUrl(resolveResult.scheme, {});
-
-            if (await is404(out)) {
-                throw new Error(`${out} 404 not found !`);
-            }
-
-            return out;
-
-        }
-
-        for (const tsconfigOutDir of [
-            (() => {
-                switch (resolveResult.type) {
-                    case "DENOIFIED MODULE": 
-                        return resolveResult.tsconfigOutDir.replace(/\\/g, "/");
-                    case "HANDMADE PORT": 
-                        return "dist";
-                }
-            })(),
-            undefined
-        ]) {
-
-
-            let out = Scheme.buildUrl(
-                resolveResult.scheme,
-                {
-                    "pathToFile":
-                        (tsconfigOutDir === undefined ?
-                            specificImportPath
-                            :
-                            path.posix.join(
-                                path.posix.join(
-                                    path.posix.dirname(tsconfigOutDir), // .
-                                    `deno_${path.posix.basename(tsconfigOutDir)}`//deno_dist
-                                ), // deno_dist
-                                path.posix.relative(
-                                    tsconfigOutDir,
-                                    specificImportPath // dest/tools/typeSafety
-                                ) //  tools/typeSafety
-                            ) // deno_dist/tool/typeSafety
-                        ) + ".ts" // deno_dist/tool/typeSafety.ts
-                }
-            );
-
-            walk: {
-
-                if (await is404(out)) {
-                    break walk;
-                }
-
-                return out;
-
-            }
-
-            out = out
-                .replace(/\.ts$/, "/index.ts")
-                // https://.../deno_dist/tool/typeSafety/index.ts
-                ;
-
-            walk: {
-
-                if (await is404(out)) {
-                    break walk;
-                }
-
-                return out;
-
-            }
-
-        }
-
-        throw new Error([
-            `Problem resolving ${importStr} in ${fileDirPath} with`, 
-            `${JSON.stringify(resolveResult.scheme)} 404 not found.`
-        ].join(" "));
+        return getValidImportUrl(
+            !specificImportPath ?
+                ({ "target": "DEFAULT EXPORT" }) :
+                ({ "target": "SPECIFIC FILE", specificImportPath })
+        );
 
     }
 

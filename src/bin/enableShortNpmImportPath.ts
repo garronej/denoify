@@ -6,7 +6,7 @@ import { modTsFile } from "../lib/modTsFile";
 import { pathDepth } from "../tools/pathDepth";
 import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel"
 import { execFactory } from "../tools/exec";
-import { getIsDryRun } from "../lib/getIsDryRun";
+import { getIsDryRun } from "./lib/getIsDryRun";
 import { crawl } from "../tools/crawl";
 import * as fs from "fs";
 import * as commentJson from "comment-json";

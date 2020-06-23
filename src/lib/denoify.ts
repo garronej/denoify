@@ -1,13 +1,14 @@
 
 import { denoifySingleFileFactory } from "./denoifySingleFile";
 import { transformCodebase } from "./transformCodebase";
-import { resolveFactory } from "./resolve";
+import { resolveNodeModuleToDenoModuleFactory } from "./resolveNodeModuleToDenoModule";
 import * as fs from "fs";
 import * as path from "path";
 import * as commentJson from "comment-json";
 import { denoifyImportArgumentFactory } from "./denoifyImportArgument";
 import { modTsFile } from "./modTsFile";
 import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
+
 
 export async function denoify(
     params: {
@@ -44,6 +45,7 @@ export async function denoify(
     tsconfigOutDir= path.normalize(tsconfigOutDir);
 
     if (!("main" in packageJsonParsed)) {
+        //TODO: We shouldn't force users to specify a default export.
         throw new Error([
             "A main field in package.json need to be specified",
             "otherwise we don't know what file the mod.ts should export."
@@ -63,7 +65,7 @@ export async function denoify(
 
         const { denoifyImportArgument } = denoifyImportArgumentFactory((() => {
 
-            const { resolve } = resolveFactory({
+            const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
                 "projectPath": ".",
                 "userProvidedPorts": packageJsonParsed["denoPorts"] ?? {},
                 "dependencies": packageJsonParsed["dependencies"] ?? {},
@@ -71,7 +73,7 @@ export async function denoify(
                 "log": console.log
             });
 
-            return { resolve };
+            return { resolveNodeModuleToDenoModule };
 
 
         })());

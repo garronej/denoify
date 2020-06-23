@@ -127,28 +127,23 @@ function usesBuiltIn(
         sourceCode: string
 ): boolean {
 
-    walk: {
-
-        if (builtIn !== "Buffer") {
-            break walk;
-        }
+    switch(builtIn){
+        case "Buffer": {
 
         //We should return false for example
         //if we have an import from the browserify polyfill
         //e.g.: import { Buffer } from "buffer";
-        const match = sourceCode.match(
-            /import\s*{[^}]*Buffer[^}]*}\s*from\s*["'][^"']+["']/
-        );
-
-        if( match === null ){
-            break walk;
+        if( !!sourceCode.match( /import\s*{[^}]*Buffer[^}]*}\s*from\s*["'][^"']+["']/)) {
+            return false;
         }
 
-        return false;
+        return !!sourceCode.match(/(?:^|\s)Buffer/);
 
+        } break;
+        case "__dirname":
+        case "__filename":
+            return sourceCode.indexOf(builtIn) >= 0;
     }
-
-    return sourceCode.indexOf(builtIn) >= 0;
 
 }
 

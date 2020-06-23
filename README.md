@@ -10,13 +10,15 @@
 </p>
 <br>
 
+
+
 **NOTICE**: The tool will be presented at the next [Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetup.  
 
 # What it is
 
 A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
-  
-![what_denoify_does](https://user-images.githubusercontent.com/6702424/83460547-f3ac5b80-a466-11ea-84a9-026dfe225398.png)  
+
+![83460547-f3ac5b80-a466-11ea-84a9-026dfe225398](https://user-images.githubusercontent.com/6702424/85448868-6c4e9580-b597-11ea-9b61-61f259526249.png)
 
 If you are just looking for a quick way to load NPM modules in your Deno project
 you can check out [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading),

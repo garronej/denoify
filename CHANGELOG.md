@@ -1,3 +1,7 @@
+### **0.3.2** (2020-06-24)  
+  
+- Add RxJS in known ports    
+  
 ### **0.3.1** (2020-06-24)  
   
 - Improve non-explicitly imported builtins matching    

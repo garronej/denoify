@@ -1,12 +1,12 @@
 ### **0.3.1** (2020-06-24)  
   
-- Improve non-explicitely imported builtins matching    
+- Improve non-explicitly imported builtins matching    
   
 ## **0.3.0** (2020-06-23)  
   
 - More carefully check if Buffer is really user before including the Polyfill  
 - drop node v8 support  
-- std/node vesion freez (use latest version when compiling), suport default_version, stop assuming master is the default branch    
+- std/node version freeze (use latest version when compiling), support `default_version`, stop assuming master is the default branch    
   
 ### **0.2.22** (2020-06-13)  
   
@@ -14,10 +14,10 @@
 - Support for node < v10  
 - Generated import path consistency Windows/Posix  
 - Notice about Buffer support  
-- Fix tipo  
+- Fix typo  
 - Adding visual demo of what denoify does  
 - Fix typo  
-- What it isn't wasn't rellevent    
+- What it isn't wasn't relevant    
   
 ### **0.2.21** (2020-06-01)  
   

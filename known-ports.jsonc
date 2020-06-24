@@ -18,6 +18,7 @@
     },
     "third_party": {
         "js-yaml": "https://deno.land/x/js_yaml_port/js-yaml.js",
-        "ts-md5": "garronej/ts-md5"
+        "ts-md5": "garronej/ts-md5",
+        "rxjs": "DenoBRComunitty/rxjs"
     }
 }

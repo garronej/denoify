@@ -1,3 +1,7 @@
+### **0.3.1** (2020-06-24)  
+  
+- Improve non-explicitely imported builtins matching    
+  
 ## **0.3.0** (2020-06-23)  
   
 - More carefully check if Buffer is really user before including the Polyfill  

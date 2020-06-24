@@ -1,3 +1,9 @@
+## **0.3.0** (2020-06-23)  
+  
+- More carefully check if Buffer is really user before including the Polyfill  
+- drop node v8 support  
+- std/node vesion freez (use latest version when compiling), suport default_version, stop assuming master is the default branch    
+  
 ### **0.2.22** (2020-06-13)  
   
 - add Buffer support  

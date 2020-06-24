@@ -2,6 +2,8 @@
 import { denoifySingleFileFactory } from "../lib/denoifySingleFile";
 import { assert } from "evt/tools/typeSafety";
 
+(async()=>{
+
 {
 
 const sourceCode = `
@@ -39,7 +41,7 @@ const { denoifySingleFile } = denoifySingleFileFactory({
 });
 
 
-(async () => {
+await (async () => {
 
     const modifiedSourceCode = await denoifySingleFile({
         sourceCode,
@@ -83,7 +85,7 @@ console.log(__dirname,__filename);
         "denoifyImportArgument": () => { throw new Error("never"); }
     });
 
-    (async () => {
+    await (async () => {
 
         const modifiedSourceCode = await denoifySingleFile({
             sourceCode,
@@ -123,13 +125,12 @@ Buffer.from("hello");
         }
     });
 
-    (async () => {
+    await (async () => {
 
         const modifiedSourceCode = await denoifySingleFile({
             sourceCode,
             "fileDirPath": "whatever"
         });
-
 
         assert(modifiedSourceCode === expected);
 
@@ -138,3 +139,5 @@ Buffer.from("hello");
     })();
 
 }
+
+})();

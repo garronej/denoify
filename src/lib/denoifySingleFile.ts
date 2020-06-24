@@ -123,32 +123,24 @@ node's builtins but this need to be improved later on.
 
 */
 function usesBuiltIn(
-        builtIn: "__filename" | "__dirname" | "Buffer",
-        sourceCode: string
+    builtIn: "__filename" | "__dirname" | "Buffer",
+    sourceCode: string
 ): boolean {
 
-    switch(builtIn){
+    switch (builtIn) {
         case "Buffer": {
 
-        //We should return false for example
-        //if we have an import from the browserify polyfill
-        //e.g.: import { Buffer } from "buffer";
-        if( !!sourceCode.match( /import\s*{[^}]*Buffer[^}]*}\s*from\s*["'][^"']+["']/)) {
-            return false;
+            //We should return false for example
+            //if we have an import from the browserify polyfill
+            //e.g.: import { Buffer } from "buffer";
+            if (!!sourceCode.match(/import\s*{[^}]*Buffer[^}]*}\s*from\s*["'][^"']+["']/)) {
+                return false;
+            }
+
         }
-
-        return !!sourceCode.match(/(?:^|[\s\(;])Buffer/);
-
-        } break;
         case "__dirname":
         case "__filename":
-            return sourceCode.indexOf(builtIn) >= 0;
+            return (new RegExp(`(?:^|[\\s\\(\\);=><{}\\[\\]\\/:?,])${builtIn}`)).test(sourceCode);
     }
 
 }
-
-
-
-
-
-

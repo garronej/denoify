@@ -39,6 +39,11 @@ Modules that have been made cross-runtime using Denoify:
 - [EVT](https://evt.land)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 
+# Video introduction
+
+
+[![Watch the video](https://user-images.githubusercontent.com/6702424/85890466-af09ab00-b7ed-11ea-9cf4-10c9bbfb3621.png)](https://youtu.be/vJQdfTPeeXw)
+
 # Limitations
 
 Coming up next is a detailed guide on how to set up denoify with your project and how

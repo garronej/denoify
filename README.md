@@ -89,6 +89,7 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 
 # TODO LIST / Things that need to change
 
+- [ ] 🔥 Support CDN ([Pika](https://www.pika.dev/cdn), [jspm](https://jspm.org), [UNPKG](https://unpkg.com) ...) urls as Deno ports and feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png).
 - [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
 - [ ] Add cli option for specifying the output directory.
 

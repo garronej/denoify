@@ -20,5 +20,6 @@
         "js-yaml": "https://deno.land/x/js_yaml_port/js-yaml.js",
         "ts-md5": "garronej/ts-md5",
         "rxjs": "DenoBRComunitty/rxjs"
+        //Support of react, react-dom and many other coming soon!
     }
 }

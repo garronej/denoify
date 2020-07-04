@@ -140,7 +140,7 @@ function usesBuiltIn(
         }
         case "__dirname":
         case "__filename":
-            return (new RegExp(`(?:^|[\\s\\(\\);=><{}\\[\\]\\/:?,])${builtIn}`)).test(sourceCode);
+            return (new RegExp(`(?:^|[\\s\\(\\);=><{}\\[\\]\\/:?,])${builtIn}(?:$|[^a-zA-Z0-9$_-])`)).test(sourceCode);
     }
 
 }

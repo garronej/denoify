@@ -140,4 +140,105 @@ Buffer.from("hello");
 
 }
 
+{
+
+    const sourceCode = `
+Buffer.from("hello");
+`;
+
+    const expected = `
+import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
+
+Buffer.from("hello");
+`.replace(/^\n/,"");
+
+    const { denoifySingleFile } = denoifySingleFileFactory({
+        "denoifyImportArgument": ({ importArgument }) => {
+
+            assert(importArgument === "buffer");
+
+            return Promise.resolve("https://deno.land/std/xxx/buffer.ts");
+
+
+        }
+    });
+
+    await (async () => {
+
+        const modifiedSourceCode = await denoifySingleFile({
+            sourceCode,
+            "fileDirPath": "whatever"
+        });
+
+        assert(modifiedSourceCode === expected);
+
+        console.log("PASS");
+
+    })();
+
+}
+
+{
+
+    const sourceCode = `
+Buffer`;
+
+    const expected = `
+import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
+
+Buffer`.replace(/^\n/,"");
+
+    const { denoifySingleFile } = denoifySingleFileFactory({
+        "denoifyImportArgument": ({ importArgument }) => {
+
+            assert(importArgument === "buffer");
+
+            return Promise.resolve("https://deno.land/std/xxx/buffer.ts");
+
+
+        }
+    });
+
+    await (async () => {
+
+        const modifiedSourceCode = await denoifySingleFile({
+            sourceCode,
+            "fileDirPath": "whatever"
+        });
+
+        assert(modifiedSourceCode === expected);
+
+        console.log("PASS");
+
+    })();
+
+}
+
+{
+
+    const sourceCode = `
+ArrayBuffer.from("hello");
+new BufferSource.foo()
+Buffer_name
+`;
+
+    const { denoifySingleFile } = denoifySingleFileFactory({
+        "denoifyImportArgument": () => { assert(false) }
+    });
+
+    await (async () => {
+
+        const modifiedSourceCode = await denoifySingleFile({
+            sourceCode,
+            "fileDirPath": "whatever"
+        });
+
+        assert(modifiedSourceCode === sourceCode);
+
+        console.log("PASS");
+
+    })();
+
+}
+
 })();

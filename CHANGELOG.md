@@ -1,3 +1,7 @@
+### **0.3.3** (2020-07-04)  
+  
+- Improve node builtins usage detection (less false positive)    
+  
 ### **0.3.2** (2020-06-24)  
   
 - Add RxJS in known ports    

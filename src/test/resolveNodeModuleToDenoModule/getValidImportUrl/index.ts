@@ -1,5 +1,5 @@
 
-import { runSequentially } from "../../tools/runSequentially";
+import { runSequentially } from "../../../tools/runSequentially";
 
 runSequentially({
     "scriptsPaths": [

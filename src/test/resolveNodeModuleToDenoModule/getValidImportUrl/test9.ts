@@ -1,8 +1,9 @@
 
-import { ModuleAddress } from "../../lib/ModuleAddress";
+import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
 import * as inDepth from "evt/tools/inDepth";
 import { assert } from "evt/tools/typeSafety";
+import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 
 (async () => {
 
@@ -31,7 +32,7 @@ import { assert } from "evt/tools/typeSafety";
 
     {
 
-        const getValidImportUrlFactoryResult = await ModuleAddress.getValidImportUrlFactory({
+        const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             moduleAddress,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
             "version": "0.2.5"

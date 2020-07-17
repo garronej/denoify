@@ -1,22 +1,28 @@
 
-import { ModuleAddress } from "../../lib/ModuleAddress";
-import { assert } from "evt/tools/typeSafety";
 
+
+import { ModuleAddress } from "../../../lib/types/ModuleAddress";
+
+import { assert } from "evt/tools/typeSafety";
+import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
+
+//Makes sure it work when version tag is prefixed with a v.
 (async () => {
 
-    const moduleAddress: ModuleAddress.GitHubRepo = {
+    const expectedScheme: ModuleAddress.GitHubRepo = {
         "type": "GITHUB REPO",
         "userOrOrg": "garronej",
-        "repositoryName": "ts-md5",
+        "repositoryName": "evt",
         "branch": undefined
     } as const;
 
+
     {
 
-        const getValidImportUrlFactoryResult = await ModuleAddress.getValidImportUrlFactory({
-            "moduleAddress": moduleAddress,
+        const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
+            "moduleAddress": expectedScheme,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
-            "version": "1.2.7"
+            "version": "1.6.8"
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
@@ -31,14 +37,9 @@ import { assert } from "evt/tools/typeSafety";
         assert(
             await getValidImportUrl({ "target": "DEFAULT EXPORT" })
             ===
-            "https://raw.githubusercontent.com/garronej/ts-md5/1.2.7/mod.ts"
+            "https://raw.githubusercontent.com/garronej/evt/v1.6.8/mod.ts"
         );
 
-        assert(
-            await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "dist/parallel_hasher" })
-            ===
-            "https://raw.githubusercontent.com/garronej/ts-md5/1.2.7/deno_dist/parallel_hasher.ts"
-        );
 
     }
 

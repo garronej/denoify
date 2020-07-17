@@ -5,7 +5,7 @@ import { resolveNodeModuleToDenoModuleFactory } from "./resolveNodeModuleToDenoM
 import * as fs from "fs";
 import * as path from "path";
 import * as commentJson from "comment-json";
-import { denoifyImportArgumentFactory } from "./denoifyImportArgument";
+import { denoifyImportExportStatementFactory } from "./denoifyImportExportStatement";
 import { modTsFile } from "./modTsFile";
 import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
 
@@ -63,7 +63,7 @@ export async function denoify(
 
     const { denoifySingleFile } = denoifySingleFileFactory((() => {
 
-        const { denoifyImportArgument } = denoifyImportArgumentFactory((() => {
+        const { denoifyImportExportStatement } = denoifyImportExportStatementFactory((() => {
 
             const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
                 "projectPath": ".",
@@ -78,7 +78,7 @@ export async function denoify(
 
         })());
 
-        return { denoifyImportArgument };
+        return { denoifyImportExportStatement };
 
     })());
 

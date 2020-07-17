@@ -1,5 +1,5 @@
 
-import { resolveNodeModuleToDenoModuleFactory } from "../lib/resolveNodeModuleToDenoModule";
+import { resolveNodeModuleToDenoModuleFactory } from "../../lib/resolveNodeModuleToDenoModule";
 import * as path from "path";
 import { assert } from "evt/tools/typeSafety";
 
@@ -10,7 +10,7 @@ import { assert } from "evt/tools/typeSafety";
         let std_out = "";
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_1"),
+            "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_1"),
             "dependencies": {
                 "js-yaml": "~3.13.0"
             },
@@ -34,13 +34,12 @@ import { assert } from "evt/tools/typeSafety";
 
     }
 
-
     {
 
         let std_out = "";
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_2"),
+            "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_2"),
             "dependencies": {
                 "js-yaml": "~3.13.0"
             },
@@ -82,7 +81,7 @@ This mean that the Node and the Deno distribution of your module will not run th
         let std_out = "";
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_3"),
+            "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_3"),
             "dependencies": { "ts-md5": "1.2.7" },
             "devDependencies": {},
             "userProvidedPorts": {},
@@ -112,7 +111,7 @@ This mean that the Node and the Deno distribution of your module will not run th
         let std_out = "";
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_4"),
+            "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_4"),
             "dependencies": { "my-dummy-npm-and-deno-module": "0.2.0" },
             "devDependencies": {},
             "userProvidedPorts": {},
@@ -141,7 +140,7 @@ This mean that the Node and the Deno distribution of your module will not run th
         let std_out = "";
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_5"),
+            "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_5"),
             "dependencies": { "ts-md5": "garronej/ts-md5#1.2.7" },
             "devDependencies": {},
             "userProvidedPorts": {},
@@ -171,7 +170,7 @@ This mean that the Node and the Deno distribution of your module will not run th
         let std_out = "";
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_6"),
+            "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_6"),
             "dependencies": {
                 "minimal-polyfills": "~2.0.0"
             },

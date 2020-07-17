@@ -1,8 +1,8 @@
 
 
-import { ModuleAddress } from "../../lib/ModuleAddress";
-
+import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 import { assert } from "evt/tools/typeSafety";
+import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 
 (async () => {
 
@@ -18,7 +18,7 @@ import { assert } from "evt/tools/typeSafety";
 
     {
 
-        const getValidImportUrlFactoryResult = await ModuleAddress.getValidImportUrlFactory({
+        const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             "moduleAddress": expectedScheme,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
             "version": "99.99.99"

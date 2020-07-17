@@ -1,5 +1,5 @@
 
-import { ModuleAddress } from "../../lib/ModuleAddress";
+import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
 import * as inDepth from "evt/tools/inDepth";
 import { assert } from "evt/tools/typeSafety";

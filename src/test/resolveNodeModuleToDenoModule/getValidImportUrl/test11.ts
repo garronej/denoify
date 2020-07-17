@@ -1,9 +1,10 @@
 
-import { ModuleAddress } from "../../lib/ModuleAddress";
+import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
 import * as inDepth from "evt/tools/inDepth";
 import { assert } from "evt/tools/typeSafety";
-import { getCurrentStdVersion } from "../../lib/getCurrentStdVersion";
+import { getCurrentStdVersion } from "../../../lib/getCurrentStdVersion";
+import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 
 //When this is installed: https://www.npmjs.com/package/buffer 
 //We should still resolve the std without trying to match the version
@@ -34,7 +35,7 @@ import { getCurrentStdVersion } from "../../lib/getCurrentStdVersion";
 
     {
 
-        const getValidImportUrlFactoryResult = await ModuleAddress.getValidImportUrlFactory({
+        const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             moduleAddress,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
             "version": "0.55.0"

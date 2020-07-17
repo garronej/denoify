@@ -1,5 +1,6 @@
 
-import { ModuleAddress } from "../../lib/ModuleAddress";
+import { ModuleAddress } from "../../../lib/types/ModuleAddress";
+import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 
 import { assert } from "evt/tools/typeSafety";
 
@@ -12,7 +13,7 @@ import { assert } from "evt/tools/typeSafety";
         "branch": undefined
     } as const;
 
-    const getValidImportUrlFactoryResult = await ModuleAddress.getValidImportUrlFactory({
+    const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
         "moduleAddress": moduleAddress,
         "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
         "version": "99.99.99"

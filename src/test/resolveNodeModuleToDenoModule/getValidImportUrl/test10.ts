@@ -1,9 +1,10 @@
 
-import { ModuleAddress } from "../../lib/ModuleAddress";
+import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
 import * as inDepth from "evt/tools/inDepth";
 import { assert } from "evt/tools/typeSafety";
-import { getCurrentStdVersion } from "../../lib/getCurrentStdVersion";
+import { getCurrentStdVersion } from "../../../lib/getCurrentStdVersion";
+import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 
 (async () => {
 
@@ -31,7 +32,7 @@ import { getCurrentStdVersion } from "../../lib/getCurrentStdVersion";
 
     {
 
-        const getValidImportUrlFactoryResult = await ModuleAddress.getValidImportUrlFactory({
+        const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             moduleAddress,
             "desc": "NO SPECIFIC VERSION PRESENT IN NODE_MODULE ( PROBABLY NODE BUILTIN)",
         });

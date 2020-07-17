@@ -1,6 +1,7 @@
 
 import { denoifySingleFileFactory } from "../lib/denoifySingleFile";
 import { assert } from "evt/tools/typeSafety";
+import { ParsedImportExportStatement } from "../lib/types/ParsedImportExportStatement";
 
 (async()=>{
 
@@ -27,43 +28,66 @@ const dd = import   (   "xxx"    );
 
 `;
 
+const expected = `
+import * as _ from "xxx"; import * as foobar from "xxx" import * as d from "xxx";
+const ok = 3;
+import { } from "xxx";
+import * as baz from "xxx";
+import * as foo from 'xxx';
+import type * as foo from 'xxx';
+import type { Cat } from 'xxx';
+import "xxx";
+
+const dd = import("xxx");
+const dd = import("xxx");
+
+`.replace(/xxx/g, "yyy");
+
 const str = "foo bar";
 
-const { denoifySingleFile } = denoifySingleFileFactory({
-    "denoifyImportArgument": ({ importArgument, fileDirPath }) => {
+        const { denoifySingleFile } = denoifySingleFileFactory({
+            "denoifyImportExportStatement": ({ importExportStatement, fileDirPath }) => {
 
-        assert(fileDirPath === str);
-        assert(importArgument === "xxx");
+                assert(fileDirPath === str);
 
-        return Promise.resolve("yyy");
+                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
+
+                assert(parsedImportExportStatement.argument === "xxx");
+
+                return Promise.resolve(
+                    ParsedImportExportStatement.stringify({
+                        ...parsedImportExportStatement,
+                        "argument": "yyy"
+                    })
+                );
+
+            }
+        });
+
+
+        await (async () => {
+
+            const modifiedSourceCode = await denoifySingleFile({
+                sourceCode,
+                "fileDirPath": str
+            });
+
+            assert(modifiedSourceCode === expected);
+
+            console.log("PASS");
+
+        })();
 
     }
-});
 
 
-await (async () => {
+    {
 
-    const modifiedSourceCode = await denoifySingleFile({
-        sourceCode,
-        "fileDirPath": str
-    });
-
-    assert(modifiedSourceCode === sourceCode.replace(/xxx/g, "yyy"));
-
-    console.log("PASS");
-
-})();
-
-}
-
-
-{
-
-    const sourceCode = `
+        const sourceCode = `
 console.log(__dirname,__filename);
 `;
 
-    const expected = `
+        const expected = `
 const __dirname = (()=>{
     const {url: urlStr}= import.meta;
     const url= new URL(urlStr);
@@ -79,166 +103,187 @@ const __filename = (()=>{
 
 
 console.log(__dirname,__filename);
-`.replace(/^\n/,"");
+`.replace(/^\n/, "");
 
-    const { denoifySingleFile } = denoifySingleFileFactory({
-        "denoifyImportArgument": () => { throw new Error("never"); }
-    });
-
-    await (async () => {
-
-        const modifiedSourceCode = await denoifySingleFile({
-            sourceCode,
-            "fileDirPath": "whatever"
+        const { denoifySingleFile } = denoifySingleFileFactory({
+            "denoifyImportExportStatement": () => { throw new Error("never"); }
         });
 
-        assert(modifiedSourceCode === expected);
+        await (async () => {
 
-        console.log("PASS");
+            const modifiedSourceCode = await denoifySingleFile({
+                sourceCode,
+                "fileDirPath": "whatever"
+            });
 
-    })();
+            assert(modifiedSourceCode === expected);
 
-}
+            console.log("PASS");
 
-{
+        })();
 
-    const sourceCode = `
+    }
+
+    {
+
+        const sourceCode = `
 import { Buffer } from "buffer";
 
 Buffer.from("hello");
 `;
 
-    const expected = `
+        const expected = `
 import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
 
 Buffer.from("hello");
 `;
 
-    const { denoifySingleFile } = denoifySingleFileFactory({
-        "denoifyImportArgument": ({ importArgument }) => {
+        const { denoifySingleFile } = denoifySingleFileFactory({
+            "denoifyImportExportStatement": ({ importExportStatement }) => {
 
-            assert(importArgument === "buffer");
+                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
-            return Promise.resolve("https://deno.land/std/xxx/buffer.ts");
+                assert(parsedImportExportStatement.argument === "buffer");
+
+                return Promise.resolve(
+                    ParsedImportExportStatement.stringify({
+                        ...parsedImportExportStatement,
+                        "argument": "https://deno.land/std/xxx/buffer.ts"
+                    })
+                );
 
 
-        }
-    });
-
-    await (async () => {
-
-        const modifiedSourceCode = await denoifySingleFile({
-            sourceCode,
-            "fileDirPath": "whatever"
+            }
         });
 
-        assert(modifiedSourceCode === expected);
+        await (async () => {
 
-        console.log("PASS");
+            const modifiedSourceCode = await denoifySingleFile({
+                sourceCode,
+                "fileDirPath": "whatever"
+            });
 
-    })();
+            assert(modifiedSourceCode === expected);
 
-}
+            console.log("PASS");
 
-{
+        })();
 
-    const sourceCode = `
+    }
+
+    {
+
+        const sourceCode = `
 Buffer.from("hello");
 `;
 
-    const expected = `
+        const expected = `
 import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
 
 Buffer.from("hello");
-`.replace(/^\n/,"");
+`.replace(/^\n/, "");
 
-    const { denoifySingleFile } = denoifySingleFileFactory({
-        "denoifyImportArgument": ({ importArgument }) => {
+        const { denoifySingleFile } = denoifySingleFileFactory({
+            "denoifyImportExportStatement": ({ importExportStatement }) => {
 
-            assert(importArgument === "buffer");
+                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
-            return Promise.resolve("https://deno.land/std/xxx/buffer.ts");
+                assert(parsedImportExportStatement.argument === "buffer");
+
+                return Promise.resolve(
+                    ParsedImportExportStatement.stringify({
+                        ...parsedImportExportStatement,
+                        "argument": "https://deno.land/std/xxx/buffer.ts"
+                    })
+                );
 
 
-        }
-    });
-
-    await (async () => {
-
-        const modifiedSourceCode = await denoifySingleFile({
-            sourceCode,
-            "fileDirPath": "whatever"
+            }
         });
 
-        assert(modifiedSourceCode === expected);
+        await (async () => {
 
-        console.log("PASS");
+            const modifiedSourceCode = await denoifySingleFile({
+                sourceCode,
+                "fileDirPath": "whatever"
+            });
 
-    })();
+            assert(modifiedSourceCode === expected);
 
-}
+            console.log("PASS");
 
-{
+        })();
 
-    const sourceCode = `
+    }
+
+    {
+
+        const sourceCode = `
 Buffer`;
 
-    const expected = `
+        const expected = `
 import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
 
-Buffer`.replace(/^\n/,"");
+Buffer`.replace(/^\n/, "");
 
-    const { denoifySingleFile } = denoifySingleFileFactory({
-        "denoifyImportArgument": ({ importArgument }) => {
+        const { denoifySingleFile } = denoifySingleFileFactory({
+            "denoifyImportExportStatement": ({ importExportStatement }) => {
 
-            assert(importArgument === "buffer");
+                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
-            return Promise.resolve("https://deno.land/std/xxx/buffer.ts");
+                assert(parsedImportExportStatement.argument === "buffer");
+
+                return Promise.resolve(
+                    ParsedImportExportStatement.stringify({
+                        ...parsedImportExportStatement,
+                        "argument": "https://deno.land/std/xxx/buffer.ts"
+                    })
+                );
 
 
-        }
-    });
-
-    await (async () => {
-
-        const modifiedSourceCode = await denoifySingleFile({
-            sourceCode,
-            "fileDirPath": "whatever"
+            }
         });
 
-        assert(modifiedSourceCode === expected);
+        await (async () => {
 
-        console.log("PASS");
+            const modifiedSourceCode = await denoifySingleFile({
+                sourceCode,
+                "fileDirPath": "whatever"
+            });
 
-    })();
+            assert(modifiedSourceCode === expected);
 
-}
+            console.log("PASS");
 
-{
+        })();
 
-    const sourceCode = `
+    }
+
+    {
+
+        const sourceCode = `
 ArrayBuffer.from("hello");
 new BufferSource.foo()
 Buffer_name
 `;
 
-    const { denoifySingleFile } = denoifySingleFileFactory({
-        "denoifyImportArgument": () => { assert(false) }
-    });
-
-    await (async () => {
-
-        const modifiedSourceCode = await denoifySingleFile({
-            sourceCode,
-            "fileDirPath": "whatever"
+        const { denoifySingleFile } = denoifySingleFileFactory({
+            "denoifyImportExportStatement": () => { assert(false) }
         });
 
-        assert(modifiedSourceCode === sourceCode);
+        await (async () => {
 
-        console.log("PASS");
+            const modifiedSourceCode = await denoifySingleFile({
+                sourceCode,
+                "fileDirPath": "whatever"
+            });
 
-    })();
+            assert(modifiedSourceCode === sourceCode);
 
-}
+            console.log("PASS");
+
+        })();
+
+    }
 
 })();

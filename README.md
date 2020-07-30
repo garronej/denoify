@@ -56,7 +56,7 @@ here are the current limitations you need to be aware of.
 - For the dependencies that can't easily be denoified you will need to write a
   partial Deno port of the bits your module needs.
 - `require()` is not yet supported.
-- You can't (yet) `fs.readFile` files that are part of the module ( files inside a ``res/`` 
+- You can't (yet) `fs.readFile()` files that are part of the module ( files inside a ``res/`` 
   directory for example ). (4)
 
 (1) *Don't be afraid, renaming your source with ``.ts`` and dropping some ``any`` here 

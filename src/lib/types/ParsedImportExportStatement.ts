@@ -15,8 +15,6 @@ export namespace ParsedImportExportStatement {
 
     export type Async = _Common & {
         isAsyncImport: true;
-        quoteSymbol: "\"" | "'";
-        argument: string;
     };
 
     export type Regular = Regular.Export | Regular.Import;

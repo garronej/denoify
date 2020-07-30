@@ -1,6 +1,6 @@
 # Roadmap
 
-Now that we have `ParsedImportExportStatement` we can implement a wat to, on a case by case basis add
+Now that we have `ParsedImportExportStatement` we can implement a way to, on a case by case basis, add
 support for third party library by writing custom import and enable user to write their own import.
 Example with `ipaddr.js`:
 

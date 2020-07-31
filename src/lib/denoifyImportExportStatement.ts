@@ -1,7 +1,10 @@
 import * as path from "path";
+import { assert, typeGuard } from "evt/tools/typeSafety";
 import * as fs from "fs";
-import type { NodeToDenoModuleResolutionResult } from "./resolveNodeModuleToDenoModule";
+import type { resolveNodeModuleToDenoModuleFactory } from "./resolveNodeModuleToDenoModule";
+import type { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 import { ParsedImportExportStatement } from "./types/ParsedImportExportStatement";
+import { consumeExecutableReplacerFactory } from "./replacer";
 
 /**
  * examples: 
@@ -11,16 +14,36 @@ import { ParsedImportExportStatement } from "./types/ParsedImportExportStatement
  */
 export function denoifyImportExportStatementFactory(
     params: {
-        resolveNodeModuleToDenoModule(params: { nodeModuleName: string; }): Promise<NodeToDenoModuleResolutionResult>;
-    }
+        userProvidedReplacerPath: string | undefined;
+    } &
+        ReturnType<typeof resolveNodeModuleToDenoModuleFactory> &
+        ReturnType<typeof getInstalledVersionPackageJsonFactory>
 ) {
 
-    const { resolveNodeModuleToDenoModule } = params;
+    const {
+        userProvidedReplacerPath,
+        resolveNodeModuleToDenoModule,
+        getInstalledVersionPackageJson
+    } = params;
+
+    const {
+        consumeExecutableReplacer: consumeExecutableBuiltinsReplacer
+    } = consumeExecutableReplacerFactory({
+        "filePath": path.join(__dirname, "..", "bin", "replacer", "index")
+    });
+
+    const {
+        consumeExecutableReplacer: consumeExecutableUserProvidedReplacer
+    } = userProvidedReplacerPath === undefined ?
+            { "consumeExecutableReplacer": undefined } :
+            consumeExecutableReplacerFactory({
+                "filePath": userProvidedReplacerPath
+            });
 
     async function denoifyImportExportStatement(
         params: {
             /** Path of the file in which the import was */
-            fileDirPath: string; //
+            fileDirPath: string;
             /** e.g:  
              * import { Evt } from "evt"
              * import { id } "evt/dist/tools/typeSafety" 
@@ -32,56 +55,97 @@ export function denoifyImportExportStatementFactory(
     ): Promise<string> {
 
 
-        const { fileDirPath } = params;
+        const { fileDirPath, importExportStatement } = params;
 
         const parsedImportExportStatement = ParsedImportExportStatement.parse(
             params.importExportStatement
         );
 
+        if (parsedImportExportStatement.parsedArgument.type === "URL") {
+
+            //There is no reason to have url import in the source
+            //file as url import are not supported by node it does not 
+            //hurt to leave the import unchanged. See #7
+            return importExportStatement;
+
+        }
+
         const stringify = (argument: string) =>
             ParsedImportExportStatement.stringify({
                 ...parsedImportExportStatement,
-                argument
+                "parsedArgument": ParsedImportExportStatement.ParsedArgument.parse(
+                    argument
+                )
             });
 
-        const importStr = parsedImportExportStatement
-            .argument // ./interfaces/ 
-            .replace(/\/+$/, "/index") // ./interfaces/index ( if ends with / append index )
-            ;
+        if (parsedImportExportStatement.parsedArgument.type === "PROJECT LOCAL FILE") {
 
-        if (importStr.startsWith(".")) {
+            const { relativePath } = parsedImportExportStatement.parsedArgument;
 
-            if (/\.json$/i.test(importStr)) {
-                return stringify(importStr);
+            if (/\.json$/i.test(relativePath)) {
+                return stringify(relativePath);
             }
 
-            if (fs.existsSync(path.join(fileDirPath, `${importStr}.ts`))) {
-                return stringify(`${importStr}.ts`);
+            if (fs.existsSync(path.join(fileDirPath, `${relativePath}.ts`))) {
+                return stringify(`${relativePath}.ts`);
             }
 
-            const out = path.posix.join(importStr, "index.ts");
+            const out = path.posix.join(relativePath, "index.ts");
 
             return stringify(out.startsWith(".") ? out : `./${out}`);
 
         }
 
-        const { nodeModuleName, specificImportPath } = (() => {
+        //NOTE: Should be inferable...
+        assert(
+            typeGuard<import("./replacer").ParsedImportExportStatement<"DEPENDENCY">>(
+                parsedImportExportStatement
+            )
+        );
 
-            const [nodeModuleName, ...rest] = importStr.split("/");
+        const { nodeModuleName, specificImportPath } = parsedImportExportStatement.parsedArgument;
 
-            return {
-                nodeModuleName,
-                "specificImportPath": rest.join("/")
-            };
+        const { version } = await getInstalledVersionPackageJson({ nodeModuleName })
+            .catch(() => ({ "version": "0.0.0" }));
 
+        walk: {
 
-        })();
+            const result = await consumeExecutableUserProvidedReplacer!({
+                parsedImportExportStatement,
+                version
+            });
 
+            if (result === undefined) {
+
+                break walk;
+
+            }
+
+        }
+
+        walk: {
+
+            const result = await consumeExecutableBuiltinsReplacer({
+                parsedImportExportStatement,
+                version
+            });
+
+            if (result === undefined) {
+
+                break walk;
+
+            }
+
+        }
 
         const nodeToDenoModuleResolutionResult = await resolveNodeModuleToDenoModule({ nodeModuleName });
 
         if (nodeToDenoModuleResolutionResult.result === "NON-FATAL UNMET DEPENDENCY") {
-            return stringify(`${importStr} DENOIFY: DEPENDENCY UNMET (${nodeToDenoModuleResolutionResult.kind})`);
+            return stringify(`${
+                ParsedImportExportStatement.ParsedArgument.stringify(
+                    parsedImportExportStatement.parsedArgument
+                )
+                } DENOIFY: DEPENDENCY UNMET (${nodeToDenoModuleResolutionResult.kind})`);
         }
 
         const { getValidImportUrl } = nodeToDenoModuleResolutionResult;

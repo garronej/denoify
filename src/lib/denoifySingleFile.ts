@@ -3,9 +3,8 @@ import { replaceAsync } from "../tools/replaceAsync";
 import type { denoifyImportExportStatementFactory } from "./denoifyImportExportStatement";
 
 export function denoifySingleFileFactory(
-    params: {
-        denoifyImportExportStatement: ReturnType<typeof denoifyImportExportStatementFactory>["denoifyImportExportStatement"]
-    }
+    params: {} & 
+    ReturnType<typeof denoifyImportExportStatementFactory>
 ) {
 
     const { denoifyImportExportStatement } = params;

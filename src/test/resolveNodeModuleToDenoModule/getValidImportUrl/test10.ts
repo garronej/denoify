@@ -34,7 +34,7 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoM
 
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             moduleAddress,
-            "desc": "NO SPECIFIC VERSION PRESENT IN NODE_MODULE ( PROBABLY NODE BUILTIN)",
+            "desc": "NOT LISTED AS A DEPENDENCY (PROBABLY NODE BUILTIN)",
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);

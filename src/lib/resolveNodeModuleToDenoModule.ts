@@ -1,5 +1,4 @@
 
-import * as st from "scripting-tools";
 import { getProjectRoot } from "../tools/getProjectRoot";
 import * as fs from "fs";
 import { ModuleAddress } from "./types/ModuleAddress";
@@ -12,6 +11,7 @@ import * as commentJson from "comment-json";
 import * as path from "path";
 import { addCache } from "../tools/addCache";
 import { getCurrentStdVersion } from "./getCurrentStdVersion";
+import type { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 
 const knownPorts: { [nodeModuleName: string]: string; } = (() => {
 
@@ -36,7 +36,7 @@ type GetValidImportUrl = (params: {
     specificImportPath: string; // e.g tools/typeSafety ( no .ts ext )
 }) => Promise<string>;
 
-export type NodeToDenoModuleResolutionResult = {
+type Result = {
     result: "SUCCESS";
     getValidImportUrl: GetValidImportUrl;
 } | {
@@ -46,15 +46,14 @@ export type NodeToDenoModuleResolutionResult = {
 
 export function resolveNodeModuleToDenoModuleFactory(
     params: {
-        projectPath: string;
         userProvidedPorts: { [nodeModuleName: string]: string; };
         dependencies: { [nodeModuleName: string]: string; };
         devDependencies: { [nodeModuleName: string]: string; };
         log: typeof console.log;
-    }
+    } & ReturnType<typeof getInstalledVersionPackageJsonFactory>
 ) {
 
-    const { log } = params;
+    const { log, getInstalledVersionPackageJson } = params;
 
     const { denoPorts } = (() => {
 
@@ -78,11 +77,6 @@ export function resolveNodeModuleToDenoModuleFactory(
 
     const devDependenciesNames = Object.keys(params.devDependencies);
 
-    const getTargetModulePath = (nodeModuleName: string) =>
-        st.find_module_path(
-            nodeModuleName,
-            params.projectPath
-        );
 
     const isInUserProvidedPort = (nodeModuleName: string) =>
         nodeModuleName in params.userProvidedPorts
@@ -91,7 +85,7 @@ export function resolveNodeModuleToDenoModuleFactory(
 
     const resolveNodeModuleToDenoModule = addCache(async (
         params: { nodeModuleName: string; }
-    ): Promise<NodeToDenoModuleResolutionResult> => {
+    ): Promise<Result> => {
 
         const {
             nodeModuleName //js-yaml
@@ -115,7 +109,7 @@ export function resolveNodeModuleToDenoModuleFactory(
             const getValidImportUrlFactoryResult = await
                 getValidImportUrlFactory({
                     "moduleAddress": ModuleAddress.parse(denoPorts[nodeModuleName]),
-                    "desc": "NO SPECIFIC VERSION PRESENT IN NODE_MODULE ( PROBABLY NODE BUILTIN)"
+                    "desc": "NOT LISTED AS A DEPENDENCY (PROBABLY NODE BUILTIN)"
                 });
 
             if (!getValidImportUrlFactoryResult.couldConnect) {
@@ -148,17 +142,22 @@ export function resolveNodeModuleToDenoModuleFactory(
             gitHubRepo = ModuleAddress.GitHubRepo.parse(allDependencies[nodeModuleName]);
         }
 
+
         const {
             version, // 3.13.1 (version installed)
             repository: repositoryEntryOfPackageJson
-        } = JSON.parse(
-            fs.readFileSync(
-                path.join(
-                    getTargetModulePath(nodeModuleName), // node_modules/js-yaml
-                    "package.json"
-                )
-            ).toString("utf8")
-        );
+        } = await getInstalledVersionPackageJson({ nodeModuleName })
+            .catch(() => {
+
+                log([
+                    `${nodeModuleName} could not be found in the node_module directory`,
+                    `seems like you needs to re-install your project dependency ( npm install )`
+                ].join(" "));
+
+                process.exit(-1);
+
+            });
+
 
         if (gitHubRepo === undefined) {
 
@@ -291,7 +290,7 @@ export const { getValidImportUrlFactory } = (() => {
         {
             moduleAddress: ModuleAddress;
         } & ({
-            desc: "NO SPECIFIC VERSION PRESENT IN NODE_MODULE ( PROBABLY NODE BUILTIN)";
+            desc: "NOT LISTED AS A DEPENDENCY (PROBABLY NODE BUILTIN)";
         } | {
             desc: "MATCH VERSION INSTALLED IN NODE_MODULE";
             version: string
@@ -655,7 +654,7 @@ export const { getValidImportUrlFactory } = (() => {
     });
 
 
-    return { getValidImportUrlFactory };
+    return { getValidImportUrlFactory };
 
 })();
 

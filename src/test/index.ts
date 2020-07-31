@@ -6,6 +6,8 @@ runSequentially({
         "resolveNodeModuleToDenoModule",
         "types/parsedImportExportStatement",
         "denoifyImportExportStatement",
-        "denoifySingleFile"
+        "denoifySingleFile",
+        "getInstalledVersionPackageJson",
+        "replacer"
     ]
 });

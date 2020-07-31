@@ -14,7 +14,11 @@ import { assert } from "evt/tools/typeSafety";
             parsedImportExportStatement,
             {
                 "isAsyncImport": false,
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "isTypeOnly": false,
                 "quoteSymbol": '"',
                 "statementType": "import",
@@ -45,7 +49,11 @@ import { assert } from "evt/tools/typeSafety";
             parsedImportExportStatement,
             {
                 "isAsyncImport": false,
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "isTypeOnly": false,
                 "quoteSymbol": "\"",
                 "statementType": "import",
@@ -76,7 +84,11 @@ import { assert } from "evt/tools/typeSafety";
             parsedImportExportStatement,
             {
                 "isAsyncImport": false,
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "isTypeOnly": false,
                 "quoteSymbol": "\"",
                 "statementType": "import",
@@ -108,7 +120,11 @@ import { assert } from "evt/tools/typeSafety";
             parsedImportExportStatement,
             {
                 "isAsyncImport": false,
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "isTypeOnly": false,
                 "quoteSymbol": "\"",
                 "statementType": "import",
@@ -139,7 +155,11 @@ import { assert } from "evt/tools/typeSafety";
         same(
             parsedImportExportStatement,
             {
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "isAsyncImport": false,
                 "quoteSymbol": "\"",
                 "statementType": "import",
@@ -173,7 +193,11 @@ import { assert } from "evt/tools/typeSafety";
             {
                 "isAsyncImport": true,
                 "quoteSymbol": "\"",
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "target": undefined
             }
         )
@@ -201,7 +225,11 @@ import { assert } from "evt/tools/typeSafety";
             parsedImportExportStatement,
             {
                 "isAsyncImport": false,
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "isTypeOnly": false,
                 "quoteSymbol": "'",
                 "statementType": "import",
@@ -232,7 +260,11 @@ import { assert } from "evt/tools/typeSafety";
             parsedImportExportStatement,
             {
                 "isAsyncImport": false,
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "isTypeOnly": true,
                 "quoteSymbol": "'",
                 "statementType": "import",
@@ -263,7 +295,11 @@ import { assert } from "evt/tools/typeSafety";
             parsedImportExportStatement,
             {
                 "isAsyncImport": false,
-                "argument": "xxx",
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "xxx",
+                    "specificImportPath": undefined
+                },
                 "isTypeOnly": true,
                 "quoteSymbol": "'",
                 "statementType": "import",

@@ -2,6 +2,8 @@
 import { resolveNodeModuleToDenoModuleFactory } from "../../lib/resolveNodeModuleToDenoModule";
 import * as path from "path";
 import { assert } from "evt/tools/typeSafety";
+import { getInstalledVersionPackageJsonFactory } from "../../lib/getInstalledVersionPackageJson";
+
 
 (async () => {
 
@@ -9,8 +11,12 @@ import { assert } from "evt/tools/typeSafety";
 
         let std_out = "";
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
             "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_1"),
+        });
+
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
             "dependencies": {
                 "js-yaml": "~3.13.0"
             },
@@ -38,8 +44,12 @@ import { assert } from "evt/tools/typeSafety";
 
         let std_out = "";
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
             "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_2"),
+        });
+
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
             "dependencies": {
                 "js-yaml": "~3.13.0"
             },
@@ -80,8 +90,12 @@ This mean that the Node and the Deno distribution of your module will not run th
 
         let std_out = "";
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
             "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_3"),
+        });
+
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
             "dependencies": { "ts-md5": "1.2.7" },
             "devDependencies": {},
             "userProvidedPorts": {},
@@ -110,8 +124,12 @@ This mean that the Node and the Deno distribution of your module will not run th
 
         let std_out = "";
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
             "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_4"),
+        });
+
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
             "dependencies": { "my-dummy-npm-and-deno-module": "0.2.0" },
             "devDependencies": {},
             "userProvidedPorts": {},
@@ -139,8 +157,12 @@ This mean that the Node and the Deno distribution of your module will not run th
 
         let std_out = "";
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
             "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_5"),
+        });
+
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
             "dependencies": { "ts-md5": "garronej/ts-md5#1.2.7" },
             "devDependencies": {},
             "userProvidedPorts": {},
@@ -169,8 +191,12 @@ This mean that the Node and the Deno distribution of your module will not run th
 
         let std_out = "";
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
             "projectPath": path.join(__dirname, "..", "..", "..", "res", "test_resolve_6"),
+        });
+
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
             "dependencies": {
                 "minimal-polyfills": "~2.0.0"
             },

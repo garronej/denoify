@@ -52,12 +52,18 @@ const str = "foo bar";
 
                 const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
-                assert(parsedImportExportStatement.argument === "xxx");
+                assert(
+                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" &&
+                    parsedImportExportStatement.parsedArgument.nodeModuleName === "xxx"
+                );
 
                 return Promise.resolve(
                     ParsedImportExportStatement.stringify({
                         ...parsedImportExportStatement,
-                        "argument": "yyy"
+                        "parsedArgument": {
+                            "type": "URL",
+                            "url": "yyy"
+                        }
                     })
                 );
 
@@ -143,12 +149,18 @@ Buffer.from("hello");
 
                 const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
-                assert(parsedImportExportStatement.argument === "buffer");
+                assert(
+                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" && 
+                    parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer" 
+                );
 
                 return Promise.resolve(
                     ParsedImportExportStatement.stringify({
                         ...parsedImportExportStatement,
-                        "argument": "https://deno.land/std/xxx/buffer.ts"
+                        "parsedArgument": {
+                            "type": "URL",
+                            "url": "https://deno.land/std/xxx/buffer.ts"
+                        }
                     })
                 );
 
@@ -188,12 +200,19 @@ Buffer.from("hello");
 
                 const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
-                assert(parsedImportExportStatement.argument === "buffer");
+
+                assert(
+                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" && 
+                    parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer" 
+                );
 
                 return Promise.resolve(
                     ParsedImportExportStatement.stringify({
                         ...parsedImportExportStatement,
-                        "argument": "https://deno.land/std/xxx/buffer.ts"
+                        "parsedArgument": {
+                            "type": "URL",
+                            "url": "https://deno.land/std/xxx/buffer.ts"
+                        }
                     })
                 );
 
@@ -231,12 +250,18 @@ Buffer`.replace(/^\n/, "");
 
                 const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
-                assert(parsedImportExportStatement.argument === "buffer");
+                assert(
+                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" && 
+                    parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer" 
+                );
 
                 return Promise.resolve(
                     ParsedImportExportStatement.stringify({
                         ...parsedImportExportStatement,
-                        "argument": "https://deno.land/std/xxx/buffer.ts"
+                        "parsedArgument": {
+                            "type": "URL",
+                            "url": "https://deno.land/std/xxx/buffer.ts"
+                        }
                     })
                 );
 

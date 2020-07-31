@@ -10,8 +10,68 @@ export namespace ParsedImportExportStatement {
 
     export type _Common = {
         quoteSymbol: "\"" | "'";
-        argument: string;
+        parsedArgument: ParsedArgument;
     };
+
+    export type ParsedArgument = 
+        ParsedArgument.Local | 
+        ParsedArgument.Dependency |
+        ParsedArgument.Url;
+
+    export namespace ParsedArgument {
+
+        export type Local = {
+            type: "PROJECT LOCAL FILE";
+            relativePath: string;
+        };
+
+        export type Dependency = {
+            type: "DEPENDENCY";
+            nodeModuleName: string;
+            specificImportPath: string | undefined;
+        };
+
+        export type Url = {
+            type: "URL";
+            url: string;
+        }
+
+        export function parse(argument: string): ParsedArgument {
+
+            if (argument.startsWith(".")) {
+                return id<Local>({
+                    "type": "PROJECT LOCAL FILE",
+                    "relativePath": argument
+                });
+            } else {
+
+                const [nodeModuleName, ...rest] = argument.split("/");
+
+                return id<Dependency>({
+                    "type": "DEPENDENCY",
+                    nodeModuleName,
+                    "specificImportPath": rest.join("/") || undefined
+                });
+
+            }
+
+        }
+
+        export function stringify(parsedArgument: ParsedArgument): string {
+
+            switch (parsedArgument.type) {
+                case "PROJECT LOCAL FILE": return parsedArgument.relativePath;
+                case "DEPENDENCY": {
+                    const { nodeModuleName, specificImportPath } = parsedArgument;
+
+                    return `${nodeModuleName}${specificImportPath ? `/${specificImportPath}` : ``}`;
+                };
+                case "URL": return parsedArgument.url;
+            }
+
+        }
+
+    }
 
     export type Async = _Common & {
         isAsyncImport: true;
@@ -52,10 +112,6 @@ export namespace ParsedImportExportStatement {
 
     }
 
-}
-
-export namespace ParsedImportExportStatement {
-
     export function parse(
         importExportStatement: string
     ): ParsedImportExportStatement {
@@ -72,17 +128,19 @@ export namespace ParsedImportExportStatement {
         const quoteSymbol = importExportStatement
             .endsWith(`'${isAsyncImport ? ")" : ""}`) ? "'" : "\""
 
-
-        const argument = importExportStatement.match(
-            new RegExp(`^[^${quoteSymbol}]*${quoteSymbol}([^${quoteSymbol}]+)${quoteSymbol}[^${quoteSymbol}]*$`)
-        )![1];
+        const parsedArgument =
+            ParsedImportExportStatement.ParsedArgument.parse(
+                importExportStatement.match(
+                    new RegExp(`^[^${quoteSymbol}]*${quoteSymbol}([^${quoteSymbol}]+)${quoteSymbol}[^${quoteSymbol}]*$`)
+                )![1]
+            );
 
         if (isAsyncImport) {
 
             return id<ParsedImportExportStatement.Async>({
                 "isAsyncImport": true,
                 quoteSymbol,
-                argument
+                parsedArgument
             });
 
         }
@@ -90,7 +148,7 @@ export namespace ParsedImportExportStatement {
         if ((new RegExp(`^import\\s+${quoteSymbol}`)).test(importExportStatement)) {
 
             return id<ParsedImportExportStatement.Regular.Import.WithoutTarget>({
-                argument,
+                parsedArgument,
                 isAsyncImport: false,
                 quoteSymbol,
                 "statementType": "import",
@@ -117,7 +175,7 @@ export namespace ParsedImportExportStatement {
             ParsedImportExportStatement.Regular.Export
         >({
             "isAsyncImport": false,
-            argument,
+            parsedArgument,
             isTypeOnly,
             quoteSymbol,
             statementType,
@@ -130,9 +188,14 @@ export namespace ParsedImportExportStatement {
         parsedImportExportStatement: ParsedImportExportStatement
     ): string {
 
-        const { quoteSymbol, argument } = parsedImportExportStatement;
+        const {
+            quoteSymbol,
+            parsedArgument
+        } = parsedImportExportStatement;
 
-        const quotedArgument = `${quoteSymbol}${argument}${quoteSymbol}`;
+        const quotedArgument = `${quoteSymbol}${
+            ParsedImportExportStatement.ParsedArgument.stringify(parsedArgument)
+            }${quoteSymbol}`;
 
         if (parsedImportExportStatement.isAsyncImport) {
             return `import(${quotedArgument})`;

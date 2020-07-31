@@ -8,6 +8,7 @@ import * as commentJson from "comment-json";
 import { denoifyImportExportStatementFactory } from "./denoifyImportExportStatement";
 import { modTsFile } from "./modTsFile";
 import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
+import { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 
 
 export async function denoify(
@@ -63,27 +64,31 @@ export async function denoify(
 
     const { denoifySingleFile } = denoifySingleFileFactory((() => {
 
+        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({ 
+            "projectPath": "."
+        });
+
         const { denoifyImportExportStatement } = denoifyImportExportStatementFactory((() => {
 
             const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-                "projectPath": ".",
                 "userProvidedPorts": packageJsonParsed["denoPorts"] ?? {},
                 "dependencies": packageJsonParsed["dependencies"] ?? {},
                 "devDependencies": packageJsonParsed["devDependencies"] ?? {},
-                "log": console.log
+                "log": console.log,
+                getInstalledVersionPackageJson
             });
 
-            return { resolveNodeModuleToDenoModule };
-
+            return { 
+                resolveNodeModuleToDenoModule,
+                "userProvidedReplacerPath": packageJsonParsed["denoifyReplacer"],
+                getInstalledVersionPackageJson
+            };
 
         })());
 
         return { denoifyImportExportStatement };
 
     })());
-
-
-
 
     const denoDistPath = path.join(
         path.dirname(tsconfigOutDir),

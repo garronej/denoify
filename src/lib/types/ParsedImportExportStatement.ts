@@ -13,8 +13,8 @@ export namespace ParsedImportExportStatement {
         parsedArgument: ParsedArgument;
     };
 
-    export type ParsedArgument = 
-        ParsedArgument.Local | 
+    export type ParsedArgument =
+        ParsedArgument.Local |
         ParsedArgument.Dependency |
         ParsedArgument.Url;
 
@@ -39,11 +39,24 @@ export namespace ParsedImportExportStatement {
         export function parse(argument: string): ParsedArgument {
 
             if (argument.startsWith(".")) {
+
                 return id<Local>({
                     "type": "PROJECT LOCAL FILE",
                     "relativePath": argument
                 });
-            } else {
+
+            }
+
+            if (argument.toLowerCase().startsWith("http")) {
+
+                return id<Url>({
+                    "type": "URL",
+                    "url": argument
+                });
+
+            }
+
+            {
 
                 const [nodeModuleName, ...rest] = argument.split("/");
 
@@ -54,6 +67,7 @@ export namespace ParsedImportExportStatement {
                 });
 
             }
+
 
         }
 

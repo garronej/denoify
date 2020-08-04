@@ -33,12 +33,15 @@ export type Replacer = (
     }
 ) => Promise<undefined | string>;
 
-const errorCodeForUndefined = 23233;
+const errorCodeForUndefined = 153;
 
-
+/** 
+ * Assert the replacer never throws, if you do not want to override 
+ * the normal module resolution just return undefined.
+ */
 export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Promise<never> {
 
-    //process.once("unhandledRejection", error => { throw error; });
+    process.once("unhandledRejection", error => { throw error; });
 
     const [,, importExportStatement, version] = process.argv;
 
@@ -118,7 +121,6 @@ export function consumeExecutableReplacerFactory(
                 throw error;
 
             }
-
 
         });
 

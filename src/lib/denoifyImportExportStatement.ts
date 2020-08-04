@@ -108,33 +108,23 @@ export function denoifyImportExportStatementFactory(
         const { version } = await getInstalledVersionPackageJson({ nodeModuleName })
             .catch(() => ({ "version": "0.0.0" }));
 
-        walk: {
+        for(const consumeExecutableReplacer of [
+            consumeExecutableUserProvidedReplacer, 
+            consumeExecutableBuiltinsReplacer
+        ]) {
 
-            const result = await consumeExecutableUserProvidedReplacer!({
+            const result = await consumeExecutableReplacer?.({
                 parsedImportExportStatement,
                 version
             });
 
             if (result === undefined) {
 
-                break walk;
+                continue;
 
             }
 
-        }
-
-        walk: {
-
-            const result = await consumeExecutableBuiltinsReplacer({
-                parsedImportExportStatement,
-                version
-            });
-
-            if (result === undefined) {
-
-                break walk;
-
-            }
+            return result;
 
         }
 

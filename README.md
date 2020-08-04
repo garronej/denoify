@@ -12,7 +12,7 @@
 
 
 
-**NOTICE**: Due to a recent deno.land/x update Denoify is currently broken. Trust it will be fixed soon!    
+**NOTICE**: Due to a recent deno.land/x update Denoify is **currently broken**. Trust it will be fixed soon!    
 
 # What it is
 

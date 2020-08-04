@@ -12,7 +12,7 @@
 
 
 
-**NOTICE**: The tool will be presented at the next [Deno Israel](https://www.meetup.com/DenoIsrael/events/270885478/) online meetup.  
+**NOTICE**: Due to a recent deno.land/x update Denoify is **currently broken**. Trust it will be fixed soon!    
 
 # What it is
 

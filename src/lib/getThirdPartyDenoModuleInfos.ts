@@ -2,6 +2,7 @@
 import fetch from "node-fetch";
 import { addCache } from "../tools/addCache";
 import * as path from "path";
+import { getProjectRoot } from "../tools/getProjectRoot";
 
 // https://api.deno.land/modules
 // https://cdn.deno.land/evt/meta/versions.json
@@ -30,7 +31,7 @@ const listThirdPartyDenoModulesByPage = addCache(async (params: { page: number; 
 
 }, {
     "filePathForPersistanceAcrossRun": path.join(
-        __dirname, "..", "..", "res", "cache", "listThirdPartyDenoModulesByPage.json"
+        getProjectRoot(), "res", "cache", "listThirdPartyDenoModulesByPage.json"
     )
 });
 
@@ -108,7 +109,7 @@ export const getThirdPartyDenoModuleInfos = addCache(
 
     }, {
     "filePathForPersistanceAcrossRun": path.join(
-        __dirname, "..", "..", "res", "cache", "getThirdPartyDenoModuleInfos.json"
+        getProjectRoot(), "res", "cache", "getThirdPartyDenoModuleInfos.json"
     )
 });
 

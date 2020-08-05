@@ -5,6 +5,7 @@ import type { resolveNodeModuleToDenoModuleFactory } from "./resolveNodeModuleTo
 import type { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 import { ParsedImportExportStatement } from "./types/ParsedImportExportStatement";
 import { consumeExecutableReplacerFactory } from "./replacer";
+import { getProjectRoot } from "../tools/getProjectRoot";
 
 /**
  * examples: 
@@ -29,7 +30,12 @@ export function denoifyImportExportStatementFactory(
     const {
         consumeExecutableReplacer: consumeExecutableBuiltinsReplacer
     } = consumeExecutableReplacerFactory({
-        "filePath": path.join(__dirname, "..", "bin", "replacer", "index")
+        "filePath":
+            path.join(
+                getProjectRoot(),
+                fs.existsSync(path.join(getProjectRoot(), "dist")) ? "dist" : "",
+                "bin", "replacer", "index.js"
+            )
     });
 
     const {
@@ -108,8 +114,8 @@ export function denoifyImportExportStatementFactory(
         const { version } = await getInstalledVersionPackageJson({ nodeModuleName })
             .catch(() => ({ "version": "0.0.0" }));
 
-        for(const consumeExecutableReplacer of [
-            consumeExecutableUserProvidedReplacer, 
+        for (const consumeExecutableReplacer of [
+            consumeExecutableUserProvidedReplacer,
             consumeExecutableBuiltinsReplacer
         ]) {
 

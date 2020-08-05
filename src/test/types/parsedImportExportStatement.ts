@@ -5,6 +5,7 @@ import { assert } from "evt/tools/typeSafety";
 
 {
 
+
     const parsedImportExportStatement = ParsedImportExportStatement.parse(
         'import \n\n    * as _ \n\nfrom \n\n"xxx"'
     );
@@ -314,6 +315,41 @@ import { assert } from "evt/tools/typeSafety";
         )
         ===
         'import type { Cat } from \'xxx\''
+    );
+
+}
+
+{
+
+    console.log("pass until here");
+
+    const parsedImportExportStatement = ParsedImportExportStatement.parse(
+        `import { from } from "./Evt.from"`
+    );
+
+    assert(
+        same(
+            parsedImportExportStatement,
+            {
+                "isAsyncImport": false,
+                "parsedArgument": {
+                    "type": "PROJECT LOCAL FILE",
+                    "relativePath": "./Evt.from"
+                },
+                "isTypeOnly": false,
+                "quoteSymbol": '"',
+                "statementType": "import",
+                "target": "{ from }"
+            }
+        )
+    );
+
+    assert(
+        ParsedImportExportStatement.stringify(
+            parsedImportExportStatement
+        )
+        ===
+        `import { from } from "./Evt.from"`
     );
 
 }

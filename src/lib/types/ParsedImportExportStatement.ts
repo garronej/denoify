@@ -182,7 +182,7 @@ export namespace ParsedImportExportStatement {
             importExportStatement.match(
                 new RegExp(`^(?:import|export)(?:\\s+type)?\\s*([^${quoteSymbol}]+)${quoteSymbol}`)
             )![1]
-                .replace(/\s*from\s*/, "");
+                .replace(/\s*from\s*$/, "");
 
         return id<
             ParsedImportExportStatement.Regular.Import.WithTarget |

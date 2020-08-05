@@ -4,12 +4,8 @@
   
 ### **0.3.4** (2020-08-05)  
   
-- switch back to tags name prefixed by 'v'  
-- emergency patch for the new deno.land/x  
-- Update README.md  
-- Update README.md  
+- emergency patch for the new deno.land/x mechanism
 - Provide a way to scrip how import/export statement are transformed  
-- cosmetic (update ignore)    
   
 ### **0.3.3** (2020-07-04)  
   

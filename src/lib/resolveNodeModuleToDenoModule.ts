@@ -363,8 +363,8 @@ export const { getValidImportUrlFactory } = (() => {
 
         if (params.desc === "MATCH VERSION INSTALLED IN NODE_MODULE") {
             const { version } = params;
-            yield [version, fallback];
             yield ["v" + version, fallback];
+            yield [version, fallback];
 
             fallback = { version };
 

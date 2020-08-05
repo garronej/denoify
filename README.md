@@ -12,7 +12,7 @@
 
 
 
-**NOTICE**: Due to a recent deno.land/x update Denoify is **currently broken**. Trust it will be fixed soon!    
+**NOTICE**: About the deno.lan/x mechanism: A patched version have been published so that you can continue using the tool until the real integration is completed.
 
 # What it is
 

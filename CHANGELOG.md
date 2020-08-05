@@ -1,3 +1,7 @@
+### **0.3.6** (2020-08-05)  
+  
+- fix previous version    
+  
 ### **0.3.5** (2020-08-05)  
   
 - Fix: Forget to publish some files in previous release    

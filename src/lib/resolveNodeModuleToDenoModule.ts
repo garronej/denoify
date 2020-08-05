@@ -5,7 +5,7 @@ import { ModuleAddress } from "./types/ModuleAddress";
 import { is404 } from "../tools/is404";
 import { urlJoin } from "../tools/urlJoin";
 import { getGithubDefaultBranchName } from "get-github-default-branch-name";
-import { getDenoThirdPartyModuleDatabase } from "./denoThirdPartyModuleDb";
+import { thirdPartyDenoModuleNames, getThirdPartyDenoModuleInfos } from "./getThirdPartyDenoModuleInfos";
 import fetch from "node-fetch";
 import * as commentJson from "comment-json";
 import * as path from "path";
@@ -377,23 +377,23 @@ export const { getValidImportUrlFactory } = (() => {
         switch (moduleAddress.type) {
             case "GITHUB REPO":
 
-                walk: {
+                for await (const denoModuleName of thirdPartyDenoModuleNames()) {
 
-                    const database = await getDenoThirdPartyModuleDatabase();
+                    const infos = (await getThirdPartyDenoModuleInfos({ denoModuleName }));
 
-                    const entry = Object.keys(database)
-                        .map(moduleName => database[moduleName])
-                        .find(({ owner, repo }) => (
-                            owner === moduleAddress.userOrOrg &&
-                            repo === moduleAddress.repositoryName
-                        ))
-                        ;
-
-                    if (entry === undefined) {
-                        break walk;
+                    if (infos === undefined) {
+                        continue;
                     }
 
-                    yield [entry.default_version, fallback];
+                    const { owner, repo, latestVersion } = infos;
+
+                    if (!(owner === moduleAddress.userOrOrg &&
+                        repo === moduleAddress.repositoryName)
+                    ) {
+                        continue;
+                    }
+
+                    yield [latestVersion, fallback];
 
                 }
 
@@ -430,23 +430,13 @@ export const { getValidImportUrlFactory } = (() => {
 
                 } else {
 
-                    const default_version =
-                        await getDenoThirdPartyModuleDatabase()
-                            .then(
-                                database => database[
-                                    moduleAddress.baseUrlWithoutBranch.split("/").reverse()[0]
-                                ]?.default_version
-                            );
+                    const latestVersion = (await getThirdPartyDenoModuleInfos({ "denoModuleName": moduleAddress.baseUrlWithoutBranch.split("/").reverse()[0] }))?.latestVersion;
 
-
-                    if (default_version === undefined) {
+                    if (latestVersion === undefined) {
                         break;
                     }
 
-                    yield [
-                        default_version,
-                        fallback
-                    ];
+                    yield [latestVersion, fallback];
 
                 }
 

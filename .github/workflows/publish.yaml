@@ -91,13 +91,13 @@ jobs:
         FROM_VERSION: ${{ github.event.client_payload.from_version }}
         OWNER: ${{github.repository_owner}}
         REPO: ${{github.event.client_payload.repo}}
-        REF: ${{github.event.client_payload.to_version}}
+        REF: v${{github.event.client_payload.to_version}}
     - name: Create Release
       uses: garronej/create-release@master
       env:
         GITHUB_TOKEN: ${{ secrets.PAT }} 
       with:
-        tag_name: ${{ github.event.client_payload.to_version }}
+        tag_name: v${{ github.event.client_payload.to_version }}
         release_name: Release ${{ github.event.client_payload.to_version }}
         branch: latest
         draft: false

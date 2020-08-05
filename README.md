@@ -12,7 +12,7 @@
 
 
 
-**NOTICE**: About the deno.lan/x mechanism: A patched version have been published so that you can continue using the tool until the real integration is completed.
+**NOTICE**: About the new deno.lan/x mechanism: A patched version have been published so that you can continue using the tool until the real integration is completed.
 
 # What it is
 

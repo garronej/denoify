@@ -1,3 +1,7 @@
+### **0.3.7** (2020-08-05)  
+  
+- fix regular expression edge case    
+  
 ### **0.3.6** (2020-08-05)  
   
 - fix previous version    

@@ -1,3 +1,7 @@
+## **0.4.0** (2020-08-10)  
+  
+- mod.ts no longer in root but in deno_dist    
+  
 ### **0.3.8** (2020-08-09)  
   
 - update cache    

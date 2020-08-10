@@ -71,7 +71,7 @@ export function removeFromGitignore(
 
     //NOTE: Optimization: if node_modules is excluded do not list every files, just exclude /node_modules
     if (
-        gitignore.denies("node_modules") &&
+        gitignore.denies("node_modules/") &&
         !fileOrDirPathsToAccept
             .map(fileOrDirPath => isInsideOrIsDir({ "dirPath": "node_modules", fileOrDirPath })).includes(true)
     ) {

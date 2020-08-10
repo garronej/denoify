@@ -8,6 +8,11 @@ import { getIsDryRun } from "./lib/getIsDryRun";
 import { crawl } from "../tools/crawl";
 import * as fs from "fs";
 import * as commentJson from "comment-json";
+import { removeFromGitignore } from "../tools/removeFromGitignore";
+
+//TODO: Test on windows! 
+
+path.win32.normalize("./ok/foo/bar.txt");
 
 /** 
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
@@ -86,13 +91,14 @@ async function run(
         }
         ;
 
-    if( srcDirPath === undefined ){
+    if (srcDirPath === undefined) {
         throw new Error("There should be a 'src' or 'lib' dir containing the .ts files");
     }
 
     if (pathDepth(tsconfigOutDir) !== 1) {
         throw new Error("For this script to work tsconfig out dir must be a directory at the root of the project");
     }
+
 
     const moveSourceFiles =
         "types" in packageJsonParsed ?
@@ -102,8 +108,8 @@ async function run(
         ;
 
     console.log(
-        moveSourceFiles ? 
-            "Putting .ts files alongside .js files" : 
+        moveSourceFiles ?
+            "Putting .ts files alongside .js files" :
             "Leaving .ts file in the src/ directory"
     );
 
@@ -213,13 +219,13 @@ async function run(
             {
                 ...packageJsonParsed,
                 ...("main" in packageJsonParsed ? {
-                    "main": getAfterMovedFilePath({ 
-                        "beforeMovedFilePath": packageJsonParsed["main"] 
+                    "main": getAfterMovedFilePath({
+                        "beforeMovedFilePath": packageJsonParsed["main"]
                     })
                 } : {}),
                 ...("types" in packageJsonParsed ? {
-                    "types": getAfterMovedFilePath({ 
-                        "beforeMovedFilePath": packageJsonParsed["types"] 
+                    "types": getAfterMovedFilePath({
+                        "beforeMovedFilePath": packageJsonParsed["types"]
                     })
                 } : {}),
                 ...("bin" in packageJsonParsed ? {
@@ -230,8 +236,8 @@ async function run(
                         Object.keys(packageJsonParsed.bin)
                             .map(binName => [binName, packageJsonParsed.bin[binName]] as const)
                             .forEach(([binName, beforeMovedBinFilePath]) =>
-                                out[binName] = getAfterMovedFilePath({ 
-                                    "beforeMovedFilePath": beforeMovedBinFilePath 
+                                out[binName] = getAfterMovedFilePath({
+                                    "beforeMovedFilePath": beforeMovedBinFilePath
                                 })
                             )
                             ;
@@ -268,6 +274,39 @@ async function run(
 
     }
 
+    walk: {
+
+        const denoDistDirPath =
+            path.join(
+                path.dirname(tsconfigOutDir),
+                `deno_${path.basename(tsconfigOutDir)}`
+            ); // ./deno_dist
+
+        if (!fs.existsSync(denoDistDirPath)) {
+            break walk;
+        }
+
+        const { fixedGitignoreRaw } = removeFromGitignore({
+            "pathToTargetModule": ".",
+            "fileOrDirPathsToAccept": [denoDistDirPath]
+        });
+
+        if (!fixedGitignoreRaw) {
+            break walk;
+        }
+
+        console.log(`\n${isDryRun ? "(dry)" : ""} .gitignore:\n\n${fixedGitignoreRaw}`);
+
+        if (isDryRun) {
+            break walk;
+        }
+
+        fs.writeFileSync(
+            ".gitignore",
+            Buffer.from(fixedGitignoreRaw, "utf8")
+        );
+
+    }
 
 }
 

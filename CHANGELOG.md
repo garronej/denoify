@@ -1,3 +1,7 @@
+### **0.4.1** (2020-08-10)  
+  
+- fix script for enabeling short import path, we can now have a unik dist TAG for node and deno    
+  
 ## **0.4.0** (2020-08-10)  
   
 - mod.ts no longer in root but in deno_dist    

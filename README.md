@@ -10,9 +10,9 @@
 </p>
 <br>
 
-
-
-**NOTICE**: About the new deno.lan/x mechanism: A patched version have been published so that you can continue using the tool until the real integration is completed.
+**NEW v0.4.0**: Now that [deno.land/x](https://deno.land/x) allows to publish modules under a subdirectory of a GitHub repo
+denoify no longer generate a `mod.ts` at the root of the project but under `deno_dist`. `deno_dist` should be stipulated 
+as subdirectory when registering your module on [deno.land/x](https://deno.land/x).
 
 # What it is
 
@@ -94,7 +94,7 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 
 # TODO LIST / Things that need to change
 
-- [ ] Support custom replacer for `import/export` statements, this will make the tool way more flexible.
+- [x] Support custom replacer for `import/export` statements, this will make the tool way more flexible.
 - [ ] 🔥 Support CDN ([Pika](https://www.pika.dev/cdn), [jspm](https://jspm.org), [UNPKG](https://unpkg.com) ...) urls as Deno ports and feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png).
 - [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
 - [ ] Add cli option for specifying the output directory.

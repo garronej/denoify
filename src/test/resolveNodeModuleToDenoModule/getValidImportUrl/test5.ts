@@ -1,11 +1,13 @@
 
 
+
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
+
 import { assert } from "evt/tools/typeSafety";
 import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 
+//Makes sure it work when version tag is prefixed with a v.
 (async () => {
-
 
     const expectedScheme: ModuleAddress.GitHubRepo = {
         "type": "GITHUB REPO",
@@ -15,47 +17,28 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoM
     } as const;
 
 
-
     {
 
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             "moduleAddress": expectedScheme,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
-            "version": "99.99.99"
+            "version": "1.6.8"
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
 
-        const { versionFallbackWarning, isDenoified, getValidImportUrl } = getValidImportUrlFactoryResult;
+        const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
-        assert((
-            isDenoified === true &&
-            typeof versionFallbackWarning === "string"
-        ));
+        assert(typeof versionFallbackWarning === "undefined");
 
         assert(
             await getValidImportUrl({ "target": "DEFAULT EXPORT" })
             ===
-            "https://raw.githubusercontent.com/garronej/evt/master/mod.ts"
-        );
-
-
-
-        assert(
-            await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "tools/typeSafety" })
-            ===
-            "https://raw.githubusercontent.com/garronej/evt/master/tools/typeSafety/index.ts"
-        );
-
-        assert(
-            await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "tools/typeSafety/assert" })
-            ===
-            "https://raw.githubusercontent.com/garronej/evt/master/tools/typeSafety/assert.ts"
+            "https://raw.githubusercontent.com/garronej/evt/v1.6.8/mod.ts"
         );
 
 
     }
-
 
     console.log("PASS");
 

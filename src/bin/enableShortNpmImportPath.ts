@@ -2,10 +2,8 @@
 
 import * as path from "path";
 import { globProxyFactory } from "../tools/globProxy";
-import { modTsFile } from "../lib/modTsFile";
 import { pathDepth } from "../tools/pathDepth";
 import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel"
-import { execFactory } from "../tools/exec";
 import { getIsDryRun } from "./lib/getIsDryRun";
 import { crawl } from "../tools/crawl";
 import * as fs from "fs";
@@ -24,7 +22,6 @@ async function run(
 
     const { isDryRun } = params;
 
-    const { exec } = execFactory({ isDryRun });
     const { moveContentUpOneLevel } = moveContentUpOneLevelFactory({ isDryRun });
 
     process.chdir(params.pathToTargetModule);
@@ -79,12 +76,9 @@ async function run(
 
     })();
 
-    const { srcDirPath, denoDistPath, tsconfigOutDir } = fs.existsSync("./mod.ts") ?
-        modTsFile.parseMetadata({ "projectPath": "." })
-        :
-        { // Only so that this script can be used as a standalone ( with module that do not uses denoify )
-            "srcDirPath": "./src",
-            "denoDistPath": undefined,
+    const { srcDirPath, tsconfigOutDir } = 
+        { 
+            "srcDirPath": ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath)),
             "tsconfigOutDir": commentJson.parse(
                 fs.readFileSync("./tsconfig.json")
                     .toString("utf8")
@@ -92,17 +86,12 @@ async function run(
         }
         ;
 
-
-    if (pathDepth(tsconfigOutDir) != 1) {
-        throw new Error("For this script to work tsconfig out dir must be a directory at the root of the project");
+    if( srcDirPath === undefined ){
+        throw new Error("There should be a 'src' or 'lib' dir containing the .ts files");
     }
 
-
-
-    if (!!denoDistPath) {
-
-        await exec(`rm -r ${denoDistPath}`);
-
+    if (pathDepth(tsconfigOutDir) !== 1) {
+        throw new Error("For this script to work tsconfig out dir must be a directory at the root of the project");
     }
 
     const moveSourceFiles =

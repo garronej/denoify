@@ -5,13 +5,17 @@ import { ModuleAddress } from "./types/ModuleAddress";
 import { is404 } from "../tools/is404";
 import { urlJoin } from "../tools/urlJoin";
 import { getGithubDefaultBranchName } from "get-github-default-branch-name";
-import { thirdPartyDenoModuleNames, getThirdPartyDenoModuleInfos } from "./getThirdPartyDenoModuleInfos";
+import { getThirdPartyDenoModuleInfos } from "./getThirdPartyDenoModuleInfos";
 import fetch from "node-fetch";
 import * as commentJson from "comment-json";
 import * as path from "path";
-import { addCache } from "../tools/addCache";
 import { getCurrentStdVersion } from "./getCurrentStdVersion";
 import type { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
+import { addCache } from "../tools/addCache";
+import { toPosix } from "../tools/toPosix";
+import { id } from "evt/tools/typeSafety";
+import { getLatestTag } from "../tools/githubTags";
+import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
 
 const knownPorts: { [nodeModuleName: string]: string; } = (() => {
 
@@ -204,12 +208,7 @@ export function resolveNodeModuleToDenoModuleFactory(
                 break walk;
             }
 
-            const { versionFallbackWarning, isDenoified } = getValidImportUrlFactoryResult;
-
-            if (!isDenoified) {
-                break walk;
-            }
-
+            const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
             if (versionFallbackWarning) {
                 log(versionFallbackWarning);
@@ -222,7 +221,6 @@ export function resolveNodeModuleToDenoModuleFactory(
                 ].join(" "));
             }
 
-            const { getValidImportUrl } = getValidImportUrlFactoryResult;
 
             return {
                 result: "SUCCESS",
@@ -302,9 +300,9 @@ export const { getValidImportUrlFactory } = (() => {
     } | {
         couldConnect: true;
         versionFallbackWarning: string | undefined;
-        isDenoified: boolean;
         getValidImportUrl: GetValidImportUrl;
     };
+
 
     /** 
       * Perform no check, just synchronously assemble the url 
@@ -315,7 +313,7 @@ export const { getValidImportUrlFactory } = (() => {
 
         const buildUrl = ((): ((
             candidateBranch: string, //e.g: deno_latest
-            pathToFile?: string //e.g: tools/typeSafety/assert.ts
+            pathToFile: string //e.g: tools/typeSafety/assert.ts
         ) => string) => {
             switch (moduleAddress.type) {
                 case "GITHUB REPO":
@@ -324,7 +322,7 @@ export const { getValidImportUrlFactory } = (() => {
                         moduleAddress.userOrOrg,
                         moduleAddress.repositoryName,
                         candidateBranch,
-                        pathToFile ?? "mod.ts"
+                        toPosix(pathToFile)
                     );
                 case "DENO.LAND URL":
                     return (candidateBranch, pathToFile) => urlJoin(
@@ -332,13 +330,13 @@ export const { getValidImportUrlFactory } = (() => {
                             moduleAddress.baseUrlWithoutBranch.replace(/\/$/, ""),
                             `@${candidateBranch}`
                         ].join(""),
-                        pathToFile ?? moduleAddress.pathToIndex
+                        toPosix(pathToFile)
                     );
                 case "GITHUB-RAW URL":
                     return (candidateBranch, pathToFile) => urlJoin(
                         moduleAddress.baseUrlWithoutBranch.replace(/\/$/, ""),
                         candidateBranch,
-                        pathToFile ?? moduleAddress.pathToIndex
+                        toPosix(pathToFile)
                     );
             }
         })();
@@ -375,31 +373,17 @@ export const { getValidImportUrlFactory } = (() => {
         }
 
         switch (moduleAddress.type) {
+            case "GITHUB-RAW URL": return undefined;
             case "GITHUB REPO":
 
-                for await (const denoModuleName of thirdPartyDenoModuleNames()) {
+                const latestTag = await getLatestTag({
+                    "owner": moduleAddress.userOrOrg,
+                    "repo": moduleAddress.repositoryName
+                });
 
-                    const infos = (await getThirdPartyDenoModuleInfos({ denoModuleName }));
-
-                    if (infos === undefined) {
-                        continue;
-                    }
-
-                    const { owner, repo, latestVersion } = infos;
-
-                    if (!(owner === moduleAddress.userOrOrg &&
-                        repo === moduleAddress.repositoryName)
-                    ) {
-                        continue;
-                    }
-
-                    yield [latestVersion, fallback];
-
+                if (latestTag !== undefined) {
+                    yield [latestTag, fallback];
                 }
-
-
-                yield ["deno_latest", fallback];
-
 
                 yield [
                     await getGithubDefaultBranchName({
@@ -407,11 +391,8 @@ export const { getValidImportUrlFactory } = (() => {
                         "repo": moduleAddress.repositoryName
                     }),
                     fallback
-                ]
+                ];
 
-                break;
-            case "GITHUB-RAW URL":
-                //NOTE: Always a branch specified that should prevail.
                 break;
             case "DENO.LAND URL":
                 if (moduleAddress.branch !== undefined) {
@@ -430,7 +411,9 @@ export const { getValidImportUrlFactory } = (() => {
 
                 } else {
 
-                    const latestVersion = (await getThirdPartyDenoModuleInfos({ "denoModuleName": moduleAddress.baseUrlWithoutBranch.split("/").reverse()[0] }))?.latestVersion;
+                    const latestVersion = (await getThirdPartyDenoModuleInfos({ 
+                        "denoModuleName": moduleAddress.baseUrlWithoutBranch.split("/").reverse()[0]
+                    }))?.latestVersion;
 
                     if (latestVersion === undefined) {
                         break;
@@ -444,81 +427,14 @@ export const { getValidImportUrlFactory } = (() => {
         }
     }
 
-    async function resolveVersion(params: Params) {
 
-        const { buildUrl } = buildUrlFactory({ "moduleAddress": params.moduleAddress });
-
-        for await (const [candidateBranch, fallback] of candidateBranches(params)) {
-
-            const url = buildUrl(candidateBranch);
-
-            if (await is404(url)) {
-                continue;
-            }
-
-            return {
-                "branchForVersion": candidateBranch,
-                "versionFallbackWarning": !fallback ?
-                    undefined :
-                    `Can't match ${fallback.version}, falling back to ${candidateBranch} branch`
-
-
-            };
-
-
-        }
-
-        return undefined;
-
-
-
-
-    }
-
-    async function isDenoified(
+    /** Throws if 404 */
+    const getTsconfigOutDir = addCache(async (
         params: {
-            moduleAddress: ModuleAddress;
+            moduleAddress: ModuleAddress.GitHubRepo;
             branchForVersion: string;
         }
-    ): Promise<boolean> {
-
-        const { moduleAddress, branchForVersion } = params;
-        const { buildUrl } = buildUrlFactory({ moduleAddress });
-
-        let modTsRaw: string;
-
-        try {
-
-            modTsRaw = await fetch(buildUrl(branchForVersion))
-                .then(res => res.text())
-                ;
-
-        } catch{
-
-
-            return false;
-
-        }
-
-        if (!modTsRaw.match(/denoify/i)) {
-
-
-            return false;
-        }
-
-
-        return true;
-
-
-    }
-
-    /** Asserts denoified module */
-    async function getTsconfigOutDir(
-        params: {
-            moduleAddress: ModuleAddress;
-            branchForVersion: string;
-        }
-    ): Promise<string> {
+    ): Promise<string> => {
 
         const { branchForVersion, moduleAddress } = params;
 
@@ -533,9 +449,89 @@ export const { getValidImportUrlFactory } = (() => {
                     )
                 ).then(res => res.text())
             )["compilerOptions"]["outDir"]
-        )
-            ;
-    };
+        );
+
+    });
+
+
+    async function resolveVersion(params: Params) {
+
+        const { moduleAddress } = params;
+
+        const { buildUrl } = buildUrlFactory({ moduleAddress });
+
+        for await (const [candidateBranch, fallback] of candidateBranches(params)) {
+
+            let indexUrl: string;
+
+            switch (moduleAddress.type) {
+                case "DENO.LAND URL":
+                case "GITHUB-RAW URL": {
+
+                    indexUrl = buildUrl(candidateBranch, moduleAddress.pathToIndex)
+
+                    if (!await is404(indexUrl)) {
+                        break;
+                    }
+
+                    continue;
+
+                }
+                case "GITHUB REPO": {
+
+
+                    const tsConfigOutDir = await getTsconfigOutDir({
+                        moduleAddress,
+                        "branchForVersion": candidateBranch
+                    })
+                        .catch(() => undefined);
+
+                    if (tsConfigOutDir === undefined) {
+                        /*
+                        NOTE: When we have a GITHUB REPO it 
+                        must point to a denoified module.
+                        */
+                        continue;
+                    }
+
+                    indexUrl = buildUrl(
+                        candidateBranch,
+                        path.join(
+                            `deno_${path.basename(tsConfigOutDir)}`,
+                            "mod.ts"
+                        )
+                    );
+
+                    if (!await is404(indexUrl)) {
+                        break;
+                    }
+
+                    continue;
+
+                }
+            }
+
+            return {
+                "branchForVersion": candidateBranch,
+                "versionFallbackWarning": !fallback ?
+                    undefined :
+                    `Can't lookup version ${
+                    fallback.version
+                    } for module ${
+                    JSON.stringify(moduleAddress)
+                    }, falling back to ${
+                    candidateBranch
+                    }`,
+                indexUrl
+            };
+
+        }
+
+        return undefined;
+
+    }
+
+
 
 
 
@@ -550,95 +546,92 @@ export const { getValidImportUrlFactory } = (() => {
 
         const versionResolutionResult = await resolveVersion(params);
 
-
         if (versionResolutionResult === undefined) {
 
             return { "couldConnect": false };
 
         }
 
-        const { branchForVersion, versionFallbackWarning } = versionResolutionResult;
+        const { branchForVersion, versionFallbackWarning, indexUrl } = versionResolutionResult;
 
 
-        const tsconfigOutDir = await (async () => {
-
-            if (!(await isDenoified({ moduleAddress, branchForVersion }))) {
-                return undefined;
-            }
-
-            return getTsconfigOutDir({ branchForVersion, moduleAddress });
-
-        })();
-
-        const getValidImportUrl: GetValidImportUrl = async params => {
+        const getValidImportUrl = addCache(id<GetValidImportUrl>(async params => {
 
             if (params.target === "DEFAULT EXPORT") {
 
-                return buildUrl(branchForVersion);
+                return indexUrl;
 
             }
 
             const { specificImportPath } = params;
 
-            for (const fixedTsConfigOutDir of [
-                !tsconfigOutDir ? "dist" : tsconfigOutDir.replace(/\\/g, "/"),
-                undefined
-            ]) {
+            let url = buildUrl(
+                branchForVersion,
+                await (async () => {
+                    switch (moduleAddress.type) {
+                        case "DENO.LAND URL":
+                        case "GITHUB-RAW URL":
 
-                let url = buildUrl(
-                    branchForVersion,
-                    (fixedTsConfigOutDir === undefined ?
-                        specificImportPath
-                        :
-                        path.posix.join(
-                            path.posix.join(
-                                path.posix.dirname(fixedTsConfigOutDir), // .
-                                `deno_${path.posix.basename(fixedTsConfigOutDir)}`//deno_dist
-                            ), // deno_dist
-                            path.posix.relative(
-                                fixedTsConfigOutDir,
-                                specificImportPath // dest/tools/typeSafety
-                            ) //  tools/typeSafety
-                        ) // deno_dist/tool/typeSafety
-                    ) + ".ts" // deno_dist/tool/typeSafety.ts
-                )
+                            return `${specificImportPath}.ts`;
 
+                        case "GITHUB REPO":
 
-                walk: {
+                            const tsConfigOutDir = await getTsconfigOutDir({
+                                moduleAddress,
+                                branchForVersion
+                            });
 
-                    if (await is404(url)) {
-                        break walk;
+                            return path.join(
+                                path.join(
+                                    path.dirname(tsConfigOutDir), // .
+                                    `deno_${path.basename(tsConfigOutDir)}`//deno_dist
+                                ), // deno_dist
+                                isInsideOrIsDir({ "dirPath": tsConfigOutDir, "fileOrDirPath": specificImportPath }) ?
+                                    path.relative(
+                                        tsConfigOutDir,
+                                        specificImportPath // dist/tools/typeSafety
+                                    ) //  tools/typeSafety 
+                                    : specificImportPath // tools/typeSafety ( when using enable short path )
+                            ) // deno_dist/tool/typeSafety
+                                + ".ts" // deno_dist/tool/typeSafety.ts
+
                     }
+                })()
+            );
 
-                    return url;
+            walk: {
 
+                if (await is404(url)) {
+                    break walk;
                 }
 
-                url = url
-                    .replace(/\.ts$/, "/index.ts")
-                    // https://.../deno_dist/tool/typeSafety/index.ts
-                    ;
-
-                walk: {
-
-                    if (await is404(url)) {
-                        break walk;
-                    }
-
-                    return url;
-
-                }
+                return url;
 
             }
 
-            throw new Error(`Can't locate ${specificImportPath}`);
-        };
+            url = url
+                .replace(/\.ts$/, "/index.ts")
+                // https://.../deno_dist/tool/typeSafety/index.ts
+                ;
+
+            walk: {
+
+                if (await is404(url)) {
+                    break walk;
+                }
+
+                return url;
+
+            }
+
+            throw new Error(`Can't locate ${specificImportPath} from ${JSON.stringify(moduleAddress)}`);
+
+        }));
 
         return {
             "couldConnect": true,
             versionFallbackWarning,
-            "isDenoified": tsconfigOutDir !== undefined,
-            "getValidImportUrl": addCache(getValidImportUrl)
+            getValidImportUrl
         }
 
     });

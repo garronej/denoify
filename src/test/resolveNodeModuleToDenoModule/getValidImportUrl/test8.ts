@@ -1,3 +1,4 @@
+
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
 import * as inDepth from "evt/tools/inDepth";
@@ -6,44 +7,72 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoM
 
 (async () => {
 
-    const moduleAddress: ModuleAddress.DenoLandUrl = {
-        "type": "DENO.LAND URL",
-        "isStd": false,
-        "pathToIndex": "js-yaml.js",
-        "baseUrlWithoutBranch": "https://deno.land/x/js_yaml_port",
-        "branch": undefined
+    const moduleAddress: ModuleAddress.GitHubRawUrl = {
+        "type": "GITHUB-RAW URL",
+        "baseUrlWithoutBranch":
+            "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module",
+        "branch": "v0.2.0",
+        "pathToIndex": "deno_dist/mod.ts"
     };
 
     assert(
         inDepth.same(
-            ModuleAddress.parse("https://deno.land/x/js_yaml_port/js-yaml.js"),
+            ModuleAddress.parse("https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.2.0/deno_dist/mod.ts"),
             moduleAddress
         )
     );
 
+    assert(
+        inDepth.same(
+            ModuleAddress.parse("https://raw.github.com/garronej/my_dummy_npm_and_deno_module/v0.2.0/deno_dist/mod.ts"),
+            moduleAddress
+        )
+    );
+
+
     {
+
 
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             moduleAddress,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
-            "version": "3.14.0"
+            "version": "v0.2.9"
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
 
-        assert(
-            getValidImportUrlFactoryResult.isDenoified === false &&
-            getValidImportUrlFactoryResult.versionFallbackWarning === undefined
+        assert(getValidImportUrlFactoryResult.versionFallbackWarning === undefined);
+
+        console.log(
+            await getValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })
         );
 
         assert(
             await getValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })
             ===
-            "https://deno.land/x/js_yaml_port@3.14.0/js-yaml.js"
+            "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.2.9/deno_dist/mod.ts"
         );
+
+        try{
+
+            await getValidImportUrlFactoryResult.getValidImportUrl({ 
+                "target": "SPECIFIC FILE", 
+                "specificImportPath": "dist/lib/Cat" 
+            });
+
+            assert(false);
+
+        }catch{
+
+            //Couldn't find 
+            //     https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.2.9/dist/lib/Cat.ts
+            // nor https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.2.9/dist/lib/Cat/index.ts
+
+        }
 
     }
 
     console.log("PASS");
+
 
 })();

@@ -1,6 +1,6 @@
 
 import { Version } from "../tools/Version";
-import { listTags } from "../tools/listTags";
+import { listTags } from "../tools/githubTags";
 import { addCache } from "../tools/addCache";
 
 export const getCurrentStdVersion = addCache(async () => {

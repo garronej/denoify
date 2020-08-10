@@ -6,10 +6,10 @@ import * as fs from "fs";
 import * as path from "path";
 import * as commentJson from "comment-json";
 import { denoifyImportExportStatementFactory } from "./denoifyImportExportStatement";
-import { modTsFile } from "./modTsFile";
-import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
-import { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
-
+import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
+import { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
+import { toPosix } from "../tools/toPosix"
+import * as st from "scripting-tools";
 
 export async function denoify(
     params: {
@@ -35,7 +35,7 @@ export async function denoify(
     );
 
     let tsconfigOutDir: string | undefined = commentJson.parse(
-        fs.readFileSync("./tsconfig.json")
+        fs.readFileSync("tsconfig.json")
             .toString("utf8")
     )["compilerOptions"]["outDir"]; // ./dist
 
@@ -43,7 +43,7 @@ export async function denoify(
         throw new Error("tsconfig.json must specify an outDir");
     }
 
-    tsconfigOutDir= path.normalize(tsconfigOutDir);
+    tsconfigOutDir = path.normalize(tsconfigOutDir);
 
     if (!("main" in packageJsonParsed)) {
         //TODO: We shouldn't force users to specify a default export.
@@ -64,7 +64,7 @@ export async function denoify(
 
     const { denoifySingleFile } = denoifySingleFileFactory((() => {
 
-        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({ 
+        const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
             "projectPath": "."
         });
 
@@ -78,7 +78,7 @@ export async function denoify(
                 getInstalledVersionPackageJson
             });
 
-            return { 
+            return {
                 resolveNodeModuleToDenoModule,
                 "userProvidedReplacerPath": packageJsonParsed["denoifyReplacer"],
                 getInstalledVersionPackageJson
@@ -105,20 +105,38 @@ export async function denoify(
                 Promise.resolve(sourceCode)
     });
 
-    modTsFile.create({
-        "projectPath": ".",
-        "tsFilePath": path.join(
-            denoDistPath,
-            path.relative(
-                tsconfigOutDir,
-                path.normalize(packageJsonParsed["main"]) // ./dist/lib/index.js
-            ) // ./lib/index.js
-        ) // ./deno_dist/lib/index.js
-            .replace(/\.js$/i, ".ts"), // ./deno_dist/lib/index.ts,
-        "metadata": { srcDirPath, denoDistPath, tsconfigOutDir },
-        "isDryRun": false
-    });
+    {
 
+        const modFilePath = path.join(denoDistPath, "mod.ts");
+
+        if (!fs.existsSync(modFilePath)) {
+
+            fs.writeFileSync(
+                path.join(modFilePath),
+                Buffer.from(
+                    `export * from "${toPosix(
+                        path.relative(
+                            tsconfigOutDir,
+                            path.normalize(packageJsonParsed["main"]) // ./dist/lib/index.js
+                        ) // ./lib/index.js
+                            .replace(/\.js$/i, ".ts"), // ./deno_dist/lib/index.ts
+                    ).replace(/^(:?\.\/)?/, "./")}";`,
+                    "utf8"
+                )
+            );
+
+        }
+
+    }
+
+    if (fs.existsSync("README.md")) {
+
+        st.fs_move("COPY", ".", denoDistPath, "README.md");
+
+    }
+
+
+    console.log(`Publishing on https://deno.land/x use subdirectory: ${denoDistPath} when asked`);
 
 }
 

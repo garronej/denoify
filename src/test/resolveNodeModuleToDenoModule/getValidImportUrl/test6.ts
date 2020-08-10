@@ -1,45 +1,46 @@
-
-
-
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
+import * as inDepth from "evt/tools/inDepth";
 import { assert } from "evt/tools/typeSafety";
 import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
+import { getLatestTag } from "../../../tools/githubTags";
 
-//Makes sure it work when version tag is prefixed with a v.
 (async () => {
 
-    const expectedScheme: ModuleAddress.GitHubRepo = {
-        "type": "GITHUB REPO",
-        "userOrOrg": "garronej",
-        "repositoryName": "evt",
+    const moduleAddress: ModuleAddress.DenoLandUrl = {
+        "type": "DENO.LAND URL",
+        "isStd": false,
+        "pathToIndex": "js-yaml.js",
+        "baseUrlWithoutBranch": "https://deno.land/x/js_yaml_port",
         "branch": undefined
-    } as const;
+    };
 
+    assert(
+        inDepth.same(
+            ModuleAddress.parse("https://deno.land/x/js_yaml_port/js-yaml.js"),
+            moduleAddress
+        )
+    );
 
     {
 
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
-            "moduleAddress": expectedScheme,
+            moduleAddress,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
-            "version": "1.6.8"
+            "version": "99.99.99"
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
 
-        const { versionFallbackWarning, isDenoified, getValidImportUrl } = getValidImportUrlFactoryResult;
+        assert(typeof getValidImportUrlFactoryResult.versionFallbackWarning === "string");
 
-        assert((
-            isDenoified === true &&
-            typeof versionFallbackWarning === "undefined"
-        ));
+        const latestTag= await getLatestTag({ "owner": "KSXGitHub", "repo": "simple-js-yaml-port-for-deno" });
 
         assert(
-            await getValidImportUrl({ "target": "DEFAULT EXPORT" })
+            await getValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })
             ===
-            "https://raw.githubusercontent.com/garronej/evt/v1.6.8/mod.ts"
+            `https://deno.land/x/js_yaml_port@${latestTag}/js-yaml.js`
         );
-
 
     }
 

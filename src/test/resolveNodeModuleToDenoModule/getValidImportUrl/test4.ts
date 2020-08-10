@@ -1,57 +1,52 @@
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 import { assert } from "evt/tools/typeSafety";
 import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
+import { getThirdPartyDenoModuleInfos } from "../../../lib/getThirdPartyDenoModuleInfos";
 
 (async () => {
 
-    const expectedScheme: ModuleAddress.GitHubRepo = {
+    const moduleAddress: ModuleAddress.GitHubRepo = {
         "type": "GITHUB REPO",
         "userOrOrg": "garronej",
         "repositoryName": "evt",
         "branch": undefined
     } as const;
 
-
     {
 
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
-            "moduleAddress": expectedScheme,
+            "moduleAddress": moduleAddress,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
             "version": "99.99.99"
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
 
-        const { versionFallbackWarning, isDenoified, getValidImportUrl } = getValidImportUrlFactoryResult;
+        const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
-        assert((
-            isDenoified === true &&
-            typeof versionFallbackWarning === "string"
-        ));
+        assert(typeof versionFallbackWarning === "string");
+
+        const { latestVersion } = (await getThirdPartyDenoModuleInfos({ "denoModuleName": "evt" }))!;
 
         assert(
             await getValidImportUrl({ "target": "DEFAULT EXPORT" })
             ===
-            "https://raw.githubusercontent.com/garronej/evt/master/mod.ts"
+            `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/mod.ts`
         );
-
-
 
         assert(
             await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "tools/typeSafety" })
             ===
-            "https://raw.githubusercontent.com/garronej/evt/master/tools/typeSafety/index.ts"
+            `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/tools/typeSafety/index.ts`
         );
 
         assert(
             await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "tools/typeSafety/assert" })
             ===
-            "https://raw.githubusercontent.com/garronej/evt/master/tools/typeSafety/assert.ts"
+            `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/tools/typeSafety/assert.ts`
         );
 
-
     }
-
 
     console.log("PASS");
 

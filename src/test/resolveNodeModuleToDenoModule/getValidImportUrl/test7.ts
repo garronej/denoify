@@ -26,20 +26,17 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoM
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             moduleAddress,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
-            "version": "99.99.99"
+            "version": "3.14.0"
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
 
-        assert(
-            getValidImportUrlFactoryResult.isDenoified === false &&
-            typeof getValidImportUrlFactoryResult.versionFallbackWarning === "string"
-        );
+        assert(getValidImportUrlFactoryResult.versionFallbackWarning === undefined);
 
         assert(
             await getValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })
             ===
-            "https://deno.land/x/js_yaml_port@master/js-yaml.js"
+            "https://deno.land/x/js_yaml_port@3.14.0/js-yaml.js"
         );
 
     }

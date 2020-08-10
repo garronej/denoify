@@ -22,23 +22,20 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoM
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
 
-        const { versionFallbackWarning, isDenoified, getValidImportUrl } = getValidImportUrlFactoryResult;
+        const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
-        assert((
-            isDenoified === true &&
-            typeof versionFallbackWarning === "undefined"
-        ));
+        assert( typeof versionFallbackWarning === "undefined");
 
         assert(
             await getValidImportUrl({ "target": "DEFAULT EXPORT" })
             ===
-            "https://raw.githubusercontent.com/garronej/ts-md5/1.2.7/mod.ts"
+            "https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/deno_dist/mod.ts"
         );
 
         assert(
             await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "dist/parallel_hasher" })
             ===
-            "https://raw.githubusercontent.com/garronej/ts-md5/1.2.7/deno_dist/parallel_hasher.ts"
+            "https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/deno_dist/parallel_hasher.ts"
         );
 
     }

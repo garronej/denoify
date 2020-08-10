@@ -1,12 +1,14 @@
 
 import fetch from "node-fetch";
 import { addCache } from "../tools/addCache";
-import * as path from "path";
-import { getProjectRoot } from "../tools/getProjectRoot";
 
 // https://api.deno.land/modules
 // https://cdn.deno.land/evt/meta/versions.json
 // https://cdn.deno.land/evt/versions/v1.6.8/meta/meta.json
+
+/*
+import * as path from "path";
+import { getProjectRoot } from "../tools/getProjectRoot";
 
 const limit= 100;
 
@@ -62,14 +64,14 @@ export async function* thirdPartyDenoModuleNames(): AsyncGenerator<string> {
     return undefined;
 
 }
-
-
+*/
 
 export const getThirdPartyDenoModuleInfos = addCache(
     async (params: { denoModuleName: string; }): Promise<{
         owner: string;
         repo: string;
         latestVersion: string;
+        subdir: string;
     } | undefined> => {
 
         const { denoModuleName } = params;
@@ -86,31 +88,39 @@ export const getThirdPartyDenoModuleInfos = addCache(
             return undefined;
         }
 
-        const repository =
+        const infos =
             await fetch(`https://cdn.deno.land/${denoModuleName}/versions/${latestVersion}/meta/meta.json`)
                 .then(async res =>
                     !/^2[0-9]{2}$/.test(`${res.status}`) ?
                         undefined :
-                        JSON.parse(await res.text())["upload_options"] as { type: string; repository: string; }
-                )
-                .then(infos => infos === undefined ?
-                    undefined :
-                    infos.type !== "github" ?
-                        undefined : infos.repository
+                        JSON.parse(await res.text())["upload_options"] as { type: string; repository: string; subdir?: string; }
                 );
 
-        if (repository === undefined) {
+        if (infos?.type !== "github") {
             return undefined;
         }
 
-        const [owner, repo] = repository.split("/");
+        if (infos.repository === undefined) {
+            return undefined;
+        }
 
-        return { owner, repo, latestVersion }
+        const [owner, repo] = infos.repository.split("/");
 
-    }, {
-    "filePathForPersistanceAcrossRun": path.join(
-        getProjectRoot(), "res", "cache", "getThirdPartyDenoModuleInfos.json"
-    )
-});
+        return {
+            owner,
+            repo,
+            latestVersion,
+            "subdir": infos.subdir ?? "/"
+        };
+
+    },
+    /*
+    {
+        "filePathForPersistanceAcrossRun": path.join(
+            getProjectRoot(), "res", "cache", "getThirdPartyDenoModuleInfos.json"
+        )
+    }
+    */
+);
 
 

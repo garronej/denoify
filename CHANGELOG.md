@@ -1,3 +1,7 @@
+### **0.4.3** (2020-08-11)  
+  
+- Support fast-xml-parser    
+  
 ### **0.4.2** (2020-08-11)  
   
 - improve proof of concept for custom remplacer    

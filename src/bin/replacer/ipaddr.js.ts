@@ -15,7 +15,7 @@ export const replacer: Replacer = async params => {
     }
 
     if( parsedImportExportStatement.statementType === "export" ){
-        throw new Error("TODO, exporting from ipaddr.js is not supported yey");
+        throw new Error("TODO, exporting from ipaddr.js is not supported yet");
     }
 
     const match = parsedImportExportStatement.target?.match(/^\*\s+as\s+(.*)$/);

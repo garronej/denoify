@@ -15,7 +15,7 @@ export const replacer: Replacer = async params => {
     }
 
     if( parsedImportExportStatement.statementType === "export" ){
-        throw new Error("TODO, exporting from fast-xml-parser is not supported yey");
+        throw new Error("TODO, exporting from fast-xml-parser is not supported yet");
     }
 
     const getUrlTypes = (version: string) =>

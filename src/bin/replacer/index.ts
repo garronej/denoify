@@ -9,7 +9,8 @@ makeThisModuleAnExecutableReplacer(
             of 
             await Promise.all([
                 import("./fast-xml-parser"),
-                import("./ipaddr.js")
+                import("./ipaddr.js"),
+                import("./react")
             ] as const)
         ) {
 

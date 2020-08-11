@@ -1,3 +1,7 @@
+### **0.4.2** (2020-08-11)  
+  
+- improve proof of concept for custom remplacer    
+  
 ### **0.4.1** (2020-08-10)  
   
 - fix script for enabeling short import path, we can now have a unik dist TAG for node and deno    

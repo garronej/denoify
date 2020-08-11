@@ -1,3 +1,7 @@
+### **0.4.4** (2020-08-11)  
+  
+- Support react    
+  
 ### **0.4.3** (2020-08-11)  
   
 - Support fast-xml-parser    

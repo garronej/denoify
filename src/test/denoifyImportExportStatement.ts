@@ -30,10 +30,7 @@ const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "
                 "fileDirPath": "irrelevant here...",
                 "importExportStatement": `import * as ipaddr from ${sep}ipaddr.js${sep}`
             }),
-            [
-                `// @deno-types=${sep}https://raw.githubusercontent.com/whitequark/ipaddr.js/v1.6.0/lib/ipaddr.js.d.ts${sep}`,
-                `import ipaddr from ${sep}https://jspm.dev/ipaddr.js@1.1.0${sep}`
-            ].join("\n")
+            `import ipaddr from ${sep}https://jspm.dev/ipaddr.js@1.1.0${sep}`
         );
 
 

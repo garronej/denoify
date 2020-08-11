@@ -6,6 +6,7 @@ export const replacer: Replacer = async params => {
 
     const { parsedImportExportStatement, version } = params;
 
+
     if (parsedImportExportStatement.parsedArgument.nodeModuleName !== "ipaddr.js") {
         return undefined;
     }
@@ -32,15 +33,29 @@ export const replacer: Replacer = async params => {
 
     }
 
+    if( parsedImportExportStatement.isAsyncImport ){
+        throw new Error("TODO, async import of ipaddr.js not supported");
+    }
+
+    const match = parsedImportExportStatement.target?.match(/^\*\s+as\s+(.*)$/);
+
+    if( !match ){
+        throw new Error("expect import ipaddr.js as a namespace");
+    }
+
+    const parsedImportExportStatementOut: ParsedImportExportStatement<"URL"> = {
+        ...parsedImportExportStatement,
+        "parsedArgument": {
+            "type": "URL",
+            "url": `https://jspm.dev/ipaddr.js@${version}`
+        }
+    };
+
+    parsedImportExportStatementOut.target = match[1];
+
     return [
         `// @deno-types="${urlTypes}"`,
-        ParsedImportExportStatement.stringify({
-            ...parsedImportExportStatement,
-            "parsedArgument": {
-                "type": "URL",
-                "url": `https://raw.githubusercontent.com/whitequark/ipaddr.js/v${version}/lib/ipaddr.js`
-            }
-        })
+        ParsedImportExportStatement.stringify(parsedImportExportStatementOut)
     ].join("\n");
 
 };

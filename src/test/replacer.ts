@@ -12,7 +12,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 (async () => {
 
     const output = await consumeExecutableReplacer({
-        "parsedImportExportStatement": ParsedImportExportStatement.parse('import ipaddr from "ipaddr.js"') as any,
+        "parsedImportExportStatement": ParsedImportExportStatement.parse('import * as ipaddr from "ipaddr.js"') as any,
         "version": "1.8.1"
     });
 
@@ -20,7 +20,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
         output,
         [
             `// @deno-types="https://raw.githubusercontent.com/whitequark/ipaddr.js/v1.8.1/lib/ipaddr.js.d.ts"`,
-            `import ipaddr from "https://raw.githubusercontent.com/whitequark/ipaddr.js/v1.8.1/lib/ipaddr.js"`
+            `import ipaddr from "https://jspm.dev/ipaddr.js@1.8.1"`
         ].join("\n")
     );
 

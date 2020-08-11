@@ -18,11 +18,11 @@
     },
     "third_party": {
         "js-yaml": "https://deno.land/x/js_yaml_port/js-yaml.js",
-        "ts-md5": "garronej/ts-md5", //It is a denoified module, we just need to point to the repo.
+        "ts-md5": "garronej/ts-md5" //It is a denoified module, we just need to point to the repo.
 
-        //It is a handmade port, we need to point to the index, specific import like import "rxjs/operators" won't work.
-        //TODO: Write custom replacer
-        "rxjs": "https://raw.githubusercontent.com/DenoBRComunitty/rxjs/master/mod.ts" 
-        //Support of react, react-dom and many other coming soon!
+        //NOTE: Many third-party module will be supported by the mean of custom import replacer
+        //located here: https://github.com/garronej/denoify/tree/master/src/bin/replacer
+        //it is also possible to write your custom replacers, documentation on the mater coming soon.
+
     }
 }

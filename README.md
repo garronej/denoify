@@ -10,9 +10,7 @@
 </p>
 <br>
 
-**NEW v0.4.0**: Now that [deno.land/x](https://deno.land/x) allows to publish modules under a subdirectory of a GitHub repo
-denoify no longer generate a `mod.ts` at the root of the project but under `deno_dist`. `deno_dist` should be stipulated 
-as subdirectory when registering your module on [deno.land/x](https://deno.land/x).
+**NOTE:** Denoify itself is a node module, it won't run on Deno.
 
 # What it is
 
@@ -91,6 +89,10 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 - Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).  
 
 [Get started](https://github.com/garronej/denoify_ci)
+
+**NEW v0.4.0**: Now that [deno.land/x](https://deno.land/x) allows to publish modules under a subdirectory of a GitHub repo
+denoify no longer generate a `mod.ts` at the root of the project but under `deno_dist`. `deno_dist` should be stipulated 
+as subdirectory when registering your module on [deno.land/x](https://deno.land/x).
 
 # TODO LIST / Things that need to change
 

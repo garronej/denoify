@@ -1,3 +1,7 @@
+### **0.4.6** (2020-08-12)  
+  
+- Pass the source file path to import statements remplacers    
+  
 ### **0.4.5** (2020-08-12)  
   
 - Support react-dom    

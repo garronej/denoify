@@ -30,6 +30,7 @@ export type Replacer = (
         importExportStatement: string,
         parsedImportExportStatement: ParsedImportExportStatement<"DEPENDENCY">;
         version: string;
+        sourceFileDirPath: string;
     }
 ) => Promise<undefined | string>;
 
@@ -43,7 +44,7 @@ export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Pr
 
     process.once("unhandledRejection", error => { throw error; });
 
-    const [,, importExportStatement, version] = process.argv;
+    let [,, importExportStatement, version, sourceFileDirPath] = process.argv;
 
     assert(
         typeof version !== undefined,
@@ -60,7 +61,8 @@ export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Pr
     const result = await replacer({
         parsedImportExportStatement,
         importExportStatement,
-        version
+        version,
+        sourceFileDirPath
     });
 
     if (result === undefined) {
@@ -89,10 +91,11 @@ export function consumeExecutableReplacerFactory(
             params: {
                 parsedImportExportStatement: ParsedImportExportStatement<"DEPENDENCY">;
                 version: string;
+                sourceFileDirPath: string;
             }
         ): Promise<string | undefined> => {
 
-            const { parsedImportExportStatement, version } = params;
+            const { parsedImportExportStatement, version, sourceFileDirPath } = params;
 
             try {
 
@@ -109,6 +112,8 @@ export function consumeExecutableReplacerFactory(
                     )
                     } ${
                     version
+                    } ${
+                    JSON.stringify(sourceFileDirPath)
                     }`
                 );
 

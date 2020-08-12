@@ -121,7 +121,8 @@ export function denoifyImportExportStatementFactory(
 
             const result = await consumeExecutableReplacer?.({
                 parsedImportExportStatement,
-                version
+                version,
+                "sourceFileDirPath": fileDirPath
             });
 
             if (result === undefined) {

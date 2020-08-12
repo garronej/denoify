@@ -15,7 +15,8 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse('import * as ipaddr from "ipaddr.js"') as any,
-            "version": "1.8.1"
+            "version": "1.8.1",
+            "sourceFileDirPath": "..."
         });
 
         assert(
@@ -29,7 +30,8 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse('import * as fastXMLParser from "fast-xml-parser"') as any,
-            "version": "3.17.4"
+            "version": "3.17.4",
+            "sourceFileDirPath": "..."
         });
 
         assert(
@@ -48,7 +50,8 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse('import ReactAbc from "react"') as any,
-            "version": "16.13.1"
+            "version": "16.13.1",
+            "sourceFileDirPath": "..."
         });
 
         assert(
@@ -67,7 +70,8 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react-dom"`) as any,
-            "version": "16.13.1"
+            "version": "16.13.1",
+            "sourceFileDirPath": "..."
         });
 
         assert(
@@ -85,7 +89,8 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react-dom/server"`) as any,
-            "version": "16.13.1"
+            "version": "16.13.1",
+            "sourceFileDirPath": "..."
         });
 
         assert(

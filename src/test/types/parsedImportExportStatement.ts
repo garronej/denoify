@@ -321,8 +321,6 @@ import { assert } from "evt/tools/typeSafety";
 
 {
 
-    console.log("pass until here");
-
     const parsedImportExportStatement = ParsedImportExportStatement.parse(
         `import { from } from "./Evt.from"`
     );
@@ -351,5 +349,7 @@ import { assert } from "evt/tools/typeSafety";
         ===
         `import { from } from "./Evt.from"`
     );
+
+    console.log("PASS");
 
 }

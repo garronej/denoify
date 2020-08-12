@@ -62,6 +62,43 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
     }
 
+
+    for( const x of ["ReactDom", "* as ReactDom"]){
+
+        const output = await consumeExecutableReplacer({
+            "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react-dom"`) as any,
+            "version": "16.13.1"
+        });
+
+        assert(
+            output
+            ===
+            [
+                `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/02774811084fd4a85d91f73d27deffff2c6b8d02/react-dom/v16.13.1/react-dom.d.ts"`,
+                `import ReactDom from "https://cdn.pika.dev/react-dom@16.13.1";`
+            ].join("\n")
+        );
+
+    }
+
+    for (const x of ["ReactDomServer", "* as ReactDomServer"]) {
+
+        const output = await consumeExecutableReplacer({
+            "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react-dom/server"`) as any,
+            "version": "16.13.1"
+        });
+
+        assert(
+            output
+            ===
+            [
+                `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/df2a75e38bf52fa0bf4bd29cd790478e3011fc0f/react-dom/v16.13.1/server.d.ts"`,
+                `import ReactDomServer from "https://dev.jspm.io/react-dom@16.13.1/server.js";`
+            ].join("\n")
+        );
+
+    }
+
     console.log("PASS");
 
 })();

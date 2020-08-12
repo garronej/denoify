@@ -33,8 +33,10 @@ export const replacer: Replacer = async params => {
         throw new Error(`Only support importing default export of ${moduleName}`);
     }
 
+    const commit = "eb9b173f015a13569aa6dd5bee78bac2e43a14db";
+
     return [
-        `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/eb9b173f015a13569aa6dd5bee78bac2e43a14db/react/v16.13.1/react.d.ts"`,
+        `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/${commit}/react/v16.13.1/react.d.ts"`,
         `import ${target} from "https://dev.jspm.io/react@${version}";`
     ].join("\n");
 

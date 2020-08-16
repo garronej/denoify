@@ -1,6 +1,7 @@
 
 import { replaceAsync } from "../tools/replaceAsync";
 import type { denoifyImportExportStatementFactory } from "./denoifyImportExportStatement";
+import * as crypto from "crypto";
 
 export function denoifySingleFileFactory(
     params: {} & 
@@ -61,31 +62,55 @@ export function denoifySingleFileFactory(
 
         }
 
+        const denoifiedImportExportStatementByHash = new Map<string, string>();
+
         for (const quoteSymbol of [`"`, `'`]) {
 
-            const strRegExpInQuote = `${quoteSymbol}[^${quoteSymbol}]+${quoteSymbol}`;
+            const strRegExpInQuote = `${quoteSymbol}[^${quoteSymbol}\\r\\n]+${quoteSymbol}`;
 
             for (const regExpStr of [
-                `export\\s+\\*\\s+from\\s*${strRegExpInQuote}`, //export * from "..."
-                `(?:import|export)(?:\\s+type)?\\s*\\*\\s*as\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`, //import/export [type] * as ns from "..."
-                `(?:import|export)(?:\\s+type)?\\s*{[^}]*}\\s*from\\s*${strRegExpInQuote}`, //import/export [type] { Cat } from "..."
-                `import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s+from\\s*${strRegExpInQuote}`, //import [type] Foo from "..."
-                `import\\s*${strRegExpInQuote}`, //import "..."
-                //`[^a-zA-Z\._0-9$]import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)`, //type Foo = import("...").Foo
-                `(?<=[^a-zA-Z\._0-9$])import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)` //type Foo = import("...").Foo
+                ...[
+                    `export\\s+\\*\\s+from\\s*${strRegExpInQuote}`, //export * from "..."
+                    `(?:import|export)(?:\\s+type)?\\s*\\*\\s*as\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`, //import/export [type] * as ns from "..."
+                    `(?:import|export)(?:\\s+type)?\\s*{[^}]*}\\s*from\\s*${strRegExpInQuote}`, //import/export [type] { Cat } from "..."
+                    `import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s+from\\s*${strRegExpInQuote}`, //import [type] Foo from "..."
+                    `import\\s*${strRegExpInQuote}`, //import "..."
+                ]
+                .map(s => `(?<=^|[\\r\\n\\s;])${s}`),
+                `(?<=[^a-zA-Z\._0-9$\*])import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)` //type Foo = import("...").Foo
             ]) {
 
                 modifiedSourceCode = await replaceAsync(
                     modifiedSourceCode,
                     new RegExp(regExpStr, "g"),
-                    importExportStatement => denoifyImportExportStatement({
-                        fileDirPath,
-                        importExportStatement
-                    })
+                    async importExportStatement => {
+
+                        const denoifiedImportExportStatement = await denoifyImportExportStatement({
+                            fileDirPath,
+                            importExportStatement
+                        });
+
+                        const hash = crypto
+                            .createHash("sha256")
+                            .update(denoifiedImportExportStatement)
+                            .digest("hex");
+
+                        denoifiedImportExportStatementByHash.set(hash, denoifiedImportExportStatement);
+
+                        return hash;
+
+                    }
                 );
 
             }
 
+        }
+
+        for( const [hash, denoifiedImportExportStatement] of denoifiedImportExportStatementByHash ){
+            modifiedSourceCode = modifiedSourceCode.replace(
+                new RegExp(hash, "g"), 
+                denoifiedImportExportStatement
+            );
         }
 
         return modifiedSourceCode;

@@ -14,7 +14,8 @@ import
 
 from 
 
-"xxx"; import * as foobar from "xxx" import * as d from "xxx";
+"xxx"; import * as foobar from "xxx"
+    import * as d from "xxx";
 const ok = 3;
 import { } from "xxx";
 import * as baz from "xxx";
@@ -29,7 +30,8 @@ const dd = import   (   "xxx"    );
 `;
 
 const expected = `
-import * as _ from "xxx"; import * as foobar from "xxx" import * as d from "xxx";
+import * as _ from "xxx"; import * as foobar from "xxx"
+    import * as d from "xxx";
 const ok = 3;
 import { } from "xxx";
 import * as baz from "xxx";

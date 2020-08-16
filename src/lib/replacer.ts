@@ -30,7 +30,7 @@ export type Replacer = (
         importExportStatement: string,
         parsedImportExportStatement: ParsedImportExportStatement<"DEPENDENCY">;
         version: string;
-        sourceFileDirPath: string;
+        destDirPath: string;
     }
 ) => Promise<undefined | string>;
 
@@ -44,7 +44,7 @@ export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Pr
 
     process.once("unhandledRejection", error => { throw error; });
 
-    let [,, importExportStatement, version, sourceFileDirPath] = process.argv;
+    let [,, importExportStatement, version, destDirPath] = process.argv;
 
     assert(
         typeof version !== undefined,
@@ -62,7 +62,8 @@ export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Pr
         parsedImportExportStatement,
         importExportStatement,
         version,
-        sourceFileDirPath
+        destDirPath
+        
     });
 
     if (result === undefined) {
@@ -80,22 +81,22 @@ export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Pr
 
 export function consumeExecutableReplacerFactory(
     params: {
-        filePath: string;
+        executableFilePath: string;
     }
 ) {
 
-    const { filePath } = params;
+    const { executableFilePath } = params;
 
     const consumeExecutableReplacer = addCache(
         async (
             params: {
                 parsedImportExportStatement: ParsedImportExportStatement<"DEPENDENCY">;
                 version: string;
-                sourceFileDirPath: string;
+                destDirPath: string;
             }
         ): Promise<string | undefined> => {
 
-            const { parsedImportExportStatement, version, sourceFileDirPath } = params;
+            const { parsedImportExportStatement, version, destDirPath } = params;
 
             try {
 
@@ -103,7 +104,7 @@ export function consumeExecutableReplacerFactory(
                     `${
                     process.argv[0]
                     } ${
-                    filePath
+                    executableFilePath
                     } ${
                     JSON.stringify(
                         ParsedImportExportStatementExhaustive.stringify(
@@ -113,7 +114,7 @@ export function consumeExecutableReplacerFactory(
                     } ${
                     version
                     } ${
-                    JSON.stringify(sourceFileDirPath)
+                    JSON.stringify(destDirPath)
                     }`
                 );
 

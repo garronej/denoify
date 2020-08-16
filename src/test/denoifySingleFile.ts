@@ -48,9 +48,9 @@ const dd = import("xxx");
 const str = "foo bar";
 
         const { denoifySingleFile } = denoifySingleFileFactory({
-            "denoifyImportExportStatement": ({ importExportStatement, fileDirPath }) => {
+            "denoifyImportExportStatement": ({ importExportStatement, dirPath }) => {
 
-                assert(fileDirPath === str);
+                assert(dirPath === str);
 
                 const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
@@ -77,7 +77,7 @@ const str = "foo bar";
 
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
-                "fileDirPath": str
+                "dirPath": str
             });
 
             assert(modifiedSourceCode === expected);
@@ -121,7 +121,7 @@ console.log(__dirname,__filename);
 
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
-                "fileDirPath": "whatever"
+                "dirPath": "whatever"
             });
 
             assert(modifiedSourceCode === expected);
@@ -174,7 +174,7 @@ Buffer.from("hello");
 
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
-                "fileDirPath": "whatever"
+                "dirPath": "whatever"
             });
 
             assert(modifiedSourceCode === expected);
@@ -226,7 +226,7 @@ Buffer.from("hello");
 
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
-                "fileDirPath": "whatever"
+                "dirPath": "whatever"
             });
 
             assert(modifiedSourceCode === expected);
@@ -275,7 +275,7 @@ Buffer`.replace(/^\n/, "");
 
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
-                "fileDirPath": "whatever"
+                "dirPath": "whatever"
             });
 
             assert(modifiedSourceCode === expected);
@@ -302,7 +302,7 @@ Buffer_name
 
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
-                "fileDirPath": "whatever"
+                "dirPath": "whatever"
             });
 
             assert(modifiedSourceCode === sourceCode);

@@ -16,6 +16,7 @@ import { getProjectRoot } from "../tools/getProjectRoot";
 export function denoifyImportExportStatementFactory(
     params: {
         userProvidedReplacerPath: string | undefined;
+        getDestDirPath(params: {dirPath: string; }): string;
     } &
         ReturnType<typeof resolveNodeModuleToDenoModuleFactory> &
         ReturnType<typeof getInstalledVersionPackageJsonFactory>
@@ -23,6 +24,7 @@ export function denoifyImportExportStatementFactory(
 
     const {
         userProvidedReplacerPath,
+        getDestDirPath,
         resolveNodeModuleToDenoModule,
         getInstalledVersionPackageJson
     } = params;
@@ -30,7 +32,7 @@ export function denoifyImportExportStatementFactory(
     const {
         consumeExecutableReplacer: consumeExecutableBuiltinsReplacer
     } = consumeExecutableReplacerFactory({
-        "filePath":
+        "executableFilePath":
             path.join(
                 getProjectRoot(),
                 fs.existsSync(path.join(getProjectRoot(), "dist")) ? "dist" : "",
@@ -43,13 +45,13 @@ export function denoifyImportExportStatementFactory(
     } = userProvidedReplacerPath === undefined ?
             { "consumeExecutableReplacer": undefined } :
             consumeExecutableReplacerFactory({
-                "filePath": userProvidedReplacerPath
+                "executableFilePath": userProvidedReplacerPath
             });
 
     async function denoifyImportExportStatement(
         params: {
             /** Path of the file in which the import was */
-            fileDirPath: string;
+            dirPath: string;
             /** e.g:  
              * import { Evt } from "evt"
              * import { id } "evt/dist/tools/typeSafety" 
@@ -61,7 +63,7 @@ export function denoifyImportExportStatementFactory(
     ): Promise<string> {
 
 
-        const { fileDirPath, importExportStatement } = params;
+        const { dirPath, importExportStatement } = params;
 
         const parsedImportExportStatement = ParsedImportExportStatement.parse(
             params.importExportStatement
@@ -93,7 +95,7 @@ export function denoifyImportExportStatementFactory(
             }
 
             for (const ext of ["ts", "tsx"]) {
-                if (fs.existsSync(path.join(fileDirPath, `${relativePath}.${ext}`))) {
+                if (fs.existsSync(path.join(dirPath, `${relativePath}.${ext}`))) {
                     return stringify(`${relativePath}.${ext}`);
                 }
             }
@@ -124,7 +126,7 @@ export function denoifyImportExportStatementFactory(
             const result = await consumeExecutableReplacer?.({
                 parsedImportExportStatement,
                 version,
-                "sourceFileDirPath": fileDirPath
+                "destDirPath": getDestDirPath({ dirPath })
             });
 
             if (result === undefined) {

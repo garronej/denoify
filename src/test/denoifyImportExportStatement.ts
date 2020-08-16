@@ -22,12 +22,13 @@ const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "
                     "repository": { "url": "git://github.com/whitequark/ipaddr.js.git" }
                 };
             },
-            userProvidedReplacerPath
+            userProvidedReplacerPath,
+            "getDestDirPath": () => "whatever"
         });
 
         assert(
             await denoifyImportExportStatement({
-                "fileDirPath": "irrelevant here...",
+                "dirPath": "irrelevant here...",
                 "importExportStatement": `import * as ipaddr from ${sep}ipaddr.js${sep}`
             }),
             `import ipaddr from ${sep}https://jspm.dev/ipaddr.js@1.1.0${sep}`
@@ -42,14 +43,15 @@ const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "
         const { denoifyImportExportStatement } = denoifyImportExportStatementFactory({
             "resolveNodeModuleToDenoModule": () => { throw new Error("never"); },
             "getInstalledVersionPackageJson": async () => { throw new Error("never"); },
-            userProvidedReplacerPath
+            userProvidedReplacerPath,
+            "getDestDirPath": () => "whatever"
         });
 
         const importExportStatement = 'import ipaddr from "https://jspm.dev/ipaddr.js"';
 
         assert(
             await denoifyImportExportStatement({
-                "fileDirPath": "irrelevant here...",
+                "dirPath": "irrelevant here...",
                 importExportStatement
             }),
             importExportStatement
@@ -75,13 +77,13 @@ const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "
         "getInstalledVersionPackageJson": async () => {
             throw new Error("expected to throw");
         },
-
-        userProvidedReplacerPath
+        userProvidedReplacerPath,
+        "getDestDirPath": ()=> "whatever"
     });
 
     assert(
         await denoifyImportExportStatement({
-            "fileDirPath": "irrelevant here...",
+            "dirPath": "irrelevant here...",
             "importExportStatement": "import * as foo from 'foo/bar/baz'"
         }),
         "import * as foo from 'https://example.fr/foo/bar/baz'"

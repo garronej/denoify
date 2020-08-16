@@ -5,7 +5,7 @@ import * as path from "path";
 import { assert } from "evt/tools/typeSafety";
 
 const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
-    "filePath": path.join(__dirname, "..", "bin", "replacer", "index.js")
+    "executableFilePath": path.join(__dirname, "..", "bin", "replacer", "index.js")
 });
 
 
@@ -16,7 +16,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse('import * as ipaddr from "ipaddr.js"') as any,
             "version": "1.8.1",
-            "sourceFileDirPath": "..."
+            "destDirPath": "..."
         });
 
         assert(
@@ -31,7 +31,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse('import * as fastXMLParser from "fast-xml-parser"') as any,
             "version": "3.17.4",
-            "sourceFileDirPath": "..."
+            "destDirPath": "..."
         });
 
         assert(
@@ -51,7 +51,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react"`) as any,
             "version": "16.13.1",
-            "sourceFileDirPath": "..."
+            "destDirPath": "..."
         });
 
         assert(
@@ -71,7 +71,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react-dom"`) as any,
             "version": "16.13.1",
-            "sourceFileDirPath": "..."
+            "destDirPath": "..."
         });
 
         assert(
@@ -90,7 +90,8 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react-dom/server"`) as any,
             "version": "16.13.1",
-            "sourceFileDirPath": "..."
+            "destDirPath": "..."
+            
         });
 
         assert(

@@ -13,12 +13,12 @@ export function denoifySingleFileFactory(
     /** Returns source code with deno imports replaced */
     async function denoifySingleFile(
         params: {
-            fileDirPath: string;
+            dirPath: string;
             sourceCode: string;
         }
     ): Promise<string> {
 
-        const { fileDirPath, sourceCode } = params;
+        const { dirPath, sourceCode } = params;
 
         let modifiedSourceCode = sourceCode;
 
@@ -86,7 +86,7 @@ export function denoifySingleFileFactory(
                     async importExportStatement => {
 
                         const denoifiedImportExportStatement = await denoifyImportExportStatement({
-                            fileDirPath,
+                            dirPath,
                             importExportStatement
                         });
 

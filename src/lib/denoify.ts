@@ -10,6 +10,7 @@ import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
 import { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 import { toPosix } from "../tools/toPosix"
 import * as st from "scripting-tools";
+import { id } from "evt/tools/typeSafety";
 
 export async function denoify(
     params: {
@@ -71,6 +72,11 @@ export async function denoify(
         throw new Error(`The package.json main should point to a file inside ${tsconfigOutDir}`)
     }
 
+    const denoDistPath = path.join(
+        path.dirname(tsconfigOutDir),
+        `deno_${path.basename(tsconfigOutDir)}`
+    ); // ./deno_dist
+
     const { denoifySingleFile } = denoifySingleFileFactory((() => {
 
         const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
@@ -87,11 +93,17 @@ export async function denoify(
                 getInstalledVersionPackageJson
             });
 
-            return {
+            return id<Parameters<typeof denoifyImportExportStatementFactory>[0]>({
+                "getDestDirPath": ({ dirPath }) =>
+                    path.join(
+                        denoDistPath,
+                        path.relative(srcDirPath, dirPath)
+                    ),
                 resolveNodeModuleToDenoModule,
                 "userProvidedReplacerPath": packageJsonParsed["denoifyReplacer"],
                 getInstalledVersionPackageJson
-            };
+            });
+
 
         })());
 
@@ -99,19 +111,15 @@ export async function denoify(
 
     })());
 
-    const denoDistPath = path.join(
-        path.dirname(tsconfigOutDir),
-        `deno_${path.basename(tsconfigOutDir)}`
-    ); // ./deno_dist
 
     await transformCodebase({
         srcDirPath,
         "destDirPath": denoDistPath,
         "transformSourceCodeString": async ({ sourceCode, filePath }) => {
 
-            if (/\.deno\.ts$/i.test(filePath)) {
+            if (/\.deno\.tsx?$/i.test(filePath)) {
 
-                const nodeFilePath = filePath.replace(/\.deno\.ts$/i, ".ts");
+                const nodeFilePath = filePath.replace(/\.deno\.ts/i, ".ts");
 
                 if (fs.existsSync(nodeFilePath)) {
                     return undefined;
@@ -155,7 +163,7 @@ export async function denoify(
             return {
                 "modifiedSourceCode": await denoifySingleFile({
                     sourceCode,
-                    "fileDirPath": path.dirname(filePath)
+                    "dirPath": path.dirname(filePath)
                 })
             };
 

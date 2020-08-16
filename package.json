@@ -32,7 +32,7 @@
         "glob": "^7.1.6",
         "node-fetch": "^2.6.0",
         "path-depth": "^1.0.0",
-        "scripting-tools": "^0.19.12",
+        "scripting-tools": "^0.19.13",
         "url-join": "^4.0.1"
     },
     "keywords": [

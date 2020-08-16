@@ -10,11 +10,12 @@ export async function transformCodebase(
         srcDirPath: string;
         destDirPath: string;
         transformSourceCodeString: (params: {
-            /** e.g: .ts */
-            extension: string;
             sourceCode: string;
-            fileDirPath: string;
-        }) => Promise<string>;
+            filePath: string;
+        }) => Promise<{
+            modifiedSourceCode: string;
+            newFileName?: string;
+        } | undefined>;
     }
 ) {
 
@@ -22,29 +23,36 @@ export async function transformCodebase(
 
     for (const file_relative_path of crawl(srcDirPath)) {
 
-        {
+        const filePath = path.join(srcDirPath, file_relative_path);
 
-            const [src, dest] = [srcDirPath, destDirPath]
-                .map(base => path.join(base, file_relative_path))
-                ;
+        const transformSourceCodeStringResult = await transformSourceCodeString({
+            "sourceCode": fs.readFileSync(filePath).toString("utf8"),
+            "filePath": path.join(srcDirPath, file_relative_path)
+        });
 
-            //fs.mkdirSync(path.dirname(dest), { "recursive": true });
-            await createDirectoryIfNotExistsRecursive(path.dirname(dest));
-
-            fs.copyFileSync(src, dest);
-
+        if (transformSourceCodeStringResult === undefined) {
+            continue;
         }
 
-        const file_path = path.join(destDirPath, file_relative_path);
+        await createDirectoryIfNotExistsRecursive(
+            path.dirname(
+                path.join(
+                    destDirPath,
+                    file_relative_path
+                )
+            )
+        );
+
+
+        const { newFileName, modifiedSourceCode } = transformSourceCodeStringResult;
 
         fs.writeFileSync(
-            file_path,
+            path.join(
+                path.dirname(path.join(destDirPath, file_relative_path)),
+                newFileName ?? path.basename(file_relative_path)
+            ),
             Buffer.from(
-                await transformSourceCodeString({
-                    "extension": path.extname(file_path).substr(1).toLowerCase(),
-                    "sourceCode": fs.readFileSync(file_path).toString("utf8"),
-                    "fileDirPath": path.dirname(path.join(srcDirPath, file_relative_path))
-                }),
+                modifiedSourceCode,
                 "utf8"
             )
         );

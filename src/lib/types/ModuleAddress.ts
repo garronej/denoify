@@ -42,7 +42,10 @@ export namespace ModuleAddress {
 
         /** Match valid parse input */
         export function match(raw: string): boolean {
-            return /^(?:github:)?[^\/]+\/[^\/]+$/.test(raw);
+            return (
+                !raw.startsWith("file:") &&
+                /^(?:github:)?[^\/]+\/[^\/]+$/.test(raw)
+            );
         }
     }
 
@@ -165,6 +168,6 @@ export namespace ModuleAddress {
 
     }
 
- 
+
 
 }

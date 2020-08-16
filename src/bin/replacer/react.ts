@@ -1,8 +1,5 @@
-
-
-
-
 import type { Replacer } from "../../lib";
+import { ParsedImportExportStatement } from "../../lib/types/ParsedImportExportStatement";
 
 const moduleName= "react";
 
@@ -22,21 +19,53 @@ export const replacer: Replacer = async params => {
     if( parsedImportExportStatement.statementType === "export" ){
         throw new Error(`TODO, exporting from ${moduleName} is not supported yet`);
     }
+    const target = (() => {
 
-    const { target } = parsedImportExportStatement;
+        const { target } = parsedImportExportStatement
 
-    if( 
-        target === undefined ||
-        target.includes("{") ||
-        target.includes("*")
-    ){
-        throw new Error(`Only support importing default export of ${moduleName}`);
-    }
+        if (!target) {
+            throw new Error(`Importing ${moduleName} without target?`);
+        }
 
-    const commit = "eb9b173f015a13569aa6dd5bee78bac2e43a14db";
+        const match = target.match(/^\*\s+as\s+(.*)$/);
+
+        if (!!match) {
+            return match[1];
+        }
+
+        if (target.includes("{")) {
+
+            const importArg = ParsedImportExportStatement.ParsedArgument.stringify(
+                parsedImportExportStatement.parsedArgument
+            );
+
+            throw new Error(`Use: 
+            Instead of importing ${moduleName} like that: 
+            import ${target} from "${importArg}" 
+            You must import it like this: 
+            import * as Xxx from "${importArg}" 
+            or 
+            import Xxx from "${importArg}" 
+            then extract what you need from the default export.
+            ( The denoify parser for ${moduleName} import is not very sophisticated )
+            `);
+        }
+
+        return target;
+
+    })();
+
+    //const commit = "eb9b173f015a13569aa6dd5bee78bac2e43a14db";
 
     return [
-        `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/${commit}/react/v16.13.1/react.d.ts"`,
+        /*
+        TODO: Error when importing types of React and the types React DOM.
+        error: TS2300 [ERROR]: Duplicate identifier 'LibraryManagedAttributes'.
+        type LibraryManagedAttributes<C, P> = C extends
+         ~~~~~~~~~~~~~~~~~~~~~~~~
+        at https://raw.githubusercontent.com/Soremwar/deno_types/eb9b173f015a13569aa6dd5bee78bac2e43a14db/react/v16.13.1/react.d.ts:3294:10
+        */
+        //`// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/${commit}/react/v16.13.1/react.d.ts"`,
         `import ${target} from "https://dev.jspm.io/react@${version}";`
     ].join("\n");
 

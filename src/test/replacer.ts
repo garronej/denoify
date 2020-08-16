@@ -46,10 +46,10 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
     }
 
-    {
+    for( const x of ["React", "* as React"]){
 
         const output = await consumeExecutableReplacer({
-            "parsedImportExportStatement": ParsedImportExportStatement.parse('import ReactAbc from "react"') as any,
+            "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react"`) as any,
             "version": "16.13.1",
             "sourceFileDirPath": "..."
         });
@@ -58,8 +58,8 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
             output
             ===
             [
-                `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/eb9b173f015a13569aa6dd5bee78bac2e43a14db/react/v16.13.1/react.d.ts"`,
-                `import ReactAbc from "https://dev.jspm.io/react@16.13.1";`
+                //`// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/eb9b173f015a13569aa6dd5bee78bac2e43a14db/react/v16.13.1/react.d.ts"`,
+                `import React from "https://dev.jspm.io/react@16.13.1";`
             ].join("\n")
         );
 

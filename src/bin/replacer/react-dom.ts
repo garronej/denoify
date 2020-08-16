@@ -1,5 +1,6 @@
 
 import type { Replacer } from "../../lib";
+import { ParsedImportExportStatement } from "../../lib/types/ParsedImportExportStatement";
 
 const moduleName = "react-dom";
 
@@ -35,7 +36,21 @@ export const replacer: Replacer = async params => {
         }
 
         if (target.includes("{")) {
-            throw new Error(`Only support importing default export of ${moduleName}`);
+
+            const importArg = ParsedImportExportStatement.ParsedArgument.stringify(
+                parsedImportExportStatement.parsedArgument
+            );
+
+            throw new Error(`Use: 
+            Instead of importing ${moduleName} like that: 
+            import ${target} from "${importArg}" 
+            You must import it like this: 
+            import * as Xxx from "${importArg}" 
+            or 
+            import Xxx from "${importArg}" 
+            then extract what you need from the default export.
+            ( The denoify parser for ${moduleName} import is not very sophisticated )
+            `);
         }
 
         return target;

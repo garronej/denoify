@@ -98,8 +98,8 @@ export async function denoify(
     await transformCodebase({
         srcDirPath,
         "destDirPath": denoDistPath,
-        "transformSourceCodeString": ({ extension, sourceCode, fileDirPath }) =>
-            /^\.?ts$/i.test(extension) || /^\.?js$/i.test(extension) ?
+        "transformSourceCodeString": ({ extension, sourceCode, fileDirPath }) => 
+            /^(?:ts|tsx|js|jsx)$/i.test(extension) ?
                 denoifySingleFile({ sourceCode, fileDirPath })
                 :
                 Promise.resolve(sourceCode)

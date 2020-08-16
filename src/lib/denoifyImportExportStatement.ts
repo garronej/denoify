@@ -92,8 +92,10 @@ export function denoifyImportExportStatementFactory(
                 return stringify(relativePath);
             }
 
-            if (fs.existsSync(path.join(fileDirPath, `${relativePath}.ts`))) {
-                return stringify(`${relativePath}.ts`);
+            for (const ext of ["ts", "tsx"]) {
+                if (fs.existsSync(path.join(fileDirPath, `${relativePath}.${ext}`))) {
+                    return stringify(`${relativePath}.${ext}`);
+                }
             }
 
             const out = path.posix.join(relativePath, "index.ts");

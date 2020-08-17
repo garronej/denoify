@@ -1,3 +1,7 @@
+### **0.4.10** (2020-08-17)  
+  
+- Bug fix with .deno.ts    
+  
 ### **0.4.9** (2020-08-17)  
   
 - Update README.md doc    

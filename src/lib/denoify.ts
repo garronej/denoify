@@ -140,7 +140,9 @@ export async function denoify(
 
                 const split = filePath.split(".");
 
-                return split.splice(split.length - 1, 0, "deno").join(".");
+                split.splice(split.length - 1, 0, "deno");
+
+                return split.join(".");
 
             })();
 

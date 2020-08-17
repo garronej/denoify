@@ -1,3 +1,7 @@
+### **0.4.9** (2020-08-17)  
+  
+- Update README.md doc    
+  
 ### **0.4.8** (2020-08-17)  
   
 - Merge pull request #9 from yandeu/patch-1

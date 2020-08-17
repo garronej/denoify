@@ -1,3 +1,15 @@
+### **0.4.8** (2020-08-17)  
+  
+- Merge pull request #9 from yandeu/patch-1
+
+Added Nano JSX to README.md  
+- Added Nano JSX to README.md
+
+I have added my project Nano JSX to the "Example of modules using Denoify" section. It is a SSR first, lightweight 1kB JSX library that works on Node and Deno. I have used Denoify to publish the entire code to deno.land/x.  
+- Support *.deno.ts  
+- Improve parser  
+- fix parser    
+  
 ### **0.4.7** (2020-08-16)  
   
 - Imrove ReactDom support (for isomorphic web apps)  

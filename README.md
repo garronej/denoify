@@ -10,13 +10,13 @@
 </p>
 <br>
 
-**NOTE:** Denoify itself is a node module, it won't run on Deno.
-
 # What it is
 
 A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
 
 ![what_denoify_does](https://user-images.githubusercontent.com/6702424/85449626-41b10c80-b598-11ea-91cc-6805facab1dd.png)
+
+**NOTE:** Denoify won't run on Deno, it is a Node module.
 
 If you are just looking for a quick way to load NPM modules in your Deno project
 you can check out [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading),
@@ -40,8 +40,10 @@ Modules that have been made cross-runtime using Denoify:
 
 # Video introduction
 
+**NOTE: New features have been introduced since this meeting was hold**
 
 [![Watch the video](https://user-images.githubusercontent.com/6702424/85890466-af09ab00-b7ed-11ea-9cf4-10c9bbfb3621.png)](https://youtu.be/vJQdfTPeeXw)
+
 
 # Limitations
 
@@ -50,10 +52,12 @@ to publish on [deno.land/x](https://deno.land/x) but before anything
 here are the current limitations you need to be aware of.
 
 - If your module is vanilla JS it needs to be ported to TypeScript first. (1)
-- Not all Node's builtin are supported yet. (2)
-- You will need to fork and denoify(3) manually each of your module's (not dev) dependencies. 
-- For the dependencies that can't easily be denoified you will need to write a
-  partial Deno port of the bits your module needs.
+- Not all Node's builtin are supported yet. (2) But thanks to the new `.deno.ts` mechanisms, 
+  [à la React Native](https://reactnative.dev/docs/platform-specific-code#platform-specific-extensions), 
+  that let you have specific deno implementation for some of your files the
+  lack of support for `Buffer`, `"https"` or `"net"`, while being annoying, is no longer a dead end.
+- If your module has dependencies you will have to enable those dependencies to run on Deno.
+  While is is well documented, be aware that it is a time consuming process.
 - `require()` is not yet supported.
 - You can't (yet) `fs.readFile()` files that are part of the module ( files inside a ``res/`` 
   directory for example ). (4)
@@ -63,10 +67,6 @@ and there will do the trick.
 You will be able to pull it off even if you aren't familiar with typescript. [Ref](https://github.com/garronej/my_dummy_npm_and_deno_module#enable-strict-mode-and-fixes-errors-if-any)*
 
 (2) *You can consult [here](https://deno.land/std/node#supported-builtins) the current state of the Node's builtin support.*
-
-(3) *Glossary: To 'denoify' a module is the process of using this tool to generate a deno 
-distribution of a module and to publish it on GitHub. 
-How to do that is documented in details.*  
 
 (4) *In Deno the files that forms your module won’t be pre-fetched and 
 placed in ``node_module`` like in node so you won’t be able to access files that are not 
@@ -103,8 +103,6 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 - [x] Support `.tsx`
 - [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
 - [ ] Add cli option for specifying the output directory.
-
-
    
 
   

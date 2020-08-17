@@ -4,7 +4,6 @@ import { ParsedImportExportStatement } from "../../lib/types/ParsedImportExportS
 
 const moduleName = "react-dom";
 
-//NOTE: Type definitions not imported.
 export const replacer: Replacer = async params => {
 
     const { parsedImportExportStatement, version } = params;

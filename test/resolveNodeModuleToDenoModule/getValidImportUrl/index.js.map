@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/test/resolveNodeModuleToDenoModule/getValidImportUrl/index.ts"],"names":[],"mappings":";;AACA,oEAAiE;AAEjE,YAAY;AACZ,iCAAe,CAAC;IACZ,cAAc,EAAE;QACZ,OAAO;QACP,OAAO;QACP,OAAO;QACP,UAAU;QACV,OAAO;QACP,OAAO;QACP,UAAU;QACV,OAAO;QACP,QAAQ;KACX;CACJ,CAAC,CAAC"}

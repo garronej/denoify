@@ -11,7 +11,8 @@ makeThisModuleAnExecutableReplacer(
                 import("./fast-xml-parser"),
                 import("./ipaddr.js"),
                 import("./react"),
-                import("./react-dom")
+                import("./react-dom"),
+                import("./rxjs")
             ] as const)
         ) {
 

@@ -63,7 +63,7 @@ export const replacer: Replacer = async params => {
 
             return [
                 `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/${commit}/react-dom/v16.13.1/react-dom.d.ts"`,
-                `import ${target} from "https://cdn.pika.dev/react-dom@${version}";`
+                `import ${target} from "https://cdn.skypack.dev/react-dom@${version}";`
             ].join("\n");
 
         }

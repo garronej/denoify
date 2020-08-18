@@ -14,6 +14,66 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
     {
 
         const output = await consumeExecutableReplacer({
+            "parsedImportExportStatement": ParsedImportExportStatement.parse('import { fromEvent } from "rxjs"') as any,
+            "version": "6.6.2",
+            "destDirPath": "..."
+        });
+
+        assert(
+            output
+            ===
+            [
+                `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/07a52c868823928b792e870a572b24af36a4b665/rxjs/v6.5.5/rxjs.d.ts"`,
+                `import { fromEvent } from "https://cdn.skypack.dev/rxjs@6.6.2";`
+            ].join("\n")
+        );
+
+    }
+
+    {
+
+        const output = await consumeExecutableReplacer({
+            "parsedImportExportStatement": ParsedImportExportStatement.parse('import { throttleTime } from "rxjs/operators"') as any,
+            "version": "6.6.2",
+            "destDirPath": "..."
+        });
+
+        assert(
+            output
+            ===
+            [
+                `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/07a52c868823928b792e870a572b24af36a4b665/rxjs/v6.5.5/operators.d.ts"`,
+                `import __rxjs_operators_ns from "https://dev.jspm.io/rxjs@6.6.2/operators";`,
+                `const { throttleTime } = __rxjs_operators_ns;`
+            ].join("\n")
+        );
+
+    }
+
+    for (const target of ["* as operators", "operators"]) {
+
+
+        const output = await consumeExecutableReplacer({
+            "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${target} from "rxjs/operators"`) as any,
+            "version": "6.6.2",
+            "destDirPath": "..."
+        });
+
+
+        assert(
+            output
+            ===
+            [
+                `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/07a52c868823928b792e870a572b24af36a4b665/rxjs/v6.5.5/operators.d.ts"`,
+                `import operators from "https://dev.jspm.io/rxjs@6.6.2/operators";`
+            ].join("\n")
+        );
+
+    }
+
+    {
+
+        const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse('import * as ipaddr from "ipaddr.js"') as any,
             "version": "1.8.1",
             "destDirPath": "..."
@@ -46,7 +106,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
     }
 
-    for( const x of ["React", "* as React"]){
+    for (const x of ["React", "* as React"]) {
 
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react"`) as any,
@@ -66,7 +126,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
     }
 
 
-    for( const x of ["ReactDom", "* as ReactDom"]){
+    for (const x of ["ReactDom", "* as ReactDom"]) {
 
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react-dom"`) as any,
@@ -79,7 +139,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
             ===
             [
                 `// @deno-types="https://raw.githubusercontent.com/Soremwar/deno_types/02774811084fd4a85d91f73d27deffff2c6b8d02/react-dom/v16.13.1/react-dom.d.ts"`,
-                `import ReactDom from "https://cdn.pika.dev/react-dom@16.13.1";`
+                `import ReactDom from "https://cdn.skypack.dev/react-dom@16.13.1";`
             ].join("\n")
         );
 
@@ -91,7 +151,7 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
             "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${x} from "react-dom/server"`) as any,
             "version": "16.13.1",
             "destDirPath": "..."
-            
+
         });
 
         assert(

@@ -99,7 +99,7 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 
 - [x] Support `myModule.deno.ts` alongside `myModule.ts` for deno specific implementation of part of the code. (Like in React Native)
 - [x] Support custom replacer for `import/export` statements.
-- [x] 🔥 Support CDN ([Pika](https://www.pika.dev/cdn), [jspm](https://jspm.org), [UNPKG](https://unpkg.com) ...) urls as Deno ports and feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png). Done via custom replacer.
+- [x] 🔥 Support CDN ([Skypack](https://www.skypack.dev) ex [Pika](https://www.pika.dev/cdn), [jspm](https://jspm.org), [UNPKG](https://unpkg.com) ...) urls as Deno ports and feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png). Done via custom replacer.
 - [x] Support `.tsx`
 - [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
 - [ ] Add cli option for specifying the output directory.

@@ -41,7 +41,7 @@ async function run(
 
     const packageJsonParsed = JSON.parse(packageJsonRaw);
 
-    const packageJsonFilesResolved: string[] | undefined = await (() => {
+    const packageJsonFilesResolved: string[] | undefined = await (async () => {
 
         const pathWithWildcards: string[] | undefined =
             packageJsonParsed
@@ -60,35 +60,50 @@ async function run(
             [] as string[]
         ] as const;
 
-        return Promise.all(
+        const resolvePaths = (pathWithWildcards: string[]): Promise<string[]> =>
+            Promise.all(
+                pathWithWildcards
+                    .map(pathWithWildcard => globProxy({ pathWithWildcard }))
+            ).then(
+                arrOfArr =>
+                    arrOfArr
+                        .reduce(...flat)
+                        .map(
+                            fileOrDirPath =>
+                                !fs.lstatSync(fileOrDirPath).isDirectory() ?
+                                    [fileOrDirPath]
+                                    :
+                                    crawl(fileOrDirPath)
+                                        .map(filePath => path.join(fileOrDirPath, filePath))
+                        )
+                        .reduce(...flat)
+            );
+
+        const filesToInclude = await resolvePaths(
             pathWithWildcards
-                .map(pathWithWildcard => globProxy({ pathWithWildcard }))
-        ).then(
-            arrOfArr =>
-                arrOfArr
-                    .reduce(...flat)
-                    .map(
-                        fileOrDirPath =>
-                            !fs.lstatSync(fileOrDirPath).isDirectory() ?
-                                [fileOrDirPath]
-                                :
-                                crawl(fileOrDirPath)
-                                    .map(filePath => path.join(fileOrDirPath, filePath))
-                    )
-                    .reduce(...flat)
+                .filter(p=> !p.startsWith("!"))
         );
+
+        const filesToExclude = await resolvePaths(
+            pathWithWildcards
+                .filter(p=> p.startsWith("!"))
+                .map(p=> p.replace(/^\!/,""))
+        );
+
+        return filesToInclude
+            .filter(p => !filesToExclude.includes(p));
 
 
     })();
 
-    const { srcDirPath, tsconfigOutDir } = 
-        { 
-            "srcDirPath": ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath)),
-            "tsconfigOutDir": commentJson.parse(
-                fs.readFileSync("./tsconfig.json")
-                    .toString("utf8")
-            )["compilerOptions"]["outDir"] as string
-        }
+    const { srcDirPath, tsconfigOutDir } =
+    {
+        "srcDirPath": ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath)),
+        "tsconfigOutDir": commentJson.parse(
+            fs.readFileSync("./tsconfig.json")
+                .toString("utf8")
+        )["compilerOptions"]["outDir"] as string
+    }
         ;
 
     if (srcDirPath === undefined) {

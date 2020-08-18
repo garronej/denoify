@@ -22,6 +22,8 @@ If you are just looking for a quick way to load NPM modules in your Deno project
 you can check out [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading),
 unlike Denoify, it won't give you types definitions, it will involve `node_modules/`
 and require `--allow-read` but it will also be easier to get working.
+Some NPM modules can also be imported into Deno using CDN like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org)
+checkout [Soremwar/deno_types](https://github.com/Soremwar/deno_types) for some examples.  
 
 This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their modules and doing so without introducing breaking changes.
 
@@ -98,12 +100,9 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 # TODO LIST / Things that need to change
 
 - [x] Support `myModule.deno.ts` alongside `myModule.ts` for deno specific implementation of part of the code. (Like in React Native)
-- [x] Support custom replacer for `import/export` statements.
-- [x] 🔥 Support CDN ([Skypack](https://www.skypack.dev) ex [Pika](https://www.pika.dev/cdn), [jspm](https://jspm.org), [UNPKG](https://unpkg.com) ...) urls as Deno ports and feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png). Done via custom replacer.
+- [x] Support custom `import/export` statements replacer.
+- [x] 🔥 Leverage CDNs like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org) to support more NPM modules out of the box, feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png). 
 - [x] Support `.tsx`
 - [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
 - [ ] Add cli option for specifying the output directory.
    
-
-  
-

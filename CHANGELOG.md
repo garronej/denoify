@@ -1,3 +1,8 @@
+### **0.4.12** (2020-08-18)  
+  
+- Support rxjs  
+- Update README.md    
+  
 ### **0.4.11** (2020-08-18)  
   
 - Enable exclude files from NPM bundle via the 'files' field of package.js    

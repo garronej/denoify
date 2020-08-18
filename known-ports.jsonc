@@ -20,9 +20,9 @@
         "js-yaml": "https://deno.land/x/js_yaml_port/js-yaml.js",
         "ts-md5": "garronej/ts-md5" //It is a denoified module, we just need to point to the repo.
         /*
-        NOTE: lodash, rxjs, react, react-dom, web-push and other modules
-        are supported via custom import replacer.
+        NOTE: react, react-dom, rxjs and other modules are supported via custom import replacer.
         Checkout the complete list here: https://github.com/garronej/denoify/tree/master/src/bin/replacer
+        More module coming soon.
         */
     }
 }

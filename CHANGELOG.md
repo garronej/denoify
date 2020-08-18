@@ -1,3 +1,7 @@
+### **0.4.11** (2020-08-18)  
+  
+- Enable exclude files from NPM bundle via the 'files' field of package.js    
+  
 ### **0.4.10** (2020-08-17)  
   
 - Bug fix with .deno.ts    

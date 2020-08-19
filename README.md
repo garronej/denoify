@@ -106,7 +106,7 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 - [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
 - [ ] Add cli option for specifying the output directory.  
 
-# Order the sticker
+# The sticker
 
 <p align="center">
     <img src="https://user-images.githubusercontent.com/6702424/90624450-41d82c00-e218-11ea-8b02-e276e6ded303.png">

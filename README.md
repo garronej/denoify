@@ -108,7 +108,10 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 
 # Order the sticker
 
-[![image](https://user-images.githubusercontent.com/6702424/90624450-41d82c00-e218-11ea-8b02-e276e6ded303.png)](https://teespring.com/fr/denoify-sticker)
-
-[Shop](https://teespring.com/fr/denoify-sticker)
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/6702424/90624450-41d82c00-e218-11ea-8b02-e276e6ded303.png">
+</p>
+<p align="center">
+    <a href="https://teespring.com/fr/denoify-sticker">Shop</a>  
+</p>
    

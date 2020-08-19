@@ -40,7 +40,7 @@ Modules that have been made cross-runtime using Denoify:
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 - [Nano JSX](https://github.com/nanojsx/nano)
 
-# Video introduction
+# Introduction video
 
 **NOTE: New features have been introduced since this meeting was hold**
 
@@ -54,12 +54,12 @@ to publish on [deno.land/x](https://deno.land/x) but before anything
 here are the current limitations you need to be aware of.
 
 - If your module is vanilla JS it needs to be ported to TypeScript first. (1)
-- Not all Node's builtin are supported yet. (2) But thanks to the new `.deno.ts` mechanism, 
+- Not all Node's builtin are supported yet. (2) But thanks to the new mechanism, 
   [à la React Native](https://reactnative.dev/docs/platform-specific-code#platform-specific-extensions), 
   that let you have specific deno implementation for some of your files, the
-  lack of support for `Buffer`, `"https"` or `"net"`, while being annoying, is no longer a dead end.
+  lack of support for `"https"` or `"net"`, while being annoying, is no longer a dead end.
 - If your module has dependencies you will have to enable those dependencies to run on Deno.
-  While it is well documented, be aware that it is a time consuming process.
+  While well documented, be aware that it is a time consuming process.
 - `require()` is not yet supported.
 - You can't (yet) `fs.readFile()` files that are part of the module ( files inside a ``res/`` 
   directory for example ). (4)

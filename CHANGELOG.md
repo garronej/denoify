@@ -1,3 +1,11 @@
+### **0.4.14** (2020-08-20)  
+  
+- Copy LICENSE in deno_dist #11  
+- Update README.md  
+- Update README.md  
+- Update README.md  
+- Update README.md    
+  
 ### **0.4.13** (2020-08-18)  
   
 - update docs    

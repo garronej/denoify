@@ -197,11 +197,16 @@ export async function denoify(
 
     }
 
-    if (fs.existsSync("README.md")) {
+    for (const fileName of ["README.md", "LICENSE"]) {
 
-        st.fs_move("COPY", ".", denoDistPath, "README.md");
+        if (!fs.existsSync(fileName)) {
+            continue;
+        }
+
+        st.fs_move("COPY", ".", denoDistPath, fileName);
 
     }
+
 
 }
 

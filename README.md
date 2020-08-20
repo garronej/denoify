@@ -40,7 +40,7 @@ Modules that have been made cross-runtime using Denoify:
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 - [Nano JSX](https://github.com/nanojsx/nano)
 
-# Video introduction
+# Introduction video
 
 **NOTE: New features have been introduced since this meeting was hold**
 
@@ -54,12 +54,12 @@ to publish on [deno.land/x](https://deno.land/x) but before anything
 here are the current limitations you need to be aware of.
 
 - If your module is vanilla JS it needs to be ported to TypeScript first. (1)
-- Not all Node's builtin are supported yet. (2) But thanks to the new `.deno.ts` mechanism, 
+- Not all Node's builtin are supported yet. (2) But thanks to the new mechanism, 
   [à la React Native](https://reactnative.dev/docs/platform-specific-code#platform-specific-extensions), 
   that let you have specific deno implementation for some of your files, the
-  lack of support for `Buffer`, `"https"` or `"net"`, while being annoying, is no longer a dead end.
+  lack of support for `"https"` or `"net"`, while being annoying, is no longer a dead end.
 - If your module has dependencies you will have to enable those dependencies to run on Deno.
-  While it is well documented, be aware that it is a time consuming process.
+  While well documented, be aware that it is a time consuming process.
 - `require()` is not yet supported.
 - You can't (yet) `fs.readFile()` files that are part of the module ( files inside a ``res/`` 
   directory for example ). (4)
@@ -104,5 +104,14 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 - [x] 🔥 Leverage CDNs like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org) to support more NPM modules out of the box, feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png). 
 - [x] Support `.tsx`
 - [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
-- [ ] Add cli option for specifying the output directory.
+- [ ] Add cli option for specifying the output directory.  
+
+# The sticker
+
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/6702424/90624450-41d82c00-e218-11ea-8b02-e276e6ded303.png">
+</p>
+<p align="center">
+    <a href="https://teespring.com/fr/denoify-sticker">Shop</a>  
+</p>
    

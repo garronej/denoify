@@ -72,6 +72,11 @@ export async function denoify(
         throw new Error(`The package.json main should point to a file inside ${tsconfigOutDir}`)
     }
 
+    const denoifyParamsFromPackageJson: { 
+        replacer?: string; 
+        ports: { [portName: string]: string; } 
+    }= packageJsonParsed["denoify"];
+
     const denoDistPath = path.join(
         path.dirname(tsconfigOutDir),
         `deno_${path.basename(tsconfigOutDir)}`
@@ -86,7 +91,7 @@ export async function denoify(
         const { denoifyImportExportStatement } = denoifyImportExportStatementFactory((() => {
 
             const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-                "userProvidedPorts": packageJsonParsed["denoPorts"] ?? {},
+                "userProvidedPorts": denoifyParamsFromPackageJson.ports ?? {},
                 "dependencies": packageJsonParsed["dependencies"] ?? {},
                 "devDependencies": packageJsonParsed["devDependencies"] ?? {},
                 "log": console.log,
@@ -100,7 +105,7 @@ export async function denoify(
                         path.relative(srcDirPath, dirPath)
                     ),
                 resolveNodeModuleToDenoModule,
-                "userProvidedReplacerPath": packageJsonParsed["denoifyReplacer"],
+                "userProvidedReplacerPath": denoifyParamsFromPackageJson.replacer,
                 getInstalledVersionPackageJson
             });
 

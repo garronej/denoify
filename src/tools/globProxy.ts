@@ -3,11 +3,11 @@ import * as glob from "glob";
 
 export function globProxyFactory(
     params: {
-        cwdAndRood: string;
+        cwdAndRoot: string;
     }
 ) {
 
-    const { cwdAndRood } = params;
+    const { cwdAndRoot } = params;
 
     function globProxy(
         params: {
@@ -20,8 +20,8 @@ export function globProxyFactory(
                 glob(
                     pathWithWildcard,
                     {
-                        "cwd": cwdAndRood,
-                        "root": cwdAndRood,
+                        "cwd": cwdAndRoot,
+                        "root": cwdAndRoot,
                         "dot": true
                     },
                     (er, files) => {

@@ -1,18 +1,15 @@
 #!/usr/bin/env node
 
 import * as path from "path";
-import { globProxyFactory } from "../tools/globProxy";
 import { pathDepth } from "../tools/pathDepth";
 import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel"
 import { getIsDryRun } from "./lib/getIsDryRun";
-import { crawl } from "../tools/crawl";
 import * as fs from "fs";
 import * as commentJson from "comment-json";
 import { removeFromGitignore } from "../tools/removeFromGitignore";
+import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
 
 //TODO: Test on windows! 
-
-path.win32.normalize("./ok/foo/bar.txt");
 
 /** 
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
@@ -41,60 +38,19 @@ async function run(
 
     const packageJsonParsed = JSON.parse(packageJsonRaw);
 
-    const packageJsonFilesResolved: string[] | undefined = await (async () => {
+    const packageJsonFilesResolved: string[] | undefined = await (() => {
 
         const pathWithWildcards: string[] | undefined =
             packageJsonParsed
                 .files
             ;
 
-        if (!pathWithWildcards) {
-            return undefined;
-        }
-
-        const { globProxy } = globProxyFactory({ "cwdAndRood": "." });
-
-
-        const flat = [
-            (prev: string[], curr: string[]) => [...prev, ...curr],
-            [] as string[]
-        ] as const;
-
-        const resolvePaths = (pathWithWildcards: string[]): Promise<string[]> =>
-            Promise.all(
-                pathWithWildcards
-                    .map(pathWithWildcard => globProxy({ pathWithWildcard }))
-            ).then(
-                arrOfArr =>
-                    arrOfArr
-                        .reduce(...flat)
-                        .map(
-                            fileOrDirPath =>
-                                !fs.lstatSync(fileOrDirPath).isDirectory() ?
-                                    [fileOrDirPath]
-                                    :
-                                    crawl(fileOrDirPath)
-                                        .map(filePath => path.join(fileOrDirPath, filePath))
-                        )
-                        .reduce(...flat)
-            );
-
-        const filesToInclude = await resolvePaths(
-            pathWithWildcards
-                .filter(p=> !p.startsWith("!"))
-        );
-
-        const filesToExclude = await resolvePaths(
-            pathWithWildcards
-                .filter(p=> p.startsWith("!"))
-                .map(p=> p.replace(/^\!/,""))
-        );
-
-        return filesToInclude
-            .filter(p => !filesToExclude.includes(p));
-
+        return !pathWithWildcards ?
+            undefined :
+            resolvePathsWithWildcards({ pathWithWildcards });
 
     })();
+
 
     const { srcDirPath, tsconfigOutDir } =
     {

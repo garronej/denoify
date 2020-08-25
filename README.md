@@ -103,8 +103,6 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 - [x] Support custom `import/export` statements replacer.
 - [x] 🔥 Leverage CDNs like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org) to support more NPM modules out of the box, feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png). 
 - [x] Support `.tsx`
-- [ ] `index.ts` should be rename `mod.ts` to respect Deno's naming recommendations.
-- [ ] Add cli option for specifying the output directory.  
 
 # The sticker
 

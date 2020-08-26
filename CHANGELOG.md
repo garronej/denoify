@@ -1,3 +1,12 @@
+## **0.5.0** (2020-08-26)  
+  
+- // @denoify-ignore (with a space) worke as well as without space #11  
+- BREAKING CHANGE, all denoify params gathered in a single package.json field, pick the files to includes in deno_dist #11  
+- Update README.md
+
+Remove unsound goals (changeling ignore)  
+- Wrap all denoify related param of package.json in a single "denoify" property    
+  
 ### **0.4.14** (2020-08-20)  
   
 - Copy LICENSE in deno_dist #11  

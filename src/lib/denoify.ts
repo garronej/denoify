@@ -204,10 +204,7 @@ export async function denoify(
 
             }
 
-            if (
-                sourceCode.replace(/^\s*/, "")
-                    .startsWith("//@denoify-ignore")
-            ) {
+            if (/^\s*\/\/\s*@denoify-ignore/.test(sourceCode)) {
                 return undefined;
             }
 

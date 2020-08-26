@@ -10,6 +10,11 @@
 </p>
 <br>
 
+**NEW IN v0.5** *Breaking changes*  
+-All Denoify parameters are now gathered under a uniq `"denoify"` field.  
+-Possibility to specify which files should be copied to the `deno_dist` directory (Previously only `README.md` vas copied).  
+[Valid config example](https://github.com/garronej/my_dummy_npm_and_deno_module/blob/master/package.json)
+
 # What it is
 
 A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
@@ -45,7 +50,6 @@ Modules that have been made cross-runtime using Denoify:
 **NOTE: New features have been introduced since this meeting was hold**
 
 [![Watch the video](https://user-images.githubusercontent.com/6702424/85890466-af09ab00-b7ed-11ea-9cf4-10c9bbfb3621.png)](https://youtu.be/vJQdfTPeeXw)
-
 
 # Limitations
 

@@ -3,13 +3,14 @@ import { globProxyFactory } from "./globProxy";
 import * as fs from "fs";
 import { crawl } from "./crawl";
 import * as path from "path";
-import {removeDuplicates} from "evt/tools/reducers";
 
 export async function resolvePathsWithWildcards(
     params: {
         pathWithWildcards: string[];
     }
 ): Promise<string[]> {
+
+    console.log({ params });
 
     const { pathWithWildcards } = params;
 
@@ -50,10 +51,11 @@ export async function resolvePathsWithWildcards(
             .map(p => p.replace(/^\!/, ""))
     );
 
-
-    return filesToInclude
-        .filter(p => !filesToExclude.includes(p))
-        .reduce(...removeDuplicates<string>())
-        ;
+    return Array.from(
+        new Set(
+            filesToInclude
+                .filter(p => !filesToExclude.includes(p))
+        )
+    );
 
 }

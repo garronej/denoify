@@ -10,8 +10,6 @@ export async function resolvePathsWithWildcards(
     }
 ): Promise<string[]> {
 
-    console.log({ params });
-
     const { pathWithWildcards } = params;
 
     const { globProxy } = globProxyFactory({ "cwdAndRoot": "." });

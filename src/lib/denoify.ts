@@ -11,6 +11,8 @@ import { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPack
 import { toPosix } from "../tools/toPosix"
 import * as st from "scripting-tools";
 import { id } from "evt/tools/typeSafety";
+import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
+import { arrPartition } from "evt/tools/reducers/partition";
 
 export async function denoify(
     params: {
@@ -72,10 +74,52 @@ export async function denoify(
         throw new Error(`The package.json main should point to a file inside ${tsconfigOutDir}`)
     }
 
-    const denoifyParamsFromPackageJson: { 
-        replacer?: string; 
-        ports: { [portName: string]: string; } 
-    }= packageJsonParsed["denoify"];
+    const denoifyParamsFromPackageJson: {
+        replacer?: string;
+        ports?: { [portName: string]: string; }
+        includes?: (string | { src: string; destDir?: string; destBasename?: string; })[];
+
+    } = packageJsonParsed["denoify"] ?? {};
+
+    {
+
+        let { includes, ports, replacer } = denoifyParamsFromPackageJson;
+
+        if (
+            (
+            includes !== undefined &&
+            !includes.every(pathOrObj =>
+                typeof pathOrObj === "string" || (
+                    pathOrObj instanceof Object &&
+                    typeof pathOrObj.src === "string" &&
+                    (pathOrObj.destDir === undefined || typeof pathOrObj.destDir === "string") &&
+                    (pathOrObj.destBasename === undefined || typeof pathOrObj.destBasename === "string")
+                )
+            )
+            ) || (
+                ports !== undefined &&
+                !(
+                    ports instanceof Object &&
+                    Object.keys(ports).every(key => typeof ports![key] === "string")
+                )
+            ) || (
+                replacer !== undefined &&
+                typeof replacer !== "string"
+            )
+        ) {
+
+            console.log([
+                "Denoify configuration Error",
+                "The \"denoify\" in the package.json is malformed",
+                "See: https://github.com/garronej/my_dummy_npm_and_deno_module"
+            ].join("\n"));
+
+            process.exit(-1);
+
+        }
+
+    }
+
 
     const denoDistPath = path.join(
         path.dirname(tsconfigOutDir),
@@ -202,13 +246,56 @@ export async function denoify(
 
     }
 
-    for (const fileName of ["README.md", "LICENSE"]) {
+    {
 
-        if (!fs.existsSync(fileName)) {
-            continue;
-        }
+        const includes = (denoifyParamsFromPackageJson.includes ?? ["README.md", "LICENSE"])
+            .map(
+                pathOrObj => typeof pathOrObj === "string" ?
+                    path.normalize(pathOrObj) :
+                    ({
+                        ...pathOrObj,
+                        "src": path.normalize(pathOrObj.src)
+                    })
+            );
 
-        st.fs_move("COPY", ".", denoDistPath, fileName);
+
+        const [strIncludes, objIncludes] = arrPartition(
+            includes,
+            (include): include is string => typeof include === "string"
+        );
+
+
+        (await resolvePathsWithWildcards({
+            "pathWithWildcards": strIncludes
+        }))
+            .forEach(
+                resolvedPath =>
+                    st.fs_move("COPY",
+                        resolvedPath,
+                        path.join(
+                            denoDistPath,
+                            resolvedPath
+                        )
+                    )
+            );
+
+        objIncludes
+            .forEach(({ src, destDir, destBasename }) =>
+
+
+                st.fs_move("COPY",
+                    src,
+                    path.join(
+                        denoDistPath,
+                        path.join(
+                            destDir ?? path.dirname(src),
+                            destBasename ?? path.basename(src)
+                        )
+                    )
+                )
+
+
+            );
 
     }
 

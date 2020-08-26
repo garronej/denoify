@@ -2,8 +2,8 @@
     "name": "denoify",
     "version": "0.4.14",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
-    "main": "./dist/lib/index.js",
-    "types": "./dist/lib/index.d.ts",
+    "main": "dist/lib/index.js",
+    "types": "dist/lib/index.d.ts",
     "repository": {
         "type": "git",
         "url": "git://github.com/garronej/denoify"
@@ -16,8 +16,8 @@
         "enable_short_import_path": "npm run build && node ./dist/bin/enableShortNpmImportPath.js"
     },
     "bin": {
-        "denoify": "./dist/bin/denoify.js",
-        "denoify_enable_short_npm_import_path": "./dist/bin/enableShortNpmImportPath.js"
+        "denoify": "dist/bin/denoify.js",
+        "denoify_enable_short_npm_import_path": "dist/bin/enableShortNpmImportPath.js"
     },
     "author": "u/garronej",
     "license": "MIT",
@@ -42,14 +42,11 @@
         "CommonJs"
     ],
     "files": [
-        "/known-ports.jsonc",
-        "/dist/lib/",
-        "/dist/tools/",
-        "/dist/bin/",
-        "/src/lib/",
-        "/src/tools/",
-        "/src/bin/",
-        "/res/cache/"
+        "known-ports.jsonc",
+        "src/",
+        "!src/test/",
+        "dist/",
+        "!dist/test/"
     ],
     "devDependencies": {
         "@types/glob": "^7.1.1",

@@ -44,6 +44,7 @@ Modules that have been made cross-runtime using Denoify:
 - [EVT](https://evt.land)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 - [Nano JSX](https://github.com/nanojsx/nano)
+- [Yolk](https://github.com/nestdotland/yolk)
 
 # Introduction video
 

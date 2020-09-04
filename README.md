@@ -42,9 +42,10 @@ This tool is mainly for NPM module maintainer, to enable them to bring first-cla
 Modules that have been made cross-runtime using Denoify:
 
 - [EVT](https://evt.land)
-- [eta][https://deno.land/x/eta@v1.3.0)
-- [Nano JSX](https://github.com/nanojsx/nano)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
+- [Nano JSX](https://github.com/nanojsx/nano)
+- [Yolk](https://github.com/nestdotland/yolk)
+- [eta][https://deno.land/x/eta@v1.3.0)
 
 # Introduction video
 

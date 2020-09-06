@@ -10,10 +10,11 @@ on:
 jobs:
 
   test_node:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     if: ${{ !github.event.created }}
     strategy:
       matrix:
+        os: [windows-latest, ubuntu-latest]
         node: [ '13', '12', '11', '10' ]
     name: Test with Node v${{ matrix.node }}
     steps:

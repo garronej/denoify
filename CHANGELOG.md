@@ -1,3 +1,13 @@
+### **0.5.3** (2020-09-06)  
+  
+- Fix replacer for Windows #13  
+- Merge pull request #12 from divy-work/patch-1
+
+feat: add yolk to the list of examples  
+- feat: add yolk to the list of examples
+
+https://github.com/nestdotland/yolk    
+  
 ### **0.5.2** (2020-08-26)  
   
   

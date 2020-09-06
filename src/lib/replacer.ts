@@ -103,9 +103,9 @@ export function consumeExecutableReplacerFactory(
                 return await st.exec(
                     `"${
                     process.argv[0]
-                    }" ${
+                    }" "${
                     executableFilePath
-                    } ${
+                    }" ${
                     JSON.stringify(
                         ParsedImportExportStatementExhaustive.stringify(
                             parsedImportExportStatement

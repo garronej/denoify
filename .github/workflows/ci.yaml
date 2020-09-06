@@ -16,7 +16,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest]
         node: [ '13', '12', '11', '10' ]
-    name: Test with Node v${{ matrix.node }}
+    name: Test with Node v${{ matrix.node }} on ${{ matrix.os }}
     steps:
 
     - uses: actions/checkout@v2

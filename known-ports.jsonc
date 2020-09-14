@@ -9,7 +9,9 @@
         "timers": "https://deno.land/std/node/timers.ts",
         "util": "https://deno.land/std/node/util.ts", //Partial
         "global": "https://deno.land/std/node/global.ts",
-        "buffer": "https://deno.land/std/node/buffer.ts" //Partial
+        "buffer": "https://deno.land/std/node/buffer.ts", //Partial
+        "url": "https://deno.land/std@0.69.0/node/url.ts",
+        "assert": "https://deno.land/std@0.69.0/node/assert.ts"
         /*
         Important: built in missing: http, https, stream...
         Follow evolution of support here: https://deno.land/std/node/README.md

@@ -1,3 +1,11 @@
+### **0.5.5** (2020-09-14)  
+  
+- Add url and assert node builtin support  
+- Merge pull request #15 from garronej/dependabot/npm_and_yarn/node-fetch-2.6.1
+
+Bump node-fetch from 2.6.0 to 2.6.1  
+- Update README.md    
+  
 ### **0.5.4** (2020-09-06)  
   
   

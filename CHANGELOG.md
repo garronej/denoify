@@ -1,3 +1,7 @@
+### **0.5.7** (2020-09-20)  
+  
+  
+  
 ### **0.5.6** (2020-09-20)  
   
 - Propely copy files over deno_dist on windows, fixes #16  

@@ -3,7 +3,6 @@ import { globProxyFactory } from "./globProxy";
 import * as fs from "fs";
 import { crawl } from "./crawl";
 import * as path from "path";
-import { allEquals } from "evt/tools/reducers/allEquals";
 
 export async function resolvePathsWithWildcards(
     params: {
@@ -35,9 +34,10 @@ export async function resolvePathsWithWildcards(
                             path.dirname(fileOrDirPath),
                             fs.readdirSync(path.dirname(fileOrDirPath))
                                 .find(
-                                    basename => [basename, fileOrDirPath]
-                                        .map(s => s.toLowerCase())
-                                        .reduce(...allEquals())
+                                    basename => path.relative(
+                                        basename, 
+                                        path.basename(fileOrDirPath)
+                                    ) === "" 
                             )!
                         )
                     )

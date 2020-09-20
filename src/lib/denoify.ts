@@ -9,10 +9,11 @@ import { denoifyImportExportStatementFactory } from "./denoifyImportExportStatem
 import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
 import { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 import { toPosix } from "../tools/toPosix"
-import * as st from "scripting-tools";
 import { id } from "evt/tools/typeSafety";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
 import { arrPartition } from "evt/tools/reducers/partition";
+import { fsCopy } from "../tools/fsCopy";
+
 
 export async function denoify(
     params: {
@@ -262,12 +263,13 @@ export async function denoify(
         );
 
 
+
         (await resolvePathsWithWildcards({
             "pathWithWildcards": strIncludes
         }))
             .forEach(
                 resolvedPath =>
-                    st.fs_move("COPY",
+                    fsCopy(
                         resolvedPath,
                         path.join(
                             denoDistPath,
@@ -278,9 +280,7 @@ export async function denoify(
 
         objIncludes
             .forEach(({ src, destDir, destBasename }) =>
-
-
-                st.fs_move("COPY",
+                fsCopy(
                     src,
                     path.join(
                         denoDistPath,
@@ -290,8 +290,6 @@ export async function denoify(
                         )
                     )
                 )
-
-
             );
 
     }

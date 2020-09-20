@@ -3,6 +3,7 @@ import { globProxyFactory } from "./globProxy";
 import * as fs from "fs";
 import { crawl } from "./crawl";
 import * as path from "path";
+import { allEquals } from "evt/tools/reducers/allEquals";
 
 export async function resolvePathsWithWildcards(
     params: {
@@ -24,9 +25,22 @@ export async function resolvePathsWithWildcards(
             pathWithWildcards
                 .map(pathWithWildcard => globProxy({ pathWithWildcard }))
         ).then(
-            arrOfArr =>
-                arrOfArr
+            arrOfArr => arrOfArr
                     .reduce(...flat)
+                    //Next op is to get the apropriate case in the outputs
+                    //Ex if we have README.md as input but readme.md is the
+                    //file that is actually there we want readme.md as output.
+                    .map(fileOrDirPath => 
+                         path.join(
+                            path.dirname(fileOrDirPath),
+                            fs.readdirSync(path.dirname(fileOrDirPath))
+                                .find(
+                                    basename => [basename, fileOrDirPath]
+                                        .map(s => s.toLowerCase())
+                                        .reduce(...allEquals())
+                            )!
+                        )
+                    )
                     .map(
                         fileOrDirPath =>
                             !fs.lstatSync(fileOrDirPath).isDirectory() ?
@@ -36,6 +50,7 @@ export async function resolvePathsWithWildcards(
                                     .map(filePath => path.join(fileOrDirPath, filePath))
                     )
                     .reduce(...flat)
+
         );
 
     const filesToInclude = await resolvePaths(

@@ -4,8 +4,8 @@ import type { denoifyImportExportStatementFactory } from "./denoifyImportExportS
 import * as crypto from "crypto";
 
 export function denoifySingleFileFactory(
-    params: {} & 
-    ReturnType<typeof denoifyImportExportStatementFactory>
+    params: {} &
+        ReturnType<typeof denoifyImportExportStatementFactory>
 ) {
 
     const { denoifyImportExportStatement } = params;
@@ -25,12 +25,31 @@ export function denoifySingleFileFactory(
         if (usesBuiltIn("__filename", sourceCode)) {
 
             modifiedSourceCode = [
-                `const __filename = (()=>{`,
-                `    const {url: urlStr}= import.meta;`,
-                `    const url= new URL(urlStr);`,
-                `    return url.protocol === "file:" ? url.pathname : urlStr;`,
+                `const __filename = (() => {`,
+                `    const { url: urlStr } = import.meta;`,
+                `    const url = new URL(urlStr);`,
+                `    const __filename = (url.protocol === "file:" ? url.pathname : urlStr);`,
+                ``,
+                `    const isWindows = (() => {`,
+                ``,
+                `        let NATIVE_OS: typeof Deno.build.os = "linux";`,
+                `        // eslint-disable-next-line @typescript-eslint/no-explicit-any`,
+                `        const navigator = (globalThis as any).navigator;`,
+                `        if (globalThis.Deno != null) {`,
+                `            NATIVE_OS = Deno.build.os;`,
+                `        } else if (navigator?.appVersion?.includes?.("Win") ?? false) {`,
+                `            NATIVE_OS = "windows";`,
+                `        }`,
+                ``,
+                `        return NATIVE_OS == "windows";`,
+                ``,
+                `    })();`,
+                ``,
+                `    return isWindows ?`,
+                `        __filename.split("/").join("\\").substring(1) :`,
+                `        __filename;`,
                 `})();`,
-                '',
+                ``,
                 modifiedSourceCode
             ].join("\n");
 
@@ -40,11 +59,30 @@ export function denoifySingleFileFactory(
         if (usesBuiltIn("__dirname", sourceCode)) {
 
             modifiedSourceCode = [
-                `const __dirname = (()=>{`,
-                `    const {url: urlStr}= import.meta;`,
-                `    const url= new URL(urlStr);`,
-                `    const __filename = url.protocol === "file:" ? url.pathname : urlStr;`,
-                `    return __filename.replace(/[/][^/]*$/, '');`,
+                `const __dirname = (() => {`,
+                `    const { url: urlStr } = import.meta;`,
+                `    const url = new URL(urlStr);`,
+                `    const __filename = (url.protocol === "file:" ? url.pathname : urlStr)`,
+                `        .replace(/[/][^/]*$/, '');`,
+                ``,
+                `    const isWindows = (() => {`,
+                ``,
+                `        let NATIVE_OS: typeof Deno.build.os = "linux";`,
+                `        // eslint-disable-next-line @typescript-eslint/no-explicit-any`,
+                `        const navigator = (globalThis as any).navigator;`,
+                `        if (globalThis.Deno != null) {`,
+                `            NATIVE_OS = Deno.build.os;`,
+                `        } else if (navigator?.appVersion?.includes?.("Win") ?? false) {`,
+                `            NATIVE_OS = "windows";`,
+                `        }`,
+                ``,
+                `        return NATIVE_OS == "windows";`,
+                ``,
+                `    })();`,
+                ``,
+                `    return isWindows ?`,
+                `        __filename.split("/").join("\\").substring(1) :`,
+                `        __filename;`,
                 `})();`,
                 ``,
                 modifiedSourceCode
@@ -76,7 +114,7 @@ export function denoifySingleFileFactory(
                     `import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s+from\\s*${strRegExpInQuote}`, //import [type] Foo from "..."
                     `import\\s*${strRegExpInQuote}`, //import "..."
                 ]
-                .map(s => `(?<=^|[\\r\\n\\s;])${s}`),
+                    .map(s => `(?<=^|[\\r\\n\\s;])${s}`),
                 `(?<=[^a-zA-Z\._0-9$\*])import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)` //type Foo = import("...").Foo
             ]) {
 
@@ -106,9 +144,9 @@ export function denoifySingleFileFactory(
 
         }
 
-        for( const [hash, denoifiedImportExportStatement] of denoifiedImportExportStatementByHash ){
+        for (const [hash, denoifiedImportExportStatement] of denoifiedImportExportStatementByHash) {
             modifiedSourceCode = modifiedSourceCode.replace(
-                new RegExp(hash, "g"), 
+                new RegExp(hash, "g"),
                 denoifiedImportExportStatement
             );
         }

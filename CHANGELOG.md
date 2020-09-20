@@ -1,3 +1,8 @@
+### **0.5.6** (2020-09-20)  
+  
+- Propely copy files over deno_dist on windows, fixes #16  
+- Respect case when copying files over to deno_dist    
+  
 ### **0.5.5** (2020-09-14)  
   
 - Add url and assert node builtin support  

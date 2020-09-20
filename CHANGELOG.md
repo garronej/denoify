@@ -2,70 +2,33 @@
   
 - Makes __dirname and __filename work on Windows    
   
-### **0.5.7** (2020-09-20)  
-  
-  
-  
 ### **0.5.6** (2020-09-20)  
   
-- Propely copy files over deno_dist on windows, fixes #16  
+- Properly copy files over deno_dist on windows, fixes #16  
 - Respect case when copying files over to deno_dist    
   
 ### **0.5.5** (2020-09-14)  
   
-- Add url and assert node builtin support  
-- Merge pull request #15 from garronej/dependabot/npm_and_yarn/node-fetch-2.6.1
-
-Bump node-fetch from 2.6.0 to 2.6.1  
-- Update README.md    
-  
-### **0.5.4** (2020-09-06)  
-  
-  
+- Add "url" and "assert" support (node builtin modules)  
   
 ### **0.5.3** (2020-09-06)  
   
 - Fix replacer for Windows #13  
 - Merge pull request #12 from divy-work/patch-1
-
-feat: add yolk to the list of examples  
-- feat: add yolk to the list of examples
-
-https://github.com/nestdotland/yolk    
-  
-### **0.5.2** (2020-08-26)  
-  
-  
-  
-### **0.5.1** (2020-08-26)  
-  
-  
+- feat: add yolk to the list of examples https://github.com/nestdotland/yolk    
   
 ## **0.5.0** (2020-08-26)  
   
-- // @denoify-ignore (with a space) worke as well as without space #11  
+- // @denoify-ignore (with a space) work with a space as well that without it #11  
 - BREAKING CHANGE, all denoify params gathered in a single package.json field, pick the files to includes in deno_dist #11  
-- Update README.md
-
-Remove unsound goals (changeling ignore)  
-- Wrap all denoify related param of package.json in a single "denoify" property    
   
 ### **0.4.14** (2020-08-20)  
   
 - Copy LICENSE in deno_dist #11  
-- Update README.md  
-- Update README.md  
-- Update README.md  
-- Update README.md    
-  
-### **0.4.13** (2020-08-18)  
-  
-- update docs    
   
 ### **0.4.12** (2020-08-18)  
   
 - Support rxjs  
-- Update README.md    
   
 ### **0.4.11** (2020-08-18)  
   

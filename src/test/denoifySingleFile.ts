@@ -118,7 +118,7 @@ const __dirname = (() => {
     })();
 
     return isWindows ?
-        __filename.split("/").join("\\").substring(1) :
+        __filename.split("/").join("\\\\").substring(1) :
         __filename;
 })();
 
@@ -143,7 +143,7 @@ const __filename = (() => {
     })();
 
     return isWindows ?
-        __filename.split("/").join("\\").substring(1) :
+        __filename.split("/").join("\\\\").substring(1) :
         __filename;
 })();
 

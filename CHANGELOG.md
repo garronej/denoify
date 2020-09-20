@@ -1,3 +1,7 @@
+### **0.5.8** (2020-09-20)  
+  
+- Makes __dirname and __filename work on Windows    
+  
 ### **0.5.7** (2020-09-20)  
   
   

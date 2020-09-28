@@ -98,7 +98,20 @@ export const replacer: Replacer = async params => {
             ].join("\n")
 
         }
-        default: throw new Error(`Only support import from "${moduleName}" or "${moduleName}/operators"`);
+        case "webSocket": {
+
+            const { target } = parsedImportExportStatement;
+
+            const url = `https://cdn.skypack.dev/rxjs@${version}/webSocket?dts`;
+
+            if (target === undefined) {
+                //NOTE: More certainly useless to import like that
+                return `import "${url}";`;
+            }
+
+            return `import ${target} from "${url}";`;
+        }
+        default: throw new Error(`Only support import from "${moduleName}", "${moduleName}/operators", or "${moduleName}/webSocket`);
     }
 
 

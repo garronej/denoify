@@ -71,6 +71,26 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
     }
 
+    for (const target of ["{ webSocket, WebSocketSubjectConfig }", "* as rxjsWs"]) {
+
+
+        const output = await consumeExecutableReplacer({
+            "parsedImportExportStatement": ParsedImportExportStatement.parse(`import ${target} from "rxjs/webSocket"`) as any,
+            "version": "6.6.2",
+            "destDirPath": "..."
+        });
+
+
+        assert(
+            output
+            ===
+            [
+                `import ${target} from "https://cdn.skypack.dev/rxjs@6.6.2/webSocket?dts";`
+            ].join("\n")
+        );
+
+    }
+
     {
 
         const output = await consumeExecutableReplacer({

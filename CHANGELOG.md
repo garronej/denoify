@@ -1,3 +1,12 @@
+### **0.5.10** (2020-09-28)  
+  
+- Merge pull request #17 from marcushultman/rxjs-ws
+
+add support for rxjs/webSocket in replacer  
+- add support for rxjs/webSocket in replacer
+
+use skypack CDN with `X-TypeScript-Types` header support    
+  
 ### **0.5.9** (2020-09-20)  
   
   

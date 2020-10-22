@@ -97,6 +97,9 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 - Testing with multiple ``Node`` and ``Deno`` versions before publishing.
 - Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).  
 
+**WARNING**: Due to a GitHub bug, more often than not, the initial workflow that is supposed to trigger when
+you use the template doesn't. You may need to try 2 or 3 times. Sorry about that.
+
 [Get started](https://github.com/garronej/denoify_ci)
 
 **NEW v0.4.0**: Now that [deno.land/x](https://deno.land/x) allows to publish modules under a subdirectory of a GitHub repo

@@ -1,4 +1,4 @@
-import { is404, ParsedImportExportStatement } from "../../lib";
+import { is404 } from "../../lib";
 import type { Replacer } from "../../lib";
 
 export const replacer: Replacer = async params => {

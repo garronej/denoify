@@ -37,16 +37,6 @@ export const replacer: Replacer = async params => {
         throw new Error("expect import fast-xml-parser as a namespace");
     }
 
-    const parsedImportExportStatementOut: ParsedImportExportStatement<"URL"> = {
-        ...parsedImportExportStatement,
-        "parsedArgument": {
-            "type": "URL",
-            "url": `https://dev.jspm.io/fast-xml-parser@${version}`
-        }
-    };
-
-    parsedImportExportStatementOut.target = match[1];
-
     return [
         `import __fastXMLParser from "https://dev.jspm.io/fast-xml-parser@${version}";`,
         `import type * as __t_fastXMLParser from "${urlTypes}";`,

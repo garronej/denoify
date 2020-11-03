@@ -1,3 +1,7 @@
+### **0.5.11** (2020-11-03)  
+  
+- Fix custom replacer, import with new lines    
+  
 ### **0.5.10** (2020-09-28)  
   
 - Merge pull request #17 from marcushultman/rxjs-ws

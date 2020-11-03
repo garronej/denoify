@@ -1,3 +1,7 @@
+### **0.5.12** (2020-11-03)  
+  
+- Fix: Recognize import staring with // as url imports    
+  
 ### **0.5.11** (2020-11-03)  
   
 - Fix custom replacer, import with new lines    

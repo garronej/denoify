@@ -47,13 +47,11 @@ export namespace ParsedImportExportStatement {
 
             }
 
-            if (argument.toLowerCase().startsWith("http")) {
-
+            if( /^(https?:)?\/\//i.test(argument) ){
                 return id<Url>({
                     "type": "URL",
                     "url": argument
                 });
-
             }
 
             {

@@ -51,7 +51,9 @@ export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Pr
         `expect: node ${process.argv[1]} '<importExportStatement>' <version>`
     );
 
-    const parsedImportExportStatement = ParsedImportExportStatementExhaustive.parse(importExportStatement);
+    const parsedImportExportStatement = ParsedImportExportStatementExhaustive.parse(
+        JSON.parse(`"${importExportStatement.replace(/"/g,'\\"')}"`)
+    );
 
     assert(parsedImportExportStatement.parsedArgument.type === "DEPENDENCY");
 

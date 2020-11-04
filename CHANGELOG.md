@@ -1,3 +1,10 @@
+## **0.6.0** (2020-11-04)  
+  
+- Allow console.log in replacer  
+- Support graphql  
+- Update EVT (changlog ignore)  
+- Add graphql-helix to the list of modules using denoify    
+  
 ### **0.5.12** (2020-11-03)  
   
 - Fix: Recognize import staring with // as url imports    

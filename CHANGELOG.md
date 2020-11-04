@@ -2,7 +2,6 @@
   
 - Allow console.log in replacer  
 - Support graphql  
-- Update EVT (changlog ignore)  
 - Add graphql-helix to the list of modules using denoify    
   
 ### **0.5.12** (2020-11-03)  

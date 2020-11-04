@@ -54,6 +54,7 @@ Modules that have been made cross-runtime using Denoify:
 - [Nano JSX](https://github.com/nanojsx/nano)
 - [Yolk](https://github.com/nestdotland/yolk)
 - [eta](https://deno.land/x/eta@v1.3.0)
+- [graphql-helix](https://github.com/contrawork/graphql-helix)
 
 # Introduction video
 

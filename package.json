@@ -26,7 +26,7 @@
         "@types/comment-json": "^1.1.1",
         "commander": "^4.1.1",
         "comment-json": "^3.0.2",
-        "evt": "^1.7.13",
+        "evt": "^1.9.2",
         "get-github-default-branch-name": "^0.0.4",
         "gitignore-parser": "0.0.2",
         "glob": "^7.1.6",

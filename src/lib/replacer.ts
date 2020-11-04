@@ -34,7 +34,8 @@ export type Replacer = (
     }
 ) => Promise<undefined | string>;
 
-const errorCodeForUndefined = 153;
+const exitCodeForUndefined = 153;
+const separatorBetweenDebugAndResult = "\n===========>> | REPLACER RESULT | <<===========\n";
 
 /** 
  * Assert the replacer never throws, if you do not want to override 
@@ -70,12 +71,14 @@ export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Pr
 
     if (result === undefined) {
 
-        process.exit(errorCodeForUndefined);
+        process.exit(exitCodeForUndefined);
 
     }
 
-
-    process.stdout.write(result);
+    process.stdout.write(
+        separatorBetweenDebugAndResult +
+        result
+    );
 
     process.exit(0);
 
@@ -100,35 +103,40 @@ export function consumeExecutableReplacerFactory(
 
             const { parsedImportExportStatement, version, destDirPath } = params;
 
+            let out: string;
+
             try {
 
-                return await st.exec(
-                    `"${
-                    process.argv[0]
-                    }" "${
-                    executableFilePath
-                    }" ${
-                    JSON.stringify(
+                out = await st.exec(
+                    `"${process.argv[0]
+                    }" "${executableFilePath
+                    }" ${JSON.stringify(
                         ParsedImportExportStatementExhaustive.stringify(
                             parsedImportExportStatement
                         )
                     )
-                    } ${
-                    version
-                    } ${
-                    JSON.stringify(destDirPath)
+                    } ${version
+                    } ${JSON.stringify(destDirPath)
                     }`
                 );
 
             } catch (error) {
 
-                if (error.code === errorCodeForUndefined) {
+                if (error.code === exitCodeForUndefined) {
                     return undefined;
                 }
 
                 throw error;
 
             }
+
+            const [debugLog, result] = out.split(separatorBetweenDebugAndResult);
+
+            if (debugLog) {
+                process.stdout.write(debugLog)
+            }
+
+            return result;
 
         });
 

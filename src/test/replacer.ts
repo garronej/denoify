@@ -13,6 +13,32 @@ const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
 
     {
 
+        const input = [
+            'import {',
+            '    execute as defaultExecute,',
+            '    getOperationAST,',
+            '} from "graphql"'
+        ].join("\n");
+
+        const expectedOutput = [
+            'import {',
+            '    execute as defaultExecute,',
+            '    getOperationAST,',
+            '} from "https://cdn.skypack.dev/graphql@15.4.0-experimental-stream-defer.1?dts"'
+        ].join("\n");
+
+        const output = await consumeExecutableReplacer({
+            "parsedImportExportStatement": ParsedImportExportStatement.parse(input) as any,
+            "version": "15.4.0-experimental-stream-defer.1",
+            "destDirPath": "..."
+        });
+
+        assert(output === expectedOutput);
+
+    }
+
+    {
+
         const output = await consumeExecutableReplacer({
             "parsedImportExportStatement": ParsedImportExportStatement.parse('import { fromEvent } from "rxjs"') as any,
             "version": "6.6.2",

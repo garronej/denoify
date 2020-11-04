@@ -10,9 +10,16 @@
 </p>
 <br>
 
+**NEW IN v0.6** *Breaking changes*  
+- Built in support for [graphQL](https://www.npmjs.com/package/graphql). 
+  See how [gaphql-helix](https://github.com/contrawork/graphql-helix) got graphql working before `v0.6` using a [custom replacer](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/scripts/denoify-replacer.js) 
+  referenced in the [`package.json`](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/package.json).  
+  You can do the same with other modules using [skypack.dev](https://www.skypack.dev/) or [jspm](https://jspm.org/)
+- It is now possible to use `console.log()` in custom replacers to help debug. 
+
 **NEW IN v0.5** *Breaking changes*  
--All Denoify parameters are now gathered under a uniq `"denoify"` field.  
--Possibility to specify which files should be copied to the `deno_dist` directory (Previously only `README.md` vas copied).  
+- All Denoify parameters are now gathered under a uniq `"denoify"` field.  
+- Possibility to specify which files should be copied to the `deno_dist` directory (Previously only `README.md` vas copied).  
 [Valid config example](https://github.com/garronej/my_dummy_npm_and_deno_module/blob/master/package.json)
 
 # What it is
@@ -46,7 +53,6 @@ Modules that have been made cross-runtime using Denoify:
 - [Nano JSX](https://github.com/nanojsx/nano)
 - [Yolk](https://github.com/nestdotland/yolk)
 - [eta](https://deno.land/x/eta@v1.3.0)
-- [graphql-helix](https://github.com/contrawork/graphql-helix)
 
 # Introduction video
 

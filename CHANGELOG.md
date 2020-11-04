@@ -1,7 +1,6 @@
 ### **0.6.1** (2020-11-04)  
   
 - Add some support for 'crypto' node builtin  
-- fmt    
   
 ## **0.6.0** (2020-11-04)  
   

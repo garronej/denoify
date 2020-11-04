@@ -9,6 +9,7 @@ makeThisModuleAnExecutableReplacer(
             of 
             await Promise.all([
                 import("./fast-xml-parser"),
+                import("./graphql"),
                 import("./ipaddr.js"),
                 import("./react"),
                 import("./react-dom"),

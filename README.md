@@ -16,6 +16,7 @@
   referenced in the [`package.json`](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/package.json).  
   You can do the same with other modules using [skypack.dev](https://www.skypack.dev/) or [jspm](https://jspm.org/)
 - It is now possible to use `console.log()` in custom replacers to help debug. 
+- [Some support](https://github.com/denoland/deno/pull/8191) for `crypto` node builtin.
 
 **NEW IN v0.5** *Breaking changes*  
 - All Denoify parameters are now gathered under a uniq `"denoify"` field.  

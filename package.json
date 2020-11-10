@@ -1,6 +1,6 @@
 {
     "name": "denoify",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
     "main": "dist/lib/index.js",
     "types": "dist/lib/index.d.ts",

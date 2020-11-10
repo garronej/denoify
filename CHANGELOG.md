@@ -1,3 +1,7 @@
+### **0.6.2** (2020-11-10)  
+  
+- Add builtin support for reflect-metadata    
+  
 ### **0.6.1** (2020-11-04)  
   
 - Add some support for 'crypto' node builtin  

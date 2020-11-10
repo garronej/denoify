@@ -54,6 +54,7 @@ Modules that have been made cross-runtime using Denoify:
 - [Nano JSX](https://github.com/nanojsx/nano)
 - [Yolk](https://github.com/nestdotland/yolk)
 - [eta](https://deno.land/x/eta@v1.3.0)
+- [graphql-helix](https://github.com/contrawork/graphql-helix)
 
 # Introduction video
 
@@ -104,9 +105,6 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 - Writing a [README.md](https://github.com/garronej/denoify_ci/blob/dev/README.template.md) with decent presentation and instructions on how to install/import your module in different environments.
 - Testing with multiple ``Node`` and ``Deno`` versions before publishing.
 - Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).  
-
-**WARNING**: Due to a GitHub bug, more often than not, the initial workflow that is supposed to trigger when
-you use the template doesn't. You may need to try 2 or 3 times. Sorry about that.
 
 [Get started](https://github.com/garronej/denoify_ci)
 

@@ -12,7 +12,7 @@
 
 **NEW IN v0.6** *Breaking changes*  
 - Built in support for [graphQL](https://www.npmjs.com/package/graphql).  
-  See how [gaphql-helix](https://github.com/contrawork/graphql-helix) got graphql working before `v0.6` using a [custom replacer](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/scripts/denoify-replacer.js) 
+  See how [graphql-helix](https://github.com/contrawork/graphql-helix) got graphql working before `v0.6` using a [custom replacer](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/scripts/denoify-replacer.js) 
   referenced in the [`package.json`](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/package.json).  
   You can do the same with other modules using [skypack.dev](https://www.skypack.dev/) or [jspm](https://jspm.org/)
 - It is now possible to use `console.log()` in custom replacers to help debug. 
@@ -69,7 +69,7 @@ to publish on [deno.land/x](https://deno.land/x) but before anything
 here are the current limitations you need to be aware of.
 
 - If your module is vanilla JS it needs to be ported to TypeScript first. (1)
-- Not all Node's builtin are supported yet. (2) But thanks to the new mechanism, 
+- Not all Node's builtin modules are supported yet. (2) But thanks to the new mechanism, 
   [à la React Native](https://reactnative.dev/docs/platform-specific-code#platform-specific-extensions), 
   that let you have specific deno implementation for some of your files, the
   lack of support for `"https"` or `"net"`, while being annoying, is no longer a dead end.

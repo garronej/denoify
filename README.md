@@ -20,7 +20,7 @@
 
 **NEW IN v0.5** *Breaking changes*  
 - All Denoify parameters are now gathered under a uniq `"denoify"` field.  
-- Possibility to specify which files should be copied to the `deno_dist` directory (Previously only `README.md` vas copied).  
+- Possibility to specify which files should be copied to the `deno_dist` directory (Previously only `README.md` was copied).  
 [Valid config example](https://github.com/garronej/my_dummy_npm_and_deno_module/blob/master/package.json)
 
 # What it is

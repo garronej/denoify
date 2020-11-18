@@ -38,7 +38,7 @@ and require `--allow-read` but it will also be easier to get working.
 Some NPM modules can also be imported into Deno using CDN like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org)
 checkout [Soremwar/deno_types](https://github.com/Soremwar/deno_types) for some examples.  
 
-This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their modules and doing so without introducing breaking changes.
+This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their modules and do so without introducing breaking changes.
 
 # Motivations
 

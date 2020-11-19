@@ -114,18 +114,11 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 
 # TODO LIST / Things that need to change
 
+- [ ] Improve documentation. (New website incoming)
 - [ ] Support `baseUrl` tsConfig option. (Import non relative path relative to `baseUrl`)
 - [x] Support `myModule.deno.ts` alongside `myModule.ts` for deno specific implementation of part of the code. (Like in React Native)
 - [x] Support custom `import/export` statements replacer.
 - [x] 🔥 Leverage CDNs like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org) to support more NPM modules out of the box, feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png). 
 - [x] Support `.tsx`
 
-# The sticker
 
-<p align="center">
-    <img src="https://user-images.githubusercontent.com/6702424/90624450-41d82c00-e218-11ea-8b02-e276e6ded303.png">
-</p>
-<p align="center">
-    <a href="https://teespring.com/fr/denoify-sticker">Shop</a>  
-</p>
-   

@@ -9,8 +9,12 @@
     <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
 </p>
 
-[Site](https://www.denoify.land) |
-[Docs](https://docs.denoify.land)
+</p>
+<p align="center">
+  <a href="https://www.denoify.land">Home</a>
+  -
+  <a href="https://docs.denoify.land">Documentation</a>
+</p>
 
 <br>
 

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
+  <!-- HTML Meta Tags -->
+  <title>Denoify - The Node to Deno transpiler</title>
+  <meta name="description" content="🦕For NPM module authors that would like to support Deno but do not want to write and maintain a port for it.">
+
+  <!-- Google / Search Engine Tags -->
+  <meta itemprop="name" content="Denoify">
+  <meta itemprop="description" content="🦕For NPM module authors that would like to support Deno but do not want to write and maintain a port for it.">
+  <meta itemprop="image" content="https://denoify.land/assets/img/social_preview.png">
+
+  <!-- Facebook Meta Tags -->
+  <meta property="og:url" content="https://denoify.land">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Denoify - The Node to Deno transpiler">
+  <meta property="og:description" content="🦕For NPM module authors that would like to support Deno but do not want to write and maintain a port for it.">
+  <meta property="og:image" content="https://denoify.land/assets/img/social_preview.png">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Denoify - The Node to Deno transpiler">
+  <meta name="twitter:description" content="🦕For NPM module authors that would like to support Deno but do not want to write and maintain a port for it.">
+  <meta name="twitter:image" content="https://denoify.land/assets/img/social_preview.png">
+
+  <!-- Meta Tags Generated via http://heymeta.com -->
+
+
+  <link rel="icon" type="image/png" href="assets/img/logo_250.png" />
+
+  <link rel="stylesheet" href="assets/3p/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/3p/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163842958-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-163842958-1');
+  </script>
+
+  <!-- End Google Analytics -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
+</head>
+
+<body>
+  <header class="masthead">
+    <nav class="navbar navbar-expand-sm navbar-dark">
+      <a href="#" class="navbar-brand">
+        <img src="assets/img/logo_400.png" alt="" width="130" height="130" class="d-inline-block align-top">
+      </a>
+
+      <div class="d-block d-sm-none">
+            <a class="github-button" href="https://github.com/garronej/denoify" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star garronej/denoify on GitHub">Star</a>
+      </div>
+
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="https://docs.evt.land/api" class="nav-link text-white"> Documentation </a>
+          </li>
+          <li class="nav-item" style="padding-top: 7px;">
+
+            <div class="d-none d-sm-block">
+              <a class="github-button" href="https://github.com/garronej/denoify" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star garronej/denoify on GitHub">Star</a>
+            </div>
+
+
+          </li>
+
+          <li class="nav-item">
+            <a href="https://github.com/garronej/d" class="nav-link text-white" >
+              <i class="fa fa-github" aria-hidden="true"></i>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+    <div class="container content">
+      <div class="row">
+        <div class="col-lg-12 d-flex flex-column justify-content-center px-4">
+          <h1 class="text-center">Denoify</h1>
+          <h3 class="text-center">The Node to Deno transpiler</h3>
+          <div class="terminal-wrapper">
+
+            <div id="typed-strings" style="display: none;">
+              <span>
+                <span class="text-muted">></span> npx denoify<br>
+              </span>
+            </div>
+
+            <div class="terminal m-auto term1">
+              <span id="typed"></span>
+            </div>
+
+          </div>
+        </div>
+
+
+          <div class="col-sm-12 d-md-none text-center" style="margin-bottom: 20px;">
+            <a href="https://docs.evt.land" class="btn mt-3 btn-white" style="width: 90%">
+              Documentation
+              <i class="fa fa-arrow-circle-right fa-fw" aria-hidden="true"></i>
+            </a>
+          </div>
+
+          <div class="col-lg-12 st_flex d-none d-md-flex" style="padding-left: 150px; padding-right: 150px; margin-bottom: 20px;">
+            <a href="https://docs.evt.land" class="btn mt-3 btn-white">
+              Documentation
+              <i class="fa fa-arrow-circle-right fa-fw" aria-hidden="true"></i>
+            </a>
+          </div>
+
+
+      </div>
+    </div>
+  </header>
+
+  <section class="screenshot-container">
+    <img src="assets/img/demo.png" class="animate__animated animate__bounceIn animate__delay-1s" alt="">
+  </section>
+
+  <h1 style="
+    text-align: center;
+    margin-bottom: -20px;
+    margin-top: 50px;
+  ">Success stories</h1>
+
+  <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="10000">
+    <div class="carousel-inner">
+
+      
+      <div class="carousel-item active">
+        <section class="comment">
+
+          <div class="comment-wrapper shadow">
+
+            <div class="friend-item">
+
+              <div class="image-container">
+                  <a href="https://evt.land" target="_blank" rel="noopener noreferrer">
+                      <img src="assets/img/logo_evt.png" class="friend-logo" role="presentation">
+                  </a>
+              </div>
+              <div class="quote-container">
+                <p>
+                  <em><a target="_blank" rel="noopener noreferrer" href="https://evt.land">EVT</a>, 
+      is a type safe replacement for node's <code>EventEmitter</code>.</em>
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+      </div>
+      
+      <div class="carousel-item">
+        <section class="comment">
+
+          <div class="comment-wrapper shadow">
+
+            <div class="friend-item">
+
+              <div class="image-container">
+                  <a href="https://nest.land" target="_blank" rel="noopener noreferrer">
+                      <img src="assets/img/logo_nest.png" class="friend-logo" role="presentation">
+                  </a>
+              </div>
+              <div class="quote-container">
+                <p>
+                  <em><a target="_blank" rel="noopener noreferrer" href="https://github.com/nestdotland/yolk/tree/master/src/common">Yolk</a>, 
+      nest.land's official client library.<br>
+      nest.land is a module registry for Deno, on the blockweave. It enable to publish Deno modules to the permaweb, where they can never be deleted.
+      </em>
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+      </div>
+      
+      <div class="carousel-item">
+        <section class="comment">
+
+          <div class="comment-wrapper shadow">
+
+            <div class="friend-item">
+
+              <div class="image-container">
+                  <a href="https://eta.js.land" target="_blank" rel="noopener noreferrer">
+                      <img src="assets/img/logo_eta.png" class="friend-logo" role="presentation">
+                  </a>
+              </div>
+              <div class="quote-container">
+                <p>
+                  <em><a target="_blank" rel="noopener noreferrer" href="https://eta.js.land">Eta</a>, 
+      Is a template engine used under the hood by the widely popular Facebook's 
+      <a target="_blank" rel="noopener noreferrer" href="https://v2.docusaurus.io">Docusaurus</a></em>
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+      </div>
+      
+      <div class="carousel-item">
+        <section class="comment">
+
+          <div class="comment-wrapper shadow">
+
+            <div class="friend-item">
+
+              <div class="image-container">
+                  <a href="https://nanojsx.github.io" target="_blank" rel="noopener noreferrer">
+                      <img src="assets/img/logo_nanojsx.png" class="friend-logo" role="presentation">
+                  </a>
+              </div>
+              <div class="quote-container">
+                <p>
+                  <em><a target="_blank" rel="noopener noreferrer" href="https://nanojsx.github.io">Nano JSX</a>, 
+      is a very lightwheit yet powerfull JSX library desined to build ultra fast multi page apps.</em>
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </section>
+      </div>
+      
+
+
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+</div>
+
+  <footer class="mastfoot">
+    Code licensed under MIT License.
+  </footer>
+
+  <script src="assets/3p/jquery/jquery.min.js"></script>
+  <script src="assets/3p/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/3p/typed.js/typed.min.js"></script>
+  <script>
+    new Typed("#typed", {
+      "stringsElement": '#typed-strings',
+      "typeSpeed": 40,
+      "showCursor": false
+    });
+  </script>
+</body>
+
+</html>

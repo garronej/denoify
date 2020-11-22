@@ -1,5 +1,9 @@
 # Quick start
 
+{% hint style="info" %}
+I aknowlage that this project calls for a better, more exaustive, documentation. It's comming.
+{% endhint %}
+
 ## Documented sucess story
 
 You can check out the article wrote by the author of [the Eta template engine](https://eta.js.org).
@@ -18,7 +22,7 @@ You should be able to find everything there is to know about denoify by reading 
 
 \*\*\*\*[**Link to the GitHub repo**](https://github.com/garronej/my_dummy_npm_and_deno_module)\*\*\*\*
 
-{% hint style="info" %}
-I aknowlage that this project calls for a better, more exaustive, documentation. It's comming.
-{% endhint %}
+## Other tutorials
+
+* \*\*\*\*[**Как портировать модуль с Node на Deno**](https://habr.com/ru/company/vdsina/blog/527540/)\*\*\*\*
 

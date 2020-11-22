@@ -1,10 +1,10 @@
 # Quick start
 
 {% hint style="info" %}
-I aknowlage that this project calls for a better, more exaustive, documentation. It's comming.
+I acknowledge that this project calls for a better, more exhaustive, documentation. It's coming.
 {% endhint %}
 
-## Documented sucess story
+## A documented success story
 
 You can check out the article wrote by the author of [the Eta template engine](https://eta.js.org).
 
@@ -12,7 +12,7 @@ You can check out the article wrote by the author of [the Eta template engine](h
 
 \*\*\*\*[**Link to the DEV.to article**](https://dev.to/nebrelbug/adding-deno-support-to-the-eta-template-engine-28n7)\*\*\*\*
 
-JSYK Eta is powering the whidely popular facebook's [Docusaurus](https://v2.docusaurus.io).
+JSYK Eta is powering the widely popular facebook's [Docusaurus](https://v2.docusaurus.io).
 
 ## Complete guide
 

@@ -8,6 +8,11 @@
     <br>
     <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
 </p>
+
++ [Home](https://www.denoify.land)
++ [Documentation](https://docs.denoify.land)
+
+---
 <br>
 
 **NEW IN v0.6**  

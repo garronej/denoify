@@ -55,7 +55,7 @@ body {
   color: #026E00; }
 
 .btn-white:hover {
-  background-color: #336c28;
+  background-color: #d6e9ff;
   color: #026E00; }
 
 .terminal {
@@ -75,7 +75,7 @@ body {
   font-size: 18px;
   text-transform: uppercase; }
   .navbar a:hover {
-    color: #336c28 !important; }
+    color: #d6e9ff !important; }
 
 .st_flex {
   display: flex;

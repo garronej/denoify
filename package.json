@@ -1,6 +1,7 @@
 {
 	"name": "www.denoify.land",
 	"version": "1.0.0",
+	"homepage": "www.denoify.land",
 	"description": "The Denoify project's home page",
 	"scripts": {
 		"build": "npx gulp",

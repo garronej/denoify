@@ -6,7 +6,7 @@ module.exports = {
   baseUrl: "https://denoify.land",
   apiUrl: "https://docs.evt.land/api",
   learnMoreUrl: "https://docs.evt.land",
-  githubUrl: "https://github.com/garronej/d",
+  githubUrl: "https://github.com/garronej/denoify",
   stackblitzUrl: "https://stackblitz.com/edit/evt-playground?embed=1&file=index.ts&hideExplorer=1",
   "quotes": [
     {

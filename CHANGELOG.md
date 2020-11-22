@@ -1,3 +1,10 @@
+### **0.6.3** (2020-11-22)  
+  
+- Add documentation and homepage  
+- Setup documentation website docs.denoify.land  
+- Create CNAME  
+- Update README.md    
+  
 ### **0.6.2** (2020-11-10)  
   
 - Add builtin support for reflect-metadata    

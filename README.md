@@ -9,10 +9,9 @@
     <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
 </p>
 
-+ [Home](https://www.denoify.land)
-+ [Documentation](https://docs.denoify.land)
+[Site](https://www.denoify.land) |
+[Docs](https://docs.denoify.land)
 
----
 <br>
 
 **NEW IN v0.6**  
@@ -54,12 +53,12 @@ This tool is mainly for NPM module maintainer, to enable them to bring first-cla
 
 Modules that have been made cross-runtime using Denoify:
 
-- [EVT](https://evt.land)
-- [run-exclusive](https://github.com/garronej/run-exclusive)
-- [Nano JSX](https://github.com/nanojsx/nano)
-- [Yolk](https://github.com/nestdotland/yolk)
-- [eta](https://deno.land/x/eta@v1.3.0)
-- [graphql-helix](https://github.com/contrawork/graphql-helix)
+- garronej's [EVT](https://evt.land)
+- garronej's [run-exclusive](https://github.com/garronej/run-exclusive)
+- yandeu's [Nano JSX](https://github.com/nanojsx/nano)
+- nestdotland's [Yolk](https://github.com/nestdotland/yolk)
+- nebrelbug's [eta](https://deno.land/x/eta@v1.3.0)
+- danielrearden's [graphql-helix](https://github.com/contrawork/graphql-helix)
 
 # Introduction video
 
@@ -120,6 +119,7 @@ as subdirectory when registering your module on [deno.land/x](https://deno.land/
 # TODO LIST / Things that need to change
 
 - [ ] Improve documentation. (New website incoming)
+- [ ] Gather all imports in a `/deps.ts` [oscarotero/nodedeno](https://github.com/oscarotero/nodedeno) does.
 - [ ] Support `baseUrl` tsConfig option. (Import non relative path relative to `baseUrl`)
 - [x] Support `myModule.deno.ts` alongside `myModule.ts` for deno specific implementation of part of the code. (Like in React Native)
 - [x] Support custom `import/export` statements replacer.

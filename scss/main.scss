@@ -1,0 +1,348 @@
+$lightwhite: hsl(212, 63%, 71%);
+$bg-white: #fafafa;
+$text-white: #fff;
+
+body {
+  background-color: $bg-white;
+  font-family: Roboto,Helvetica,Arial,sans-serif;
+  min-width: 360px !important;
+
+  .carousel-control-next-icon,
+  .carousel-control-prev-icon {
+    filter: invert(1);
+  }
+
+  .comment{
+    width: 100%;
+    position: relative;
+    height: 400px;
+    margin-top: 50px;
+    /*
+    h1{
+      text-align: center;
+    }
+    @media (max-width: 788px){
+      margin-top: 120px;
+    }
+
+    @media (max-width: 576px){
+      margin-top: 50px;
+    }
+    */
+
+    margin-top: 0px !important;
+
+    .comment-wrapper{
+      background-color: rgb(241, 241, 241);
+      //background-color: #0B75F9;
+      border-radius: 10px;
+      width: 1200px;
+      height: 200px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-top: -100px;
+      margin-left: -600px;
+      .quote-container{
+        position: relative;
+        width: 1000px;
+        margin-left: 150px;
+        top: 30px;
+        text-align: center;
+      }
+      .quote-container{
+        p{
+          font-size: 0.95rem;
+          line-height: 1.5em;
+          letter-spacing: 0.05em;
+        }
+      }
+      .image-container{
+        a{
+          img{
+            width: 100px;
+            position: absolute;
+            top: 50px;
+            left: 30px;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+.btn-white {
+  background-color: #fff;
+  border: none;
+  color: #026E00;
+}
+
+.btn-white:hover {
+  background-color: $lightwhite;
+  color: #026E00;
+}
+
+.terminal {
+  color: white;
+  font-family: Menlo, Monaco, "Consolas", "Courier New", "Courier";
+  font-size: 11pt;
+  background: #1b1e21;
+  padding: 15px;
+  border-radius: 5px;
+  height: 50px;
+  max-width: 500px;
+}
+
+.mastfoot {
+  background-color: #026E00;
+}
+
+.navbar {
+  font-size: 18px;
+  text-transform: uppercase;
+
+  a:hover {
+    color: $lightwhite!important;
+  }
+}
+
+
+.st_flex {
+  display:flex;
+  justify-content:space-around;
+
+  a {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+
+}
+
+
+
+
+.masthead {
+  min-height: 500px;
+
+  background-color: #026E00;
+  background-image: url('/assets/img/background8.png');
+  //background-image: url('/Users/joseph/github/www.denoify.land/docs/assets/img/background8.png');
+  background-attachment: fixed;
+  /*background-position: center; */
+
+
+  .terminal-wrapper {
+    position: relative;
+    padding: 20px 0;
+
+    @media (max-width: 576px){
+      top: -30px;
+      margin-bottom: -30px;
+    }
+
+    .term1{
+      margin-bottom: 40px !important;
+      @media (max-width: 788px){
+        margin-bottom: 95px !important;
+      }
+      @media (max-width: 576px){
+        height: 75px;
+      }
+
+    }
+    .terminal{
+      width: 520px;
+      max-width: 520px;
+      position: relative;
+      @media (max-width: 788px){
+        left: 0;
+        margin-top: 90px !important;
+      }
+      @media (max-width: 576px) {
+        left: 0;
+        width: 310px;
+      }
+      /*@media (max-width: 345px){
+        margin-left: -10px !important;
+        padding-left: 2px;
+        width: 295px;
+      }*/
+    }
+  }
+
+  .content  {
+    height: 600px;
+
+    @media (max-width: 788px){
+      height: 675px;
+    }
+
+    @media (max-width: 767px){
+      height: 750px;
+    }
+
+
+    @media (min-width: 576px) {
+      padding: 0px 0px;
+    }
+    @media (max-width: 576px)  {
+      padding-bottom: 20px;
+      height: 570px;
+    }
+  }
+
+  h1 {
+    color: white;
+    font-weight: 600;
+    font-family: inherit;
+    margin-bottom: 0;
+    font-size: 60px;
+    @media (max-width: 576px){
+      font-size: 40px;
+      margin-top: 10px;
+    }
+  }
+
+  h3 {
+    font-weight: 300;
+    color: #fff;
+    @media (max-width: 576px){
+      font-size: 20px;
+    }
+  }
+
+  p {
+    line-height: 1.75;
+  }
+
+  img {
+    max-width: 300px;
+  }
+
+  .btn {
+    box-shadow: 3px 5px 20px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.screenshot-container {
+  text-align: center;
+  background: linear-gradient(rgb(171, 203, 243), 5%, $bg-white);
+
+  img{
+    @media (max-width: 788px){
+      position: relative;
+      top: 80px;
+    }
+  }
+
+
+  @media (max-width: 576px)  {
+    display: none;
+  }
+
+  img {
+    margin-top: -235px;
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+
+.badges-container {
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 35px;
+  padding-left: 0px;
+
+  background-color: $bg-white;
+
+  text-align: center;
+}
+
+.mastfoot {
+  padding: 10px 0px;
+
+  color: $text-white;
+
+  text-align: center;
+
+}
+
+@media screen and (max-width: 1470px){
+  body{
+    .comment{
+      .comment-wrapper{
+        width: 800px;
+        margin-top: -135px;
+        margin-left: -400px;
+        .quote-container{
+          width: 600px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 983px){
+  body{
+    .comment{
+      height: 630px;
+      .comment-wrapper{
+        width: 400px;
+        height: 490px;
+        margin-top: -240px;
+        margin-left: -200px;
+        .quote-container{
+          width: 380px;
+          top: 130px;
+          margin-left: 10px;
+          text-align: center;
+
+        }
+
+        .image-container{
+          a{
+            img{
+              top: 15px;
+              left: 50%;
+              margin-left: -50px;
+            }
+          }
+        }
+
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 788px){
+  body{
+    .carousel{
+      top: 50px;
+    }
+  }
+}
+
+@media screen and (max-width: 510px){
+  body{
+    .carousel{
+      top: -50px;
+      height: 550px;
+      .comment{
+        .comment-wrapper{
+          transform: scale(0.8);
+        }
+
+      }
+    }
+
+  }
+}
+
+.code {
+  color: #696969;
+  font-family: Menlo, Monaco, "Consolas", "Courier New", "Courier";
+  font-style: initial;
+}

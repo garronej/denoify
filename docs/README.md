@@ -12,8 +12,6 @@ You can check out the article wrote by the author of [the Eta template engine](h
 
 \*\*\*\*[**Link to the DEV.to article**](https://dev.to/nebrelbug/adding-deno-support-to-the-eta-template-engine-28n7)\*\*\*\*
 
-JSYK Eta is powering the widely popular facebook's [Docusaurus](https://v2.docusaurus.io).
-
 ## Complete guide
 
 You should be able to find everything there is to know about denoify by reading the `README` of [this](https://github.com/garronej/my_dummy_npm_and_deno_module) repo. 

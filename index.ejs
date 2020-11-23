@@ -141,18 +141,20 @@
   </section>
 
   <h1 style="
-    text-align: center;
-    margin-bottom: -20px;
-    margin-top: 50px;
-  ">Success stories</h1>
+            text-align: center;
+            margin-bottom: -20px;
+            margin-top: 50px;
+            ">Success stories
+          </h1>
 
   <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="10000">
+    
     <div class="carousel-inner">
 
       <% quotes.forEach(function(quote,index){ %>
       <div class="carousel-item<%= index===0?' active':'' %>">
         <section class="comment">
-
+          
           <div class="comment-wrapper shadow">
 
             <div class="friend-item">
@@ -162,11 +164,9 @@
                       <img src="<%= quote.logo %>" class="friend-logo" role="presentation">
                   </a>
               </div>
-              <div class="quote-container">
-                <p>
-                  <em><%- quote.quote %></em>
-                </p>
-              </div>
+              <p>
+                <em><%- quote.quote %></em>
+              </p>
 
             </div>
 

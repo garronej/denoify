@@ -1,3 +1,8 @@
+### **0.6.4** (2020-12-20)  
+  
+- Add "stream" 🎉  
+- Delete CNAME    
+  
 ### **0.6.3** (2020-11-22)  
   
 - Add documentation and homepage  

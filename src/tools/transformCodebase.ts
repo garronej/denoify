@@ -1,8 +1,8 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import { crawl } from "../tools/crawl";
-import { createDirectoryIfNotExistsRecursive } from "../tools/createDirectoryIfNotExistsRecursive";
+import { crawl } from "./crawl";
+import { createDirectoryIfNotExistsRecursive } from "./createDirectoryIfNotExistsRecursive";
 
 /** Apply a transformation function to every file of directory */
 export async function transformCodebase(

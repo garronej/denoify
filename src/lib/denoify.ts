@@ -1,6 +1,6 @@
 
 import { denoifySingleFileFactory } from "./denoifySingleFile";
-import { transformCodebase } from "./transformCodebase";
+import { transformCodebase } from "../tools/transformCodebase";
 import { resolveNodeModuleToDenoModuleFactory } from "./resolveNodeModuleToDenoModule";
 import * as fs from "fs";
 import * as path from "path";

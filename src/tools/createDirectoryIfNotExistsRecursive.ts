@@ -5,7 +5,7 @@ import * as path from "path";
 
 /** To support node < v10  we don't use fs.mkdir */
 export async function createDirectoryIfNotExistsRecursive(dirname: string) {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
 
        // initialize directories with final directory
        const directories_backwards = [dirname];

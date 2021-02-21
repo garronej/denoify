@@ -1,3 +1,7 @@
+### **0.6.5** (2021-02-21)  
+  
+- Bump version (chagelog ignore)    
+  
 ### **0.6.4** (2020-12-20)  
   
 - Add "stream" 🎉  

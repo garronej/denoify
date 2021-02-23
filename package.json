@@ -10,9 +10,8 @@
         "url": "git://github.com/garronej/denoify"
     },
     "scripts": {
-        "tsc": "npx tsc",
         "grant-exec-perms": "chmod +x ./dist/bin/*.js",
-        "build": "npm run tsc && npm run grant-exec-perms",
+        "build": "tsc && npm run grant-exec-perms",
         "test": "node ./dist/test",
         "enable_short_import_path": "npm run build && node ./dist/bin/enableShortNpmImportPath.js"
     },

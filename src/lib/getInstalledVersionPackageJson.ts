@@ -1,8 +1,13 @@
 
 import * as st from "scripting-tools";
 import { addCache } from "../tools/addCache";
-import * as path from "path";
+import {
+    join as pathJoin,
+    basename as pathBasename,
+    dirname as pathDirname
+} from "path";
 import * as fs from "fs";
+import { assert } from "evt/tools/typeSafety/assert";
 
 export function getInstalledVersionPackageJsonFactory(
     params: {
@@ -14,10 +19,28 @@ export function getInstalledVersionPackageJsonFactory(
 
     const getTargetModulePath = (params: { nodeModuleName: string; }) => {
         const { nodeModuleName } = params;
-        return st.find_module_path(
-            nodeModuleName,
-            projectPath
-        );
+
+        try {
+
+            return st.find_module_path(
+                nodeModuleName,
+                projectPath
+            );
+
+        } catch { }
+
+        return (function callee(thePath: string): string {
+
+            const theDirname = pathDirname(thePath);
+
+            assert(theDirname !== thePath);
+
+            return pathBasename(theDirname) === "node_modules" ?
+                thePath : callee(theDirname);
+
+        })(require.resolve(nodeModuleName, { "paths": [projectPath] }));
+
+
     };
 
     /** Throw if not installed locally */
@@ -36,7 +59,7 @@ export function getInstalledVersionPackageJsonFactory(
             return JSON.parse(
                 await new Promise<string>((resolve, reject) =>
                     fs.readFile(
-                        path.join(
+                        pathJoin(
                             targetModulePath,
                             "package.json"
                         ),

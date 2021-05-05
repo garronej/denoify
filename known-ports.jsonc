@@ -1,7 +1,7 @@
 {
     "builtins": {
         "events": "https://deno.land/std/node/events.ts",
-        "fs": "https://deno.land/std/node/fs.ts", //Partial
+        "fs": "https://deno.land/std/node/fs.ts",
         "os": "https://deno.land/std/node/os.ts", //Partial
         "path": "https://deno.land/std/node/path.ts",
         "process": "https://deno.land/std/node/process.ts", //Partial
@@ -13,7 +13,8 @@
         "url": "https://deno.land/std/node/url.ts",
         "assert": "https://deno.land/std/node/assert.ts",
         "crypto": "https://deno.land/std/node/crypto.ts", //Very partial
-        "stream": "https://deno.land/std/node/stream.ts"
+        "stream": "https://deno.land/std/node/stream.ts",
+        "child_process": "https://deno.land/std/node/child_process.ts"
         /*
         Important: built in missing: http, https...
         Follow evolution of support here: https://deno.land/std/node/README.md

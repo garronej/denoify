@@ -19,7 +19,8 @@
 <br>
 
 **NEW IN v0.7**  
-- Support for workspaces where `node_modules` are located in a parent directory. Example yarn workspaces. Thx [@hayes](https://github.com/hayes) [See issue](https://github.com/garronej/denoify/issues/23)  
+- Support for workspaces where `node_modules` are located in a parent directory.  
+  Example: yarn workspaces. Thx [@hayes](https://github.com/hayes) [See issue](https://github.com/garronej/denoify/issues/23)  
 - Add basic support for child_process.spawn ([#785](https://github.com/denoland/deno_std/pull/785))
 
 **NEW IN v0.6**  

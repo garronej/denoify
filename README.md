@@ -98,12 +98,10 @@ placed in ``node_module`` like in node so you won’t be able to access files th
 on the disk.*
 
 # GUIDES
-
-## Setting up an existing project
+## Step by step tutorial
 
 Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up Denoify in your project.
-
-## Starting a project from scratch
+## GitHub Actions setup
 
 ![denoify_ci](https://user-images.githubusercontent.com/6702424/82036935-c52a3480-96a1-11ea-9794-e982a23e5612.png)
 
@@ -116,18 +114,16 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 
 [Get started](https://github.com/garronej/denoify_ci)
 
-**NEW v0.4.0**: Now that [deno.land/x](https://deno.land/x) allows to publish modules under a subdirectory of a GitHub repo
-denoify no longer generate a `mod.ts` at the root of the project but under `deno_dist`. `deno_dist` should be stipulated 
-as subdirectory when registering your module on [deno.land/x](https://deno.land/x).
+# Deal with `GitHub API rate limit exceeded`
 
-# TODO LIST / Things that need to change
+If you run Denoify a lot outside of GitHub Actions pipelines you will eventually get the following error:  
+`RequestError [HttpError]: API rate limit exceeded for 176.170.197.165. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)`. 
+To fix it, [create a GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) and provide it as the environnement variable `GITHUB_TOKEN` when you run the build tool.  
 
-- [ ] Improve documentation. (New website incoming)
-- [ ] Gather all imports in a `/deps.ts` [oscarotero/nodedeno](https://github.com/oscarotero/nodedeno) does.
-- [ ] Support `baseUrl` tsConfig option. (Import non relative path relative to `baseUrl`)
-- [x] Support `myModule.deno.ts` alongside `myModule.ts` for deno specific implementation of part of the code. (Like in React Native)
-- [x] Support custom `import/export` statements replacer.
-- [x] 🔥 Leverage CDNs like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org) to support more NPM modules out of the box, feature [side loading of type definitions](https://user-images.githubusercontent.com/6702424/85604253-6ae1a380-b651-11ea-9406-38bb57f190de.png). 
-- [x] Support `.tsx`
-
+Example:
+```bash
+echo ghp_xn8jsxZrUChs9nmfZPDSmxLrTJPVJy3Sxc5J > ~/.bash_profile
+source ~/.bash_profile
+npx denoify
+```
 

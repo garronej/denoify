@@ -10,28 +10,8 @@ on:
 
 jobs:
 
-  test_lint:
-    runs-on: ubuntu-latest
-    if: ${{ !github.event.created && github.repository != 'garronej/ts_ci' }}
-    steps:
-    - uses: actions/checkout@v2.3.4
-    - uses: actions/setup-node@v2.1.3
-    - name: Making sure 'npm run lint' and 'npm run format' does not changes anything.
-      run: |
-        PACKAGE_MANAGER=npm
-        if [ -f "./yarn.lock" ]; then
-            PACKAGE_MANAGER=yarn
-        fi
-        if [ "$PACKAGE_MANAGER" = "yarn" ]; then
-            yarn install --frozen-lockfile                                                                                                                                                                                        
-        else
-            npm ci
-        fi
-        $PACKAGE_MANAGER run lint:check
-        $PACKAGE_MANAGER run format:check
   test:
     runs-on: ${{ matrix.os }}
-    needs: test_lint
     strategy:
       matrix:
         node: [ '14', '13', '12', '11', '10' ]

@@ -16,7 +16,9 @@ commanderStatic
 
 commanderStatic.parse(process.argv);
 
+const options = commanderStatic.opts()
+
 denoify({
-    "projectPath": commanderStatic["projectPath"],
-    "srcDirPath": commanderStatic["srcDirPath"]
+    "projectPath": options.project,
+    "srcDirPath": options.src
 });

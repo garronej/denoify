@@ -18,6 +18,9 @@
 
 <br>
 
+**NEW IN v0.7**  
+- Support for workspaces where `node_modules` are located in a parent directory. Example yarn workspaces. [See issue](https://github.com/garronej/denoify/issues/23)
+
 **NEW IN v0.6**  
 - Built in support for [graphQL](https://www.npmjs.com/package/graphql).  
   See how [graphql-helix](https://github.com/contrawork/graphql-helix) got graphql working before `v0.6` using a [custom replacer](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/scripts/denoify-replacer.js) 

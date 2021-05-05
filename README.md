@@ -62,12 +62,12 @@ This tool is mainly for NPM module maintainer, to enable them to bring first-cla
 
 Modules that have been made cross-runtime using Denoify:
 
-- garronej's [EVT](https://evt.land)
-- garronej's [run-exclusive](https://github.com/garronej/run-exclusive)
-- yandeu's [Nano JSX](https://github.com/nanojsx/nano)
-- nestdotland's [Yolk](https://github.com/nestdotland/yolk)
-- nebrelbug's [eta](https://deno.land/x/eta@v1.3.0)
-- danielrearden's [graphql-helix](https://github.com/contrawork/graphql-helix)
+- [graphql-helix](https://github.com/contrawork/graphql-helix)
+- [EVT](https://evt.land)
+- [Nano JSX](https://github.com/nanojsx/nano)
+- [eta](https://deno.land/x/eta@v1.3.0)
+- [Yolk](https://github.com/nestdotland/yolk)
+- [run-exclusive](https://github.com/garronej/run-exclusive)
 
 # Introduction video
 

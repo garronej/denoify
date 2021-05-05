@@ -1,3 +1,15 @@
+## **0.7.0** (2021-05-05)  
+  
+- Add child_process  
+- #23: Support for yarn workspaces / when the dependencies are installed in a parent directory  
+- fmt  
+- Update documentaion (rate limit exceeded)  
+- Improve wording on command line arguments  
+- Merge pull request #24 from hayes/patch-1
+
+Fix arg parsing  
+- Fix arg parsing    
+  
 ### **0.6.5** (2021-02-21)  
   
 - Bump version (chagelog ignore)    

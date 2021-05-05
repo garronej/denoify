@@ -96,12 +96,10 @@ You will be able to pull it off even if you aren't familiar with typescript. [Re
 (4) *In Deno the files that forms your module won’t be pre-fetched and 
 placed in ``node_module`` like in node so you won’t be able to access files that are not 
 on the disk.*
-
-# GUIDES
-## Step by step tutorial
+# Step by step tutorial
 
 Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up Denoify in your project.
-## GitHub Actions setup
+# GitHub Actions setup
 
 ![denoify_ci](https://user-images.githubusercontent.com/6702424/82036935-c52a3480-96a1-11ea-9794-e982a23e5612.png)
 

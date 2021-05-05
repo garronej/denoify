@@ -31,7 +31,12 @@ export async function runSequentially( params: { scriptsPaths: string[]; }) {
         child_process.fork(
             caller_file_path,
             undefined,
-            { "env": { [forkId]: path.join(path.dirname(caller_file_path), scriptPath) } }
+            {
+                "env": {
+                    [forkId]: path.join(path.dirname(caller_file_path), scriptPath),
+                    "GITHUB_TOKEN": process.env["GITHUB_TOKEN"]
+                }
+            }
         )
             .on("message", console.log)
             .once("exit", code => dExitCode.resolve(code ?? 1))

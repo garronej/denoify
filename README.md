@@ -45,7 +45,7 @@ A build tool that takes as input a TypeScript codebase that was meant to target 
 **NOTE:** Denoify won't run on Deno, it is a Node module.
 
 If you are just looking for a quick way to load NPM modules in your Deno project
-you can check out [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading),
+you can check out [CommonJS module Loading](https://github.com/denoland/deno_std/tree/main/node#commonjs-module-loading),
 unlike Denoify, it won't give you types definitions, it will involve `node_modules/`
 and require `--allow-read` but it will also be easier to get working.
 Some NPM modules can also be imported into Deno using CDN like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org)

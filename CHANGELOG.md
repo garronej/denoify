@@ -1,3 +1,11 @@
+### **0.7.1** (2021-05-09)  
+  
+- Update instructions for GitHub Actions  
+- Merge pull request #28 from andreswebs/master
+
+fix dead link  
+- fix dead link    
+  
 ## **0.7.0** (2021-05-05)  
   
 - Add child_process  

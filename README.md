@@ -108,14 +108,16 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 
 ![denoify_ci](https://user-images.githubusercontent.com/6702424/82036935-c52a3480-96a1-11ea-9794-e982a23e5612.png)
 
-[denoify_ci](https://github.com/garronej/denoify_ci) is a template repo that automates the boring and tedious tasks of:
-- Filling up the ``package.json``
-- Setting up TypeScript and [Denoify](https://github.com/garronej/denoify).
-- Writing a [README.md](https://github.com/garronej/denoify_ci/blob/dev/README.template.md) with decent presentation and instructions on how to install/import your module in different environments.
-- Testing with multiple ``Node`` and ``Deno`` versions before publishing.
-- Publishing on NPM and [deno.land/x](https://deno.land/x) ( via GitHub releases ).  
+Once you'll have successfully build your module for Deno you will want to publish it on [deno.land/x](https://deno.land/x)
+to do that in a clean way, without tracking the `deno_dist/` on your main branch you'll need to setup a
+CI workflow.  
+To do that you can use the [`.github/workflow/ci.yaml`](https://github.com/garronej/tsafe/blob/main/.github/workflows/ci.yaml) from [tsafe](https://github.com/garronej/tsafe), you can copy paste it, it's portable.  
 
-[Get started](https://github.com/garronej/denoify_ci)
+![image](https://user-images.githubusercontent.com/6702424/117559526-6ade6c80-b086-11eb-8575-3084f0835bbb.png)
+
+When registering your module on [deno.land/x](https://deno.land/x) you will need to specify the subdirectory:  
+
+![deno_registration](https://user-images.githubusercontent.com/6702424/117559462-c9571b00-b085-11eb-9ea5-683a0b0bb866.png)
 
 # Deal with `GitHub API rate limit exceeded`
 

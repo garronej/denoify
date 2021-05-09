@@ -20,7 +20,7 @@
 
 **NEW IN v0.7**  
 - Support for workspaces where `node_modules` are located in a parent directory.  
-  Example: yarn workspaces. Thx [@hayes](https://github.com/hayes) [See issue](https://github.com/garronej/denoify/issues/23)  
+  Thx [@hayes](https://github.com/hayes) [See issue](https://github.com/garronej/denoify/issues/23)  
 - Add basic support for child_process.spawn ([#785](https://github.com/denoland/deno_std/pull/785))
 
 **NEW IN v0.6**  
@@ -45,7 +45,7 @@ A build tool that takes as input a TypeScript codebase that was meant to target 
 **NOTE:** Denoify won't run on Deno, it is a Node module.
 
 If you are just looking for a quick way to load NPM modules in your Deno project
-you can check out [CommonJS module Loading](https://github.com/denoland/deno/tree/master/std/node/#commonjs-module-loading),
+you can check out [CommonJS module Loading](https://github.com/denoland/deno_std/tree/main/node#commonjs-module-loading),
 unlike Denoify, it won't give you types definitions, it will involve `node_modules/`
 and require `--allow-read` but it will also be easier to get working.
 Some NPM modules can also be imported into Deno using CDN like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org)
@@ -62,12 +62,12 @@ This tool is mainly for NPM module maintainer, to enable them to bring first-cla
 
 Modules that have been made cross-runtime using Denoify:
 
-- garronej's [EVT](https://evt.land)
-- garronej's [run-exclusive](https://github.com/garronej/run-exclusive)
-- yandeu's [Nano JSX](https://github.com/nanojsx/nano)
-- nestdotland's [Yolk](https://github.com/nestdotland/yolk)
-- nebrelbug's [eta](https://deno.land/x/eta@v1.3.0)
-- danielrearden's [graphql-helix](https://github.com/contrawork/graphql-helix)
+- [graphql-helix](https://github.com/contrawork/graphql-helix)
+- [EVT](https://evt.land)
+- [Nano JSX](https://github.com/nanojsx/nano)
+- [eta](https://deno.land/x/eta@v1.3.0)
+- [Yolk](https://github.com/nestdotland/yolk)
+- [run-exclusive](https://github.com/garronej/run-exclusive)
 
 # Introduction video
 

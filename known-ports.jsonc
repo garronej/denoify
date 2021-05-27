@@ -14,7 +14,8 @@
         "assert": "https://deno.land/std/node/assert.ts",
         "crypto": "https://deno.land/std/node/crypto.ts", //Very partial
         "stream": "https://deno.land/std/node/stream.ts",
-        "child_process": "https://deno.land/std/node/child_process.ts"
+        "child_process": "https://deno.land/std/node/child_process.ts",
+        "console": "https://deno.land/std/node/console.ts"
         /*
         Important: built in missing: http, https...
         Follow evolution of support here: https://deno.land/std/node/README.md

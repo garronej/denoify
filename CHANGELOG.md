@@ -1,3 +1,7 @@
+### **0.7.2** (2021-05-27)  
+  
+- Add node console    
+  
 ### **0.7.1** (2021-05-09)  
   
 - Update instructions for GitHub Actions  

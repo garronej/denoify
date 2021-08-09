@@ -1,3 +1,11 @@
+## **0.8.0** (2021-08-09)  
+  
+- Merge pull request #30 from yandeu/master
+
+Support for esm modules  
+- Update node versions in workflow  
+- Support for esm modules    
+  
 ### **0.7.2** (2021-05-27)  
   
 - Add node console    

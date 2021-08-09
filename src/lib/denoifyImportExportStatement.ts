@@ -100,6 +100,12 @@ export function denoifyImportExportStatementFactory(
                 }
             }
 
+            // relative esm module import
+            const esmReg = /\.m?js$/
+            if (esmReg.test(path.extname(relativePath)) && fs.existsSync(path.join(dirPath, relativePath.replace(esmReg, '.ts')))) {
+              return stringify(relativePath.replace(esmReg, '.ts'));
+            }
+
             const out = path.posix.join(relativePath, "index.ts");
 
             return stringify(out.startsWith(".") ? out : `./${out}`);

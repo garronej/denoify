@@ -19,6 +19,10 @@
 <br>
 
 **NEW IN v0.7**  
+
+- Support for esm modules. See [issue](https://github.com/garronej/denoify/issues/29). Thanks to [yandeu](https://github.com/yandeu).  
+
+**NEW IN v0.7**  
 - Support for workspaces where `node_modules` are located in a parent directory.  
   Thx [@hayes](https://github.com/hayes) [See issue](https://github.com/garronej/denoify/issues/23)  
 - Add basic support for child_process.spawn ([#785](https://github.com/denoland/deno_std/pull/785))

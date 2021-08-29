@@ -18,6 +18,10 @@
 
 <br>
 
+**NEW IN v0.9**  
+
+- Enable to configure the name of the output dir. It no longer has to be `deno_dist`. [See @zxch3n's PR](https://github.com/garronej/denoify/pull/31)
+
 **NEW IN v0.7**  
 
 - Support for esm modules. See [issue](https://github.com/garronej/denoify/issues/29). Thanks to [yandeu](https://github.com/yandeu).  

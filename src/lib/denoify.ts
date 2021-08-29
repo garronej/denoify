@@ -19,6 +19,7 @@ export async function denoify(
     params: {
         projectPath: string;
         srcDirPath?: string;
+        denoDirPath?: string;
     }
 ) {
 
@@ -57,23 +58,6 @@ export async function denoify(
 
     })();
 
-
-    if (!("main" in packageJsonParsed)) {
-        //TODO: We shouldn't force users to specify a default export.
-        throw new Error([
-            "A main field in package.json need to be specified",
-            "otherwise we don't know what file the mod.ts should export."
-        ].join(" "));
-    }
-
-    if (
-        !isInsideOrIsDir({
-            "dirPath": tsconfigOutDir,
-            "fileOrDirPath": path.normalize(packageJsonParsed["main"])
-        })
-    ) {
-        throw new Error(`The package.json main should point to a file inside ${tsconfigOutDir}`)
-    }
 
     const denoifyParamsFromPackageJson: {
         replacer?: string;
@@ -122,7 +106,7 @@ export async function denoify(
     }
 
 
-    const denoDistPath = path.join(
+    const denoDistPath = params.denoDirPath || path.join(
         path.dirname(tsconfigOutDir),
         `deno_${path.basename(tsconfigOutDir)}`
     ); // ./deno_dist
@@ -220,29 +204,7 @@ export async function denoify(
         }
     });
 
-    {
-
-        const modFilePath = path.join(denoDistPath, "mod.ts");
-
-        if (!fs.existsSync(modFilePath)) {
-
-            fs.writeFileSync(
-                path.join(modFilePath),
-                Buffer.from(
-                    `export * from "${toPosix(
-                        path.relative(
-                            tsconfigOutDir,
-                            path.normalize(packageJsonParsed["main"]) // ./dist/lib/index.js
-                        ) // ./lib/index.js
-                            .replace(/\.js$/i, ".ts"), // ./deno_dist/lib/index.ts
-                    ).replace(/^(:?\.\/)?/, "./")}";`,
-                    "utf8"
-                )
-            );
-
-        }
-
-    }
+    generateModFile(packageJsonParsed, tsconfigOutDir, denoDistPath, srcDirPath);
 
     {
 
@@ -295,5 +257,49 @@ export async function denoify(
     }
 
 
+}
+
+function generateModFile(packageJsonParsed: any, tsconfigOutDir: string, denoDistPath: string, srcDir: string) {
+    const mainFileRelativePath = getMainFilePath(packageJsonParsed, tsconfigOutDir);
+    const modFilePath = path.join(denoDistPath, "mod.ts");
+    if (!mainFileRelativePath) {
+        if (!fs.existsSync(modFilePath)) {
+            console.warn(`Did not generate "mod.ts" file. You may create "mod.ts" file to export in ${srcDir}`);
+        }
+        return;
+    }
+
+    const indexFilePath = path.resolve(denoDistPath, mainFileRelativePath);
+    if (!fs.existsSync(modFilePath) && fs.existsSync(indexFilePath)) {
+        fs.writeFileSync(
+            path.join(modFilePath),
+            Buffer.from(
+                `export * from "${mainFileRelativePath}";`,
+                "utf8"
+            )
+        );
+    }
+}
+
+function getMainFilePath(packageJsonParsed: any, tsconfigOutDir: string): string | undefined {
+    if (!("main" in packageJsonParsed)) {
+        return;
+    }
+
+    if (!isInsideOrIsDir({
+        "dirPath": tsconfigOutDir,
+        "fileOrDirPath": path.normalize(packageJsonParsed["main"])
+    })) {
+        return;
+    }
+
+    const indexFileRelativePath = toPosix(
+        path.relative(
+            tsconfigOutDir,
+            path.normalize(packageJsonParsed["main"]) // ./dist/lib/index.js
+        ) // ./lib/index.js
+            .replace(/\.js$/i, ".ts")
+    ).replace(/^(:?\.\/)?/, "./");
+    return indexFileRelativePath;
 }
 

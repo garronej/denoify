@@ -36,7 +36,7 @@ jobs:
       run: |
         npm ci                                                                                                                                                                                        
         npm run build
-        npm test
+#       npm test
   check_if_version_upgraded:
     name: Check if version upgrade
     if: github.event_name == 'push'

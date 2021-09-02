@@ -264,17 +264,19 @@ function getTsConfigOutDir(): string | undefined {
 }
 
 function generateModFile(packageJsonParsed: any, tsconfigOutDir: string | undefined, denoDistPath: string, srcDir: string) {
-    const mainFileRelativePath = getMainFilePath(packageJsonParsed, tsconfigOutDir);
     const modFilePath = path.join(denoDistPath, "mod.ts");
+    if (fs.existsSync(modFilePath)) {
+        return;
+    }
+
+    const mainFileRelativePath = getMainFilePath(packageJsonParsed, tsconfigOutDir);
     if (!mainFileRelativePath) {
-        if (!fs.existsSync(modFilePath)) {
-            console.warn(`Did not generate "mod.ts" file. You may create "mod.ts" file to export in ${srcDir}`);
-        }
+        console.warn(`Did not generate "mod.ts" file. You may create "mod.ts" file to export in ${srcDir}`);
         return;
     }
 
     const indexFilePath = path.resolve(denoDistPath, mainFileRelativePath);
-    if (!fs.existsSync(modFilePath) && fs.existsSync(indexFilePath)) {
+    if (fs.existsSync(indexFilePath)) {
         fs.writeFileSync(
             path.join(modFilePath),
             Buffer.from(

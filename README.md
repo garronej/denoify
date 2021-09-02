@@ -20,6 +20,7 @@
 
 **NEW IN v0.9**  
 
+- `tsconfig.json` can be absent if outputDir is specified. [See @zxch3n's PR](https://github.com/garronej/denoify/pull/32)
 - Enable to configure the name of the output dir. It no longer has to be `deno_dist`. [See @zxch3n's PR](https://github.com/garronej/denoify/pull/31)
 
 **NEW IN v0.7**  

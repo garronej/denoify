@@ -1,3 +1,14 @@
+## **0.9.0** (2021-08-29)  
+  
+- Remove temporarly disable tests since deno.land is acting iraticly  
+- If the server dosen't respond, assume 404  
+- Merge pull request #31 from zxch3n/feat-config-output
+
+feat: output dir config & remove dep on pkg 'main'  
+- chore: correct option doc  
+- chore: fix typo  
+- feat: output dir config & remove dep on pkg 'main'    
+  
 ## **0.8.0** (2021-08-09)  
   
 - Merge pull request #30 from yandeu/master

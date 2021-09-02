@@ -1,3 +1,11 @@
+### **0.9.1** (2021-09-02)  
+  
+- Merge pull request #32 from zxch3n/fix-remove-tsout-requirement
+
+tsconfig.json can be absent if outputDir is specified  
+- refactor: simplify code in genModFile  
+- fix: remove dep that tsconfig must have outDir    
+  
 ## **0.9.0** (2021-08-29)  
   
 - Remove temporarly disable tests since deno.land is acting iraticly  

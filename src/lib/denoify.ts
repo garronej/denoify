@@ -19,7 +19,7 @@ export async function denoify(
     params: {
         projectPath: string;
         srcDirPath?: string;
-        denoDirPath?: string;
+        denoDistPath?: string;
     }
 ) {
 
@@ -38,26 +38,6 @@ export async function denoify(
         fs.readFileSync("package.json")
             .toString("utf8")
     );
-
-    const { tsconfigOutDir } = (() => {
-
-        const parsedTsCompile = commentJson.parse(
-            fs.readFileSync("tsconfig.json")
-                .toString("utf8")
-        );
-
-        const { outDir } = parsedTsCompile["compilerOptions"];
-
-        if (!outDir) {
-            throw new Error("tsconfig.json must specify an outDir");
-        }
-
-        return {
-            "tsconfigOutDir": path.normalize(outDir) // dist/
-        };
-
-    })();
-
 
     const denoifyParamsFromPackageJson: {
         replacer?: string;
@@ -106,10 +86,19 @@ export async function denoify(
     }
 
 
-    const denoDistPath = params.denoDirPath || path.join(
-        path.dirname(tsconfigOutDir),
-        `deno_${path.basename(tsconfigOutDir)}`
-    ); // ./deno_dist
+    const tsconfigOutDir = getTsConfigOutDir();
+    let denoDistPath: string;
+    if (params.denoDistPath != null) {
+        denoDistPath = params.denoDistPath
+    } else if ( tsconfigOutDir != null) {
+        denoDistPath = path.join(
+            path.dirname(tsconfigOutDir),
+            `deno_${path.basename(tsconfigOutDir)}`
+        );
+    } else {
+        throw new Error(`You should specify output directory by --out option or specify "outDir" in tsconfig.json`);
+    }
+
 
     const { denoifySingleFile } = denoifySingleFileFactory((() => {
 
@@ -259,7 +248,22 @@ export async function denoify(
 
 }
 
-function generateModFile(packageJsonParsed: any, tsconfigOutDir: string, denoDistPath: string, srcDir: string) {
+function getTsConfigOutDir(): string | undefined {
+    const parsedTsCompile = commentJson.parse(
+        fs.readFileSync("tsconfig.json")
+            .toString("utf8")
+    );
+
+    const { outDir } = parsedTsCompile["compilerOptions"];
+
+    if (!outDir) {
+        return;
+    }
+
+    return path.normalize(outDir)
+}
+
+function generateModFile(packageJsonParsed: any, tsconfigOutDir: string | undefined, denoDistPath: string, srcDir: string) {
     const mainFileRelativePath = getMainFilePath(packageJsonParsed, tsconfigOutDir);
     const modFilePath = path.join(denoDistPath, "mod.ts");
     if (!mainFileRelativePath) {
@@ -281,7 +285,11 @@ function generateModFile(packageJsonParsed: any, tsconfigOutDir: string, denoDis
     }
 }
 
-function getMainFilePath(packageJsonParsed: any, tsconfigOutDir: string): string | undefined {
+function getMainFilePath(packageJsonParsed: any, tsconfigOutDir: string | undefined): string | undefined {
+    if (tsconfigOutDir == null) {
+        return;
+    }
+
     if (!("main" in packageJsonParsed)) {
         return;
     }

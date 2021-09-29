@@ -1,3 +1,7 @@
+### **0.9.2** (2021-09-29)  
+  
+- Print minimal log of what is happening    
+  
 ### **0.9.1** (2021-09-02)  
   
 - Merge pull request #32 from zxch3n/fix-remove-tsout-requirement

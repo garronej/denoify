@@ -18,33 +18,6 @@
 
 <br>
 
-**NEW IN v0.9**  
-
-- `tsconfig.json` can be absent if outputDir is specified. [See @zxch3n's PR](https://github.com/garronej/denoify/pull/32)
-- Enable to configure the name of the output dir. It no longer has to be `deno_dist`. [See @zxch3n's PR](https://github.com/garronej/denoify/pull/31)
-
-**NEW IN v0.7**  
-
-- Support for esm modules. See [issue](https://github.com/garronej/denoify/issues/29). Thanks to [yandeu](https://github.com/yandeu).  
-
-**NEW IN v0.7**  
-- Support for workspaces where `node_modules` are located in a parent directory.  
-  Thx [@hayes](https://github.com/hayes) [See issue](https://github.com/garronej/denoify/issues/23)  
-- Add basic support for child_process.spawn ([#785](https://github.com/denoland/deno_std/pull/785))
-
-**NEW IN v0.6**  
-- Built in support for [graphQL](https://www.npmjs.com/package/graphql).  
-  See how [graphql-helix](https://github.com/contrawork/graphql-helix) got graphql working before `v0.6` using a [custom replacer](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/scripts/denoify-replacer.js) 
-  referenced in the [`package.json`](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/package.json).  
-  You can do the same with other modules using [skypack.dev](https://www.skypack.dev/) or [jspm](https://jspm.org/)
-- It is now possible to use `console.log()` in custom replacers to help debug. 
-- [Some support](https://github.com/denoland/deno/pull/8191) for `crypto` node builtin.
-
-**NEW IN v0.5** *Breaking changes*  
-- All Denoify parameters are now gathered under a uniq `"denoify"` field.  
-- Possibility to specify which files should be copied to the `deno_dist` directory (Previously only `README.md` was copied).  
-[Valid config example](https://github.com/garronej/my_dummy_npm_and_deno_module/blob/master/package.json)
-
 # What it is
 
 A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.  
@@ -141,3 +114,36 @@ source ~/.bash_profile
 npx denoify
 ```
 
+# What's new 
+
+**NEW IN v0.10**  
+
+- Mitigate the risk of comment being accidentally modified.
+- Possibility to specify output directory in the package.json's denoify field. [See doc](https://github.com/garronej/my_dummy_npm_and_deno_module#optional-step-45-specify-the-output-directory).
+
+**NEW IN v0.9**  
+
+- `tsconfig.json` can be absent if outputDir is specified. [See @zxch3n's PR](https://github.com/garronej/denoify/pull/32)
+- Enable to configure the name of the output dir. It no longer has to be `deno_dist`. [See @zxch3n's PR](https://github.com/garronej/denoify/pull/31)
+
+**NEW IN v0.7**  
+
+- Support for esm modules. See [issue](https://github.com/garronej/denoify/issues/29). Thanks to [yandeu](https://github.com/yandeu).  
+
+**NEW IN v0.7**  
+- Support for workspaces where `node_modules` are located in a parent directory.  
+  Thx [@hayes](https://github.com/hayes) [See issue](https://github.com/garronej/denoify/issues/23)  
+- Add basic support for child_process.spawn ([#785](https://github.com/denoland/deno_std/pull/785))
+
+**NEW IN v0.6**  
+- Built in support for [graphQL](https://www.npmjs.com/package/graphql).  
+  See how [graphql-helix](https://github.com/contrawork/graphql-helix) got graphql working before `v0.6` using a [custom replacer](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/scripts/denoify-replacer.js) 
+  referenced in the [`package.json`](https://github.com/contrawork/graphql-helix/blob/79e863288a93d1b491caeca32a4124f97465d5a6/package.json).  
+  You can do the same with other modules using [skypack.dev](https://www.skypack.dev/) or [jspm](https://jspm.org/)
+- It is now possible to use `console.log()` in custom replacers to help debug. 
+- [Some support](https://github.com/denoland/deno/pull/8191) for `crypto` node builtin.
+
+**NEW IN v0.5** *Breaking changes*  
+- All Denoify parameters are now gathered under a uniq `"denoify"` field.  
+- Possibility to specify which files should be copied to the `deno_dist` directory (Previously only `README.md` was copied).  
+[Valid config example](https://github.com/garronej/my_dummy_npm_and_deno_module/blob/master/package.json)

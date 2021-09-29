@@ -1,3 +1,7 @@
+### **0.9.3** (2021-09-29)  
+  
+- Feat: Specify output dir in package.json denoify field    
+  
 ### **0.9.2** (2021-09-29)  
   
 - Print minimal log of what is happening    

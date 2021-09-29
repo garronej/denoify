@@ -23,8 +23,6 @@ export async function denoify(
     }
 ) {
 
-    console.log(params);
-
     process.chdir(params.projectPath ?? ".");
 
     const srcDirPath = !!params.srcDirPath ?

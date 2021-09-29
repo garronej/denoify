@@ -23,12 +23,16 @@ export async function denoify(
     }
 ) {
 
+    console.log(params);
+
     process.chdir(params.projectPath ?? ".");
 
     const srcDirPath = !!params.srcDirPath ?
         params.srcDirPath :
         ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath))
         ;
+
+    console.log(`Denoify is reading sources files from ${srcDirPath}`);
 
     if (!srcDirPath) {
         throw new Error("No src directory found");
@@ -48,7 +52,7 @@ export async function denoify(
 
     {
 
-        let { includes, ports, replacer } = denoifyParamsFromPackageJson;
+        const { includes, ports, replacer } = denoifyParamsFromPackageJson;
 
         if (
             (
@@ -99,6 +103,7 @@ export async function denoify(
         throw new Error(`You should specify output directory by --out option or specify "outDir" in tsconfig.json`);
     }
 
+    console.log(`Deno distribution will be generated at ${denoDistPath}`);
 
     const { denoifySingleFile } = denoifySingleFileFactory((() => {
 

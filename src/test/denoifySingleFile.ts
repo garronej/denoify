@@ -22,6 +22,9 @@ import * as baz from "xxx";
 import * as foo from 'xxx';
 import type * as foo from 'xxx';
 import type  { Cat } from 'xxx';
+/**
+ * import "zzz";
+ */
 import "xxx";
 
 const dd = import("xxx");
@@ -38,6 +41,9 @@ import * as baz from "xxx";
 import * as foo from 'xxx';
 import type * as foo from 'xxx';
 import type { Cat } from 'xxx';
+/**
+ * import "zzz";
+ */
 import "xxx";
 
 const dd = import("xxx");

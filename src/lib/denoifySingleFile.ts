@@ -114,7 +114,7 @@ export function denoifySingleFileFactory(
                     `import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s+from\\s*${strRegExpInQuote}`, //import [type] Foo from "..."
                     `import\\s*${strRegExpInQuote}`, //import "..."
                 ]
-                    .map(s => `(?<=^|[\\r\\n\\s;])${s}`),
+                    .map(s => `(?<=^|[\\r\\n\\s;])(?<! \\* )${s}`),
                 `(?<=[^a-zA-Z\._0-9$\*])import\\s*\\(\\s*${strRegExpInQuote}\\s*\\)` //type Foo = import("...").Foo
             ]) {
 

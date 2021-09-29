@@ -1,3 +1,7 @@
+## **0.10.0** (2021-09-29)  
+  
+- Mittigate the risk of comments beeing modified    
+  
 ### **0.9.3** (2021-09-29)  
   
 - Feat: Specify output dir in package.json denoify field    

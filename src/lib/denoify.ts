@@ -45,7 +45,7 @@ export async function denoify(
         replacer?: string;
         ports?: { [portName: string]: string; }
         includes?: (string | { src: string; destDir?: string; destBasename?: string; })[];
-
+        out?: string;
     } = packageJsonParsed["denoify"] ?? {};
 
     {
@@ -87,12 +87,20 @@ export async function denoify(
 
     }
 
-
     const tsconfigOutDir = getTsConfigOutDir();
     let denoDistPath: string;
-    if (params.denoDistPath != null) {
+    if (params.denoDistPath !== undefined) {
+
+        console.log(`Reading output directory from command line prompt`);
+
         denoDistPath = params.denoDistPath
-    } else if ( tsconfigOutDir != null) {
+    } else if (typeof denoifyParamsFromPackageJson.out === "string") {
+
+        console.log(`Reading output directory from package.json 'denoify' config`);
+
+        denoDistPath = denoifyParamsFromPackageJson.out;
+
+    } else if (tsconfigOutDir != null) {
         denoDistPath = path.join(
             path.dirname(tsconfigOutDir),
             `deno_${path.basename(tsconfigOutDir)}`

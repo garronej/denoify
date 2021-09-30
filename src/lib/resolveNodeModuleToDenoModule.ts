@@ -13,7 +13,7 @@ import { getCurrentStdVersion } from "./getCurrentStdVersion";
 import type { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 import { addCache } from "../tools/addCache";
 import { toPosix } from "../tools/toPosix";
-import { id } from "evt/tools/typeSafety";
+import { id } from "tsafe";
 import { getLatestTag } from "../tools/githubTags";
 import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
 

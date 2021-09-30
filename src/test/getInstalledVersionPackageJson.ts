@@ -1,7 +1,7 @@
 
 import { getInstalledVersionPackageJsonFactory } from "../lib/getInstalledVersionPackageJson";
 import * as path from "path";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 
 (async () => {
 

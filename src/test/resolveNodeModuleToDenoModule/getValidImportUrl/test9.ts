@@ -2,7 +2,7 @@
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
 import * as inDepth from "evt/tools/inDepth";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 import { getCurrentStdVersion } from "../../../lib/getCurrentStdVersion";
 import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 

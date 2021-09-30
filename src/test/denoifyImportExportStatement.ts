@@ -1,7 +1,7 @@
 
 import { denoifyImportExportStatementFactory } from "../lib/denoifyImportExportStatement";
 import * as path from "path";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe/assert";
 
 const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "index.js");
 

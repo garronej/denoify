@@ -1,7 +1,7 @@
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
 import * as inDepth from "evt/tools/inDepth";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 import { getLatestTag } from "../../../tools/githubTags";
 

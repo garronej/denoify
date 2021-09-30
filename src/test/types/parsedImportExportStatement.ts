@@ -1,7 +1,7 @@
 
 import { ParsedImportExportStatement } from "../../lib/types/ParsedImportExportStatement";
 import { same } from "evt/tools/inDepth";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 
 {
 

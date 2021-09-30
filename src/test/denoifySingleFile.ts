@@ -1,6 +1,6 @@
 
 import { denoifySingleFileFactory } from "../lib/denoifySingleFile";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 import { ParsedImportExportStatement } from "../lib/types/ParsedImportExportStatement";
 
 (async()=>{

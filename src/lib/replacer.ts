@@ -1,5 +1,5 @@
 
-import { assert, typeGuard } from "evt/tools/typeSafety";
+import { assert, is } from "tsafe";
 import * as st from "scripting-tools";
 import { addCache } from "../tools/addCache";
 
@@ -59,7 +59,7 @@ export async function makeThisModuleAnExecutableReplacer(replacer: Replacer): Pr
     assert(parsedImportExportStatement.parsedArgument.type === "DEPENDENCY");
 
     //NOTE: Should be inferable...
-    assert(typeGuard<ParsedImportExportStatement<"DEPENDENCY">>(parsedImportExportStatement));
+    assert(is<ParsedImportExportStatement<"DEPENDENCY">>(parsedImportExportStatement));
 
     const result = await replacer({
         parsedImportExportStatement,
@@ -121,6 +121,8 @@ export function consumeExecutableReplacerFactory(
                 );
 
             } catch (error) {
+
+                assert(is<Error & { code: number; }>(error));
 
                 if (error.code === exitCodeForUndefined) {
                     return undefined;

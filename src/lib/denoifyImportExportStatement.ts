@@ -1,5 +1,5 @@
 import * as path from "path";
-import { assert, typeGuard } from "evt/tools/typeSafety";
+import { assert, is } from "tsafe";
 import * as fs from "fs";
 import type { resolveNodeModuleToDenoModuleFactory } from "./resolveNodeModuleToDenoModule";
 import type { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
@@ -114,7 +114,7 @@ export function denoifyImportExportStatementFactory(
 
         //NOTE: Should be inferable...
         assert(
-            typeGuard<import("./replacer").ParsedImportExportStatement<"DEPENDENCY">>(
+            is<import("./replacer").ParsedImportExportStatement<"DEPENDENCY">>(
                 parsedImportExportStatement
             )
         );

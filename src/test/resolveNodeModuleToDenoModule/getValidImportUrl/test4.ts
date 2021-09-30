@@ -1,5 +1,5 @@
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 import { getThirdPartyDenoModuleInfos } from "../../../lib/getThirdPartyDenoModuleInfos";
 

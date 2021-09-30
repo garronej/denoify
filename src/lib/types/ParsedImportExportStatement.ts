@@ -1,5 +1,5 @@
 
-import { id } from "evt/tools/typeSafety";
+import { id } from "tsafe";
 
 
 export type ParsedImportExportStatement =

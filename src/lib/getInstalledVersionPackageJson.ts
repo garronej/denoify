@@ -7,7 +7,7 @@ import {
     dirname as pathDirname
 } from "path";
 import * as fs from "fs";
-import { assert } from "evt/tools/typeSafety/assert";
+import { assert } from "tsafe";
 
 export function getInstalledVersionPackageJsonFactory(
     params: {

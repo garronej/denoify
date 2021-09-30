@@ -3,7 +3,7 @@ import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 import { getLatestTag } from "../../../tools/githubTags";
 
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 
 (async () => {
 

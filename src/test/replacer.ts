@@ -2,7 +2,7 @@
 import { consumeExecutableReplacerFactory } from "../lib/replacer";
 import { ParsedImportExportStatement } from "../lib/types/ParsedImportExportStatement";
 import * as path from "path";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 
 const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
     "executableFilePath": path.join(__dirname, "..", "bin", "replacer", "index.js")

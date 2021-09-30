@@ -1,7 +1,7 @@
 
 import { resolveNodeModuleToDenoModuleFactory } from "../../lib/resolveNodeModuleToDenoModule";
 import * as path from "path";
-import { assert } from "evt/tools/typeSafety";
+import { assert } from "tsafe";
 import { getInstalledVersionPackageJsonFactory } from "../../lib/getInstalledVersionPackageJson";
 import * as fs from "fs";
 import { getThirdPartyDenoModuleInfos } from "../../lib/getThirdPartyDenoModuleInfos";

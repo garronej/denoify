@@ -9,7 +9,7 @@ import { denoifyImportExportStatementFactory } from "./denoifyImportExportStatem
 import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
 import { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 import { toPosix } from "../tools/toPosix"
-import { id } from "evt/tools/typeSafety";
+import { id } from "tsafe";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
 import { arrPartition } from "evt/tools/reducers/partition";
 import { fsCopy } from "../tools/fsCopy";

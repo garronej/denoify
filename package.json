@@ -17,7 +17,8 @@
     },
     "bin": {
         "denoify": "dist/bin/denoify.js",
-        "denoify_enable_short_npm_import_path": "dist/bin/enableShortNpmImportPath.js"
+        "enable_short_npm_import_path": "dist/bin/enableShortNpmImportPath.js",
+        "remove_deno_dist_from_gitignore": "dist/bin/removeDenoDistFromGitignore.js"
     },
     "author": "u/garronej",
     "license": "MIT",

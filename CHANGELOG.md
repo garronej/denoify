@@ -1,3 +1,7 @@
+### **0.10.1** (2021-09-30)  
+  
+  
+  
 ## **0.10.0** (2021-09-29)  
   
 - Mittigate the risk of comments beeing modified    

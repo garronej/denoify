@@ -18,8 +18,9 @@ import { fsCopy } from "../tools/fsCopy";
 export async function denoify(
     params: {
         projectPath: string;
-        srcDirPath?: string;
-        denoDistPath?: string;
+        srcDirPath: string | undefined;
+        denoDistPath: string | undefined;
+        indexFilePath: string | undefined;
     }
 ) {
 
@@ -46,6 +47,7 @@ export async function denoify(
         ports?: { [portName: string]: string; }
         includes?: (string | { src: string; destDir?: string; destBasename?: string; })[];
         out?: string;
+        index?: string;
     } = packageJsonParsed["denoify"] ?? {};
 
     {
@@ -90,16 +92,9 @@ export async function denoify(
     const tsconfigOutDir = getTsConfigOutDir();
     let denoDistPath: string;
     if (params.denoDistPath !== undefined) {
-
-        console.log(`Reading output directory from command line prompt`);
-
         denoDistPath = params.denoDistPath
     } else if (typeof denoifyParamsFromPackageJson.out === "string") {
-
-        console.log(`Reading output directory from package.json 'denoify' config`);
-
         denoDistPath = denoifyParamsFromPackageJson.out;
-
     } else if (tsconfigOutDir != null) {
         denoDistPath = path.join(
             path.dirname(tsconfigOutDir),
@@ -204,7 +199,14 @@ export async function denoify(
         }
     });
 
-    generateModFile(packageJsonParsed, tsconfigOutDir, denoDistPath, srcDirPath);
+    generateModFile({ 
+        packageJsonParsed, 
+        tsconfigOutDir, 
+        denoDistPath, 
+        srcDirPath,
+        "explicitlyProvidedIndexFilePath": 
+            params.indexFilePath ?? denoifyParamsFromPackageJson.index
+    });
 
     {
 
@@ -274,32 +276,80 @@ function getTsConfigOutDir(): string | undefined {
     return path.normalize(outDir)
 }
 
-function generateModFile(packageJsonParsed: any, tsconfigOutDir: string | undefined, denoDistPath: string, srcDir: string) {
-    const modFilePath = path.join(denoDistPath, "mod.ts");
-    if (fs.existsSync(modFilePath)) {
+function generateModFile(
+    params: {
+        packageJsonParsed: any;
+        tsconfigOutDir: string | undefined;
+        denoDistPath: string;
+        explicitlyProvidedIndexFilePath: string | undefined;
+        srcDirPath: string;
+    }
+) {
+
+    const { 
+        denoDistPath, 
+        packageJsonParsed, 
+        tsconfigOutDir, 
+        explicitlyProvidedIndexFilePath, 
+        srcDirPath 
+    } = params;
+
+
+    const indexFileRelativePath = getIndexFileRelativePath({ 
+        packageJsonParsed, 
+        tsconfigOutDir, 
+        explicitlyProvidedIndexFilePath, 
+        srcDirPath
+    });
+
+    //No need to generate a mod.ts files, user have explicitly provided one.
+    if (fs.existsSync(path.join(srcDirPath, "mod.ts"))) {
         return;
     }
 
-    const mainFileRelativePath = getMainFilePath(packageJsonParsed, tsconfigOutDir);
-    if (!mainFileRelativePath) {
-        console.warn(`Did not generate "mod.ts" file. You may create "mod.ts" file to export in ${srcDir}`);
+    if (indexFileRelativePath === undefined) {
+        console.warn([
+            `Denoify did not generate "mod.ts" file because your index wasn't found. You have two options:`,
+            `1) You may create ${path.join(srcDirPath, "mod.ts")} it will be denoified and moved to ${denoDistPath}.`,
+            `2) You can also specify where is your index using the denoify.index field in package.js`
+        ].join("\n"));
         return;
     }
 
-    const indexFilePath = path.resolve(denoDistPath, mainFileRelativePath);
-    if (fs.existsSync(indexFilePath)) {
+    if (fs.existsSync(path.resolve(denoDistPath, indexFileRelativePath))) {
         fs.writeFileSync(
-            path.join(modFilePath),
+            path.join(denoDistPath, "mod.ts"),
             Buffer.from(
-                `export * from "${mainFileRelativePath}";`,
+                `export * from "${indexFileRelativePath.replace(/^(:?\.\/)?/, "./")}";`,
                 "utf8"
             )
         );
     }
 }
 
-function getMainFilePath(packageJsonParsed: any, tsconfigOutDir: string | undefined): string | undefined {
-    if (tsconfigOutDir == null) {
+
+/** Relative to the src/ dir */
+function getIndexFileRelativePath(
+    params: {
+        packageJsonParsed: any;
+        tsconfigOutDir: string | undefined;
+        explicitlyProvidedIndexFilePath: string | undefined;
+        srcDirPath: string;
+    }
+): string | undefined {
+
+    const { packageJsonParsed, tsconfigOutDir, explicitlyProvidedIndexFilePath, srcDirPath } = params;
+
+    if( explicitlyProvidedIndexFilePath !== undefined ){
+
+        return path.relative(
+            srcDirPath,
+            toPosix(explicitlyProvidedIndexFilePath)
+        );
+
+    }
+
+    if (tsconfigOutDir === undefined) {
         return;
     }
 
@@ -320,7 +370,8 @@ function getMainFilePath(packageJsonParsed: any, tsconfigOutDir: string | undefi
             path.normalize(packageJsonParsed["main"]) // ./dist/lib/index.js
         ) // ./lib/index.js
             .replace(/\.js$/i, ".ts")
-    ).replace(/^(:?\.\/)?/, "./");
-    return indexFileRelativePath;
-}
+    )
 
+    return indexFileRelativePath;
+
+}

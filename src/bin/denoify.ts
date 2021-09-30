@@ -13,6 +13,7 @@ commanderStatic
     .option("-p, --project [projectPath]", `Default: './' -- Root path of the project to denoify, target directory is supposed to contain a 'package.json' and 'tsconfig.json'.`)
     .option("--src [srcDirPath]", `Default: '[projectPath]/src' | '[projectPath]/lib' -- Path to the directory containing the source .ts files. If the provided path is not absolute it is assumed relative to [projectPath]`)
     .option("-o --out [outputDirPath]", `Default: '$(dirname <tsconfig.outDir>)/deno_lib' -- Path to the output directory`)
+    .option("-i --index [indexFilePath]", `Default: 'Read from package.json' -- Path to the index.ts file typically: "src/lib/index.ts"`)
     ;
 
 commanderStatic.parse(process.argv);
@@ -23,4 +24,5 @@ denoify({
     "projectPath": options.project,
     "srcDirPath": options.src,
     "denoDistPath": options.out,
+    "indexFilePath": options.indexFilePath
 });

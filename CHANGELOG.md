@@ -1,3 +1,7 @@
+### **0.10.3** (2021-09-30)  
+  
+- Feat: Explicitely tell where index.ts is located in the source    
+  
 ### **0.10.2** (2021-09-30)  
   
 - Support module augmentation    

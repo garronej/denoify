@@ -120,6 +120,7 @@ npx denoify
 
 - Mitigate the risk of comment being accidentally modified.
 - Possibility to specify output directory in the package.json's denoify field. [See doc](https://github.com/garronej/my_dummy_npm_and_deno_module#optional-step-45-specify-the-output-directory).
+- Support module augmentation: `declare module ...`. [Example](https://github.com/gcanti/fp-ts/blob/60250b9de118d4939374368ca1be665bac871769/src/Endomorphism.ts#L40)
 
 **NEW IN v0.9**  
 

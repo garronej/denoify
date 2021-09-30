@@ -29,7 +29,11 @@ import "xxx";
 
 const dd = import("xxx");
 const dd = import   (   "xxx"    );
-
+declare module 'xxx' {
+    interface URItoKind<A> {
+      readonly [URI]: Array<A>
+    }
+}
 `;
 
 const expected = `
@@ -48,7 +52,11 @@ import "xxx";
 
 const dd = import("xxx");
 const dd = import("xxx");
-
+declare module 'yyy' {
+    interface URItoKind<A> {
+      readonly [URI]: Array<A>
+    }
+}
 `.replace(/xxx/g, "yyy");
 
 const str = "foo bar";

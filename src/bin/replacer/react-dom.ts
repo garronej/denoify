@@ -20,6 +20,10 @@ export const replacer: Replacer = async params => {
         throw new Error(`TODO, exporting from ${moduleName} is not supported yet`);
     }
 
+    if( parsedImportExportStatement.statementType === "declare module" ){
+        throw new Error(`TODO, module augmentation for ${moduleName} not supported`);
+    }
+
     const target = (() => {
 
         const { target } = parsedImportExportStatement

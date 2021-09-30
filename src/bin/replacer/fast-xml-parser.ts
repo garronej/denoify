@@ -1,21 +1,27 @@
 import { is404 } from "../../lib";
 import type { Replacer } from "../../lib";
 
+const moduleName = "fast-xml-parser";
+
 export const replacer: Replacer = async params => {
 
     const { parsedImportExportStatement, version } = params;
 
 
-    if (parsedImportExportStatement.parsedArgument.nodeModuleName !== "fast-xml-parser") {
+    if (parsedImportExportStatement.parsedArgument.nodeModuleName !== moduleName) {
         return undefined;
     }
 
     if( parsedImportExportStatement.isAsyncImport ){
-        throw new Error("TODO, async import of fast-xml-parser not supported yet");
+        throw new Error(`TODO, async import of ${moduleName} not supported yet`);
     }
 
     if( parsedImportExportStatement.statementType === "export" ){
-        throw new Error("TODO, exporting from fast-xml-parser is not supported yet");
+        throw new Error(`TODO, exporting from ${moduleName} is not supported yet`);
+    }
+
+    if( parsedImportExportStatement.statementType === "declare module" ){
+        throw new Error(`TODO, module augmentation for ${moduleName} not supported`);
     }
 
     const getUrlTypes = (version: string) =>

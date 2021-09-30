@@ -89,7 +89,7 @@ export namespace ParsedImportExportStatement {
         isAsyncImport: true;
     };
 
-    export type Regular = Regular.Export | Regular.Import;
+    export type Regular = Regular.Export | Regular.Import | Regular.DeclareModule;
 
     export namespace Regular {
 
@@ -120,6 +120,10 @@ export namespace ParsedImportExportStatement {
                 target: undefined;
             };
 
+        }
+
+        export type DeclareModule = _Common & {
+            statementType: "declare module";
         }
 
     }
@@ -157,11 +161,22 @@ export namespace ParsedImportExportStatement {
 
         }
 
+        if ((new RegExp(`^declare\\s+module\\s+${quoteSymbol}`)).test(importExportStatement)) {
+
+            return id<ParsedImportExportStatement.Regular.DeclareModule>({
+                parsedArgument,
+                "isAsyncImport": false,
+                quoteSymbol,
+                "statementType": "declare module",
+            });
+
+        }
+
         if ((new RegExp(`^import\\s+${quoteSymbol}`)).test(importExportStatement)) {
 
             return id<ParsedImportExportStatement.Regular.Import.WithoutTarget>({
                 parsedArgument,
-                isAsyncImport: false,
+                "isAsyncImport": false,
                 quoteSymbol,
                 "statementType": "import",
                 "target": undefined
@@ -211,6 +226,10 @@ export namespace ParsedImportExportStatement {
 
         if (parsedImportExportStatement.isAsyncImport) {
             return `import(${quotedArgument})`;
+        }
+
+        if( parsedImportExportStatement.statementType === "declare module" ){
+            return `declare module ${quotedArgument}`;
         }
 
         if (parsedImportExportStatement.target === undefined) {

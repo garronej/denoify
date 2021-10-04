@@ -1,3 +1,7 @@
+### **0.10.4** (2021-09-30)  
+  
+- Feat a script for removing deno dist from .gitignore    
+  
 ### **0.10.3** (2021-09-30)  
   
 - Feat: Explicitely tell where index.ts is located in the source    

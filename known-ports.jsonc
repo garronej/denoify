@@ -32,7 +32,8 @@
 
         See: https://github.com/ovesco/diosaur/pull/4
         */
-        "reflect-metadata": "https://raw.githubusercontent.com/rbuckton/reflect-metadata/master/Reflect.js"
+        "reflect-metadata": "https://raw.githubusercontent.com/rbuckton/reflect-metadata/master/Reflect.js",
+        "fp-ts": "garronej/fp-ts"
 
         /*
         NOTE: react, react-dom, rxjs and other modules are supported via custom import replacer.

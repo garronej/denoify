@@ -1,3 +1,7 @@
+### **0.10.5** (2021-10-04)  
+  
+- Add fp-ts in known ports    
+  
 ### **0.10.4** (2021-09-30)  
   
 - Feat a script for removing deno dist from .gitignore    

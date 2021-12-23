@@ -6,7 +6,12 @@
     <i>🦕 Support Deno and release on NPM with a single codebase.🦕</i>
     <br>
     <br>
-    <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
+    <a href="https://github.com/garronej/denoify/actions">
+      <img src="https://github.com/garronej/denoify/workflows/ci/badge.svg">
+    </a>
+    <a href="https://github.com/garronej/denoify/blob/main/LICENSE">
+      <img src="https://img.shields.io/npm/l/denoify">
+    </a>
 </p>
 
 </p>

@@ -1,3 +1,10 @@
+### **0.10.6** (2021-12-31)  
+  
+- Merge pull request #36 from DomThePorcupine/fix-index-option
+
+Fix indexFilePath option  
+- Fix indexFilePath option    
+  
 ### **0.10.5** (2021-10-04)  
   
 - Add fp-ts in known ports    

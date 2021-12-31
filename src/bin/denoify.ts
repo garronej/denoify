@@ -24,5 +24,5 @@ denoify({
     "projectPath": options.project,
     "srcDirPath": options.src,
     "denoDistPath": options.out,
-    "indexFilePath": options.indexFilePath
+    "indexFilePath": options.index
 });

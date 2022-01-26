@@ -21,7 +21,21 @@
   <a href="https://docs.denoify.land">Documentation</a>
 </p>
 
-<br>
+
+> What's new in `v0.11`: Support or partial support fro many new Node API: 
+> [`console`](https://deno.land/std/node/console.ts), [`cluster`](https://deno.land/std/node/cluster.ts),
+> [`dgram`](https://deno.land/std/node/dgram.ts), [`dns`](https://deno.land/std/node/dns.ts),
+> [`http`](https://deno.land/std/node/http.ts), [`http2`](https://deno.land/std/node/http2.ts),
+> [`https`](https://deno.land/std/node/https.ts), [`inspector`](https://deno.land/std/node/inspector.ts),
+> [`module`](https://deno.land/std/node/module.ts), [`net`](https://deno.land/std/node/net.ts),
+> [`perf_hooks`](https://deno.land/std/node/perf_hooks.ts), [`readline`](https://deno.land/std/node/readline.ts),
+> [`repl`](https://deno.land/std/node/repl.ts), [`string_decoder`](https://deno.land/std/node/string_decoder.ts),
+> [`sys`](https://deno.land/std/node/sys.ts), [`tls`](https://deno.land/std/node/tls.ts),
+> [`tty`](https://deno.land/std/node/tty.ts), [`v8`](https://deno.land/std/node/v8.ts),
+> [`vm`](https://deno.land/std/node/vm.ts), [`wasi`](https://deno.land/std/node/wasi.ts),
+> [`worker_threads`](https://deno.land/std/node/worker_threads.ts), [`zlib`](https://deno.land/std/node/zlib.ts).
+
+<br>  
 
 # What it is
 

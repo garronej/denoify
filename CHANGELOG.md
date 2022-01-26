@@ -1,3 +1,7 @@
+## **0.11.0** (2022-01-26)  
+  
+- Add many new Node API    
+  
 ### **0.10.6** (2021-12-31)  
   
 - Merge pull request #36 from DomThePorcupine/fix-index-option

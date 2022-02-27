@@ -68,6 +68,7 @@ Modules that have been made cross-runtime using Denoify:
 - [Nano JSX](https://github.com/nanojsx/nano)
 - [eta](https://deno.land/x/eta@v1.3.0)
 - [Yolk](https://github.com/nestdotland/yolk)
+- [tsafe](https://github.com/garronej/tsafe)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 
 # Introduction video

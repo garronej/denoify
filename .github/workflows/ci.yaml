@@ -26,12 +26,12 @@ jobs:
         node-version: ${{ matrix.node }}
     - if: steps.step1.outputs.npm_or_yarn == 'yarn'
       run: |
-        yarn install --frozen-lockfile                                                                                                                                                                                        
+        yarn install --frozen-lockfile
         yarn build
         yarn test
     - if: steps.step1.outputs.npm_or_yarn == 'npm'
       run: |
-        npm ci                                                                                                                                                                                        
+        npm ci
         npm run build
         npm test
   check_if_version_upgraded:
@@ -110,7 +110,7 @@ jobs:
             PACKAGE_MANAGER=yarn
         fi
         if [ "$PACKAGE_MANAGER" = "yarn" ]; then
-            yarn install --frozen-lockfile                                                                                                                                                                                        
+            yarn install --frozen-lockfile
         else
             npm ci
         fi

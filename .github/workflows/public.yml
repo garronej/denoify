@@ -26,11 +26,11 @@ jobs:
           node-version: ${{ matrix.node }}
       - if: steps.step1.outputs.npm_or_yarn == 'yarn'
         run: |
-          yarn install --frozen-lockfile                                                                                                                                                                                        
+          yarn install --frozen-lockfile
           yarn build
           yarn test
       - if: steps.step1.outputs.npm_or_yarn == 'npm'
         run: |
-          npm ci                                                                                                                                                                                        
+          npm ci
           npm run build
           npm test

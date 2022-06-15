@@ -1,0 +1,38 @@
+name: public
+
+on:
+  push:
+    branches-ignore:
+      - master
+  pull_request:
+    branches-ignore:
+      - master
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: ['16', '15', '14', '12']
+        os: [windows-latest, ubuntu-latest]
+    name: Test with Node v${{ matrix.node }} on ${{ matrix.os }}
+    steps:
+      - name: Tell if project is using npm or yarn
+        id: step1
+        uses: garronej/github_actions_toolkit@v2.2
+        with:
+          action_name: tell_if_project_uses_npm_or_yarn
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/setup-node@v2.1.3
+        with:
+          node-version: ${{ matrix.node }}
+      - if: steps.step1.outputs.npm_or_yarn == 'yarn'
+        run: |
+          yarn install --frozen-lockfile                                                                                                                                                                                        
+          yarn build
+          yarn test
+      - if: steps.step1.outputs.npm_or_yarn == 'npm'
+        run: |
+          npm ci                                                                                                                                                                                        
+          npm run build
+          npm test

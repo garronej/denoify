@@ -43,7 +43,11 @@ A build tool that takes as input a TypeScript codebase that was meant to target 
 
 ![what_denoify_does](https://user-images.githubusercontent.com/6702424/85449626-41b10c80-b598-11ea-91cc-6805facab1dd.png)
 
-**NOTE:** Denoify won't run on Deno, it is a Node module.
+> **NOTE:** Denoify won't run on Deno, it is a Node module.  
+
+> **NOTE:** Denoify is capable of **recursively** resolving **dependencies**!  
+> It works out of the box with dependencies that uses denoify
+> and there are many option for dealing with dependencies that won't transpile automatically. [See specific documentation](https://github.com/garronej/my_dummy_npm_and_deno_module)
 
 If you are just looking for a quick way to load NPM modules in your Deno project
 you can check out [CommonJS module Loading](https://github.com/denoland/deno_std/tree/main/node#commonjs-module-loading),
@@ -53,11 +57,11 @@ Some NPM modules can also be imported into Deno using CDN like [Skypack](https:/
 checkout [Soremwar/deno_types](https://github.com/Soremwar/deno_types) for some examples.  
 
 This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their modules and do so without introducing breaking changes.
-
 # Motivations
 
 - Although it is quite easy to port a module to Deno no one wants to maintain two codebase.
 - Wouldn't it be great to have a tool able to bring Deno support to NPM modules?
+
 
 # Example of modules using Denoify
 
@@ -73,7 +77,7 @@ Some modules that have been made cross-runtime using Denoify:
 - [ok-computer](https://github.com/richardscarrott/ok-computer)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
 - [Yolk](https://github.com/nestdotland/yolk)
-- [...and many more](https://github.com/garronej/denoify/network/dependents?package_id=UGFja2FnZS0yNzE2MjkwMjI%3D)
+- [...and many more great modules](https://github.com/garronej/denoify/network/dependents?package_id=UGFja2FnZS0yNzE2MjkwMjI%3D)
 
 # Introduction video
 

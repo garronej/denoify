@@ -1,3 +1,7 @@
+### **0.11.2** (2022-07-17)  
+  
+  
+  
 ### **0.11.1** (2022-06-16)  
   
 - Merge pull request #43 from garronej/update-ts

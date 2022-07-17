@@ -27,24 +27,15 @@
         "@types/comment-json": "^1.1.1",
         "commander": "^4.1.1",
         "comment-json": "^3.0.2",
-<<<<<<< HEAD
         "tsafe": "^0.10.0",
-=======
-        "evt": "beta",
->>>>>>> 2d212435a8f6c157ab8fed2f737f457eb2bbbb54
         "get-github-default-branch-name": "^0.0.4",
         "gitignore-parser": "0.0.2",
         "glob": "^7.1.6",
         "node-fetch": "^2.6.0",
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.13",
-<<<<<<< HEAD
         "url-join": "^4.0.1",
         "evt": "^2.2.0"
-=======
-        "tsafe": "^0.8.0",
-        "url-join": "^4.0.1"
->>>>>>> 2d212435a8f6c157ab8fed2f737f457eb2bbbb54
     },
     "keywords": [
         "deno",

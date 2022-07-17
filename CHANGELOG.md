@@ -1,3 +1,20 @@
+### **0.11.1** (2022-06-16)  
+  
+- Merge pull request #43 from garronej/update-ts
+
+Update TypeScript and Workflows  
+- Remove Trailing spaces  
+- Don not run ci.yaml on pull_request  
+- Remove Trailing spaces  
+- Update nodejs matrix versions  
+- Create public github action  
+- Update typescript  
+- Update package-lock.json    
+  
+## **0.11.0** (2022-01-26)  
+  
+- Add many new Node API    
+  
 ### **0.10.6** (2021-12-31)  
   
 - Merge pull request #36 from DomThePorcupine/fix-index-option

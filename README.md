@@ -61,14 +61,19 @@ This tool is mainly for NPM module maintainer, to enable them to bring first-cla
 
 # Example of modules using Denoify
 
-Modules that have been made cross-runtime using Denoify:
+Some modules that have been made cross-runtime using Denoify:
 
 - [graphql-helix](https://github.com/contrawork/graphql-helix)
 - [EVT](https://evt.land)
 - [Nano JSX](https://github.com/nanojsx/nano)
 - [eta](https://deno.land/x/eta@v1.3.0)
-- [Yolk](https://github.com/nestdotland/yolk)
+- [hono](https://github.com/honojs/hono)
+- [tsafe](https://github.com/garronej/tsafe)
+- [@sniptt/guards](https://github.com/sniptt-official/guards)
+- [ok-computer](https://github.com/richardscarrott/ok-computer)
 - [run-exclusive](https://github.com/garronej/run-exclusive)
+- [Yolk](https://github.com/nestdotland/yolk)
+- [...and many more](https://github.com/garronej/denoify/network/dependents?package_id=UGFja2FnZS0yNzE2MjkwMjI%3D)
 
 # Introduction video
 

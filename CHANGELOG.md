@@ -1,3 +1,16 @@
+### **0.11.3** (2022-07-23)  
+  
+- Update dependency evt to ^2.2.1  
+- Merge pull request #33 from garronej/renovate/configure
+
+Configure Renovate  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Add renovate.json    
+  
 ### **0.11.2** (2022-07-17)  
   
   

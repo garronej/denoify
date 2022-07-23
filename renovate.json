@@ -14,9 +14,10 @@
     },
     {
       "packagePatterns": ["tsafe", "evt"],
-      "groupName": "homegrown",
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "automerge": true,
+      "automergeType": "branch",
+      "branchName": "renovate_garronej_dependencies_update"
     }
   ]
 }

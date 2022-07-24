@@ -1,3 +1,7 @@
+### **0.11.4** (2022-07-24)  
+  
+- Update dependency evt to ^2.2.2    
+  
 ### **0.11.3** (2022-07-23)  
   
 - Update dependency evt to ^2.2.1  

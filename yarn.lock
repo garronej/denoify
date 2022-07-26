@@ -226,14 +226,14 @@ esprima@^4.0.0, esprima@^4.0.1:
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
 
-evt@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.3.0.tgz#709456803f79a125371f709fb32c0989a948a9f8"
-  integrity sha512-Tkv4vM4BrIiW9p+YM7DiWNGcxrajtSaNMsJl6C43gbk/pY5xhN7RNQ9j3wyXNgKrkudNYMTO4dTE+v3JGdJqTQ==
+evt@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.3.1.tgz#988fc6fc255db8999240e918afe63ba6c325db99"
+  integrity sha512-+MU1aA0as6hOnGxzQOw9hV/xiKIB1vAY90S+WD6zMzvvhQHlY4aPHk2b8WpWsVs3XErDzlhGzCESVCAuH9kUiA==
   dependencies:
     minimal-polyfills "^2.2.1"
-    run-exclusive "^2.2.15"
-    tsafe "^0.10.0"
+    run-exclusive "^2.2.16"
+    tsafe "^0.10.1"
 
 form-data@^3.0.0:
   version "3.0.1"
@@ -358,10 +358,10 @@ repeat-string@^1.6.1:
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
   integrity sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==
 
-run-exclusive@^2.2.15:
-  version "2.2.15"
-  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.15.tgz#8e311a741cb8def53ececf2e9d921e47abf15117"
-  integrity sha512-MpQTHZspu8Qcl/WtJXGn7ClQitwk8m9iQwVPqFhhYSJQF/YcEu0Btn7h1UfPXHAgcDClZsHBzg0HVGYRt8Txaw==
+run-exclusive@^2.2.16:
+  version "2.2.16"
+  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.16.tgz#8fa30a23037760af296c47872a5f6b38f25accf0"
+  integrity sha512-cdYv2LDvaBCRnrqXrwDFs1SgzGTx0EIsiEReTpsprEDR6hRUVlSyjoMYu+rez4S1gpz6YbOQxcmYFMXJQknVnQ==
   dependencies:
     minimal-polyfills "^2.2.1"
 
@@ -380,10 +380,10 @@ tr46@~0.0.3:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
 
-tsafe@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-0.10.0.tgz#c4fba365a49467ea6167e8c9482ddb94ee51b795"
-  integrity sha512-CFfa1uJKfU0DDRbuB8bf2mfXjkOqiTsrltexzMMLxq5gjd1LttFECNGsO8dYUALJDbShb6+f3CwAppW/wf9BrA==
+tsafe@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-0.10.1.tgz#8f100b901e4467c43c0484f56a063f4276683ce0"
+  integrity sha512-S+LrpSjoH5Pah201KS0MxtJn88HVtKf4ZxUoQuW/Hnl4IK6ALu9Qwjed7RbohDeHn+iMuug4c5Mk/z1Cq2G3nw==
 
 typescript@^4.7.3:
   version "4.7.4"

@@ -1,3 +1,7 @@
+### **0.11.6** (2022-07-26)  
+  
+- Update garronej_modules_update    
+  
 ### **0.11.5** (2022-07-26)  
   
 - Update dependency evt to ^2.3.0    

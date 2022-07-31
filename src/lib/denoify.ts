@@ -311,7 +311,7 @@ function generateModFile(
         console.warn([
             `Denoify did not generate "mod.ts" file because your index wasn't found. You have two options:`,
             `1) You may create ${path.join(srcDirPath, "mod.ts")} it will be denoified and moved to ${denoDistPath}.`,
-            `2) You can also specify where is your index using the denoify.index field in package.js`
+            `2) You can also specify where is your index using the denoify.index field in package.json`
         ].join("\n"));
         return;
     }

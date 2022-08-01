@@ -21,6 +21,12 @@
   <a href="https://docs.denoify.land">Documentation</a>
 </p>
 
+> 🗣 NOTE TO THE COMMUNITY: I am please to see an increasing number of project using Denoify! 🎉
+> That said, looking at your setup, I see that you are almost all tracking the `deno_dist` directory
+> on your default branch...  
+> `deno_dist` should be git ignored, it's not source code!  
+> I encourage you all to read [the related section of the readme](#github-actions-setup) and have a look at how [tsafe](https://github.com/garronej/tsafe) is setup.  
+> Please, do not hesitate [to reach out](https://github.com/garronej/denoify/discussions) if you need a hand.
 
 > What's new in `v0.11`: Support or partial support fro many new Node API: 
 > [`console`](https://deno.land/std/node/console.ts), [`cluster`](https://deno.land/std/node/cluster.ts),
@@ -114,6 +120,9 @@ on the disk.*
 # Step by step tutorial
 
 Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up Denoify in your project.
+
+Need a hand? Do not hesitate to [open a discussion](https://github.com/garronej/denoify/discussions).  
+
 # GitHub Actions setup
 
 ![denoify_ci](https://user-images.githubusercontent.com/6702424/82036935-c52a3480-96a1-11ea-9794-e982a23e5612.png)
@@ -122,12 +131,16 @@ Once you'll have successfully build your module for Deno you will want to publis
 to do that in a clean way, without tracking the `deno_dist/` on your main branch you'll need to setup a
 CI workflow.  
 To do that you can use the [`.github/workflow/ci.yaml`](https://github.com/garronej/tsafe/blob/main/.github/workflows/ci.yaml) from [tsafe](https://github.com/garronej/tsafe), you can copy paste it, it's portable.  
+The idea is that it creates [a `latest` branch](https://github.com/garronej/tsafe/tree/latest) on every release (when you bump the package.json version) where the `deno_dist` is present.  
 
 ![image](https://user-images.githubusercontent.com/6702424/117559526-6ade6c80-b086-11eb-8575-3084f0835bbb.png)
 
 When registering your module on [deno.land/x](https://deno.land/x) you will need to specify the subdirectory:  
 
 ![deno_registration](https://user-images.githubusercontent.com/6702424/117559462-c9571b00-b085-11eb-9ea5-683a0b0bb866.png)
+
+Do not hesitate [to open a discursion](https://github.com/garronej/denoify/discussions) if you are having issues.
+
 
 # Deal with `GitHub API rate limit exceeded`
 

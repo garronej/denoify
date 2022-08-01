@@ -1,3 +1,11 @@
+### **0.11.7** (2022-08-01)  
+  
+- Make enableShortNpmImportPath script work with tsproject.json  
+- Merge pull request #46 from GervinFung/denoify-typo
+
+fix(typo): typo in help of argument message  
+- fix(typo): typo in help of argument message    
+  
 ### **0.11.6** (2022-07-26)  
   
 - Update garronej_modules_update    

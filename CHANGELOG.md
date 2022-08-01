@@ -1,3 +1,28 @@
+### **0.11.6** (2022-07-26)  
+  
+- Update garronej_modules_update    
+  
+### **0.11.5** (2022-07-26)  
+  
+- Update dependency evt to ^2.3.0    
+  
+### **0.11.4** (2022-07-24)  
+  
+- Update dependency evt to ^2.2.2    
+  
+### **0.11.3** (2022-07-23)  
+  
+- Update dependency evt to ^2.2.1  
+- Merge pull request #33 from garronej/renovate/configure
+
+Configure Renovate  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Update renovate.json  
+- Add renovate.json    
+  
 ### **0.11.2** (2022-07-17)  
   
   

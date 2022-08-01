@@ -21,7 +21,7 @@
   <a href="https://docs.denoify.land">Documentation</a>
 </p>
 
-> 🗣 NOTE TO THE COMMUNITY: I am please to see an increasing number of project using Denoify! 🎉
+> 🗣 NOTE TO THE COMMUNITY: I am please to see an increasing number of project using Denoify! 🎉  
 > That said, looking at your setup, I see that you are almost all tracking the `deno_dist` directory
 > on your default branch...  
 > `deno_dist` should be git ignored, it's not source code!  

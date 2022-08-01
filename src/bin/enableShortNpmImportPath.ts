@@ -56,7 +56,7 @@ async function run(
     {
         "srcDirPath": ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath)),
         "tsconfigOutDir": commentJson.parse(
-            fs.readFileSync("./tsconfig.json")
+            fs.readFileSync(fs.existsSync("./tsproject.json") ? "./tsproject.json" : "./tsconfig.json")
                 .toString("utf8")
         )["compilerOptions"]["outDir"] as string
     }

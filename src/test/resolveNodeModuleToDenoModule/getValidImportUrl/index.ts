@@ -1,4 +1,3 @@
-
 import { runSequentially } from "../../../tools/runSequentially";
 
 //TODO: Fix!
@@ -12,6 +11,6 @@ runSequentially({
         "test7",
         //"test8",
         "test9",
-        "test10",
+        "test10"
     ]
 });

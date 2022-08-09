@@ -2,26 +2,20 @@
 
 import * as path from "path";
 import { pathDepth } from "../tools/pathDepth";
-import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel"
+import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel";
 import { getIsDryRun } from "./lib/getIsDryRun";
 import * as fs from "fs";
 import * as commentJson from "comment-json";
 import { removeFromGitignore } from "../tools/removeFromGitignore";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
 
-//TODO: Test on windows! 
+//TODO: Test on windows!
 
-/** 
+/**
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
  * This function Change change the working directory.
  * */
-async function run(
-    params: {
-        pathToTargetModule: string;
-        isDryRun: boolean;
-    }
-) {
-
+async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     const { isDryRun } = params;
 
     const { moveContentUpOneLevel } = moveContentUpOneLevelFactory({ isDryRun });
@@ -32,36 +26,21 @@ async function run(
         throw new Error(".npmignore not supported, please use package.json 'files' instead");
     }
 
-    const packageJsonRaw =
-        fs.readFileSync("package.json")
-            .toString("utf8")
+    const packageJsonRaw = fs.readFileSync("package.json").toString("utf8");
 
     const packageJsonParsed = JSON.parse(packageJsonRaw);
 
     const packageJsonFilesResolved: string[] | undefined = await (() => {
-
-        const pathWithWildcards: string[] | undefined =
-            packageJsonParsed
-                .files
-            ;
-
-        return !pathWithWildcards ?
-            undefined :
-            resolvePathsWithWildcards({ pathWithWildcards });
-
+        const pathWithWildcards: string[] | undefined = packageJsonParsed.files;
+        return !pathWithWildcards ? undefined : resolvePathsWithWildcards({ pathWithWildcards });
     })();
 
-
-    const { srcDirPath, tsconfigOutDir } =
-    {
+    const { srcDirPath, tsconfigOutDir } = {
         "srcDirPath": ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath)),
         "tsconfigOutDir": commentJson.parse(
-            fs.readFileSync(fs.existsSync("./tsproject.json") ? "./tsproject.json" : "./tsconfig.json")
-                .toString("utf8")
+            fs.readFileSync(fs.existsSync("./tsproject.json") ? "./tsproject.json" : "./tsconfig.json").toString("utf8")
         )["compilerOptions"]["outDir"] as string
-    }
-        ;
-
+    };
     if (srcDirPath === undefined) {
         throw new Error("There should be a 'src' or 'lib' dir containing the .ts files");
     }
@@ -70,41 +49,18 @@ async function run(
         throw new Error("For this script to work tsconfig out dir must be a directory at the root of the project");
     }
 
-
-    const moveSourceFiles =
-        "types" in packageJsonParsed ?
-            !packageJsonParsed["types"].match(/\.d\.ts$/i)
-            :
-            false
-        ;
-
-    console.log(
-        moveSourceFiles ?
-            "Putting .ts files alongside .js files" :
-            "Leaving .ts file in the src/ directory"
-    );
+    const moveSourceFiles = "types" in packageJsonParsed ? !packageJsonParsed["types"].match(/\.d\.ts$/i) : false;
+    console.log(moveSourceFiles ? "Putting .ts files alongside .js files" : "Leaving .ts file in the src/ directory");
 
     const beforeMovedFilePaths = await (async () => {
-
-        const moveAndReplace = (dirPath: string) => moveContentUpOneLevel({ dirPath })
-            .then(({ beforeMovedFilePaths }) => beforeMovedFilePaths.map(filePath => path.join(dirPath, filePath)))
-            ;
-
-        return [
-            ...(await moveAndReplace(tsconfigOutDir)),
-            ...(moveSourceFiles ? await moveAndReplace(srcDirPath) : [])
-        ];
-
-
+        const moveAndReplace = (dirPath: string) =>
+            moveContentUpOneLevel({ dirPath }).then(({ beforeMovedFilePaths }) => beforeMovedFilePaths.map(filePath => path.join(dirPath, filePath)));
+        return [...(await moveAndReplace(tsconfigOutDir)), ...(moveSourceFiles ? await moveAndReplace(srcDirPath) : [])];
     })();
 
     const getAfterMovedFilePath = (params: { beforeMovedFilePath: string }) => {
-
         const beforeMovedFilePath = beforeMovedFilePaths.find(
-            beforeMovedFilePath => path.relative(
-                beforeMovedFilePath,
-                params.beforeMovedFilePath
-            ) === ""
+            beforeMovedFilePath => path.relative(beforeMovedFilePath, params.beforeMovedFilePath) === ""
         );
 
         if (beforeMovedFilePath === undefined) {
@@ -112,56 +68,42 @@ async function run(
             return path.relative(".", params.beforeMovedFilePath);
         }
 
-
         const afterMovedFilePath = beforeMovedFilePath
             .replace(/^\.\//, "")
             .split(path.sep)
             .filter((...[, index]) => index !== 0)
-            .join(path.sep)
-            ;
-
+            .join(path.sep);
         return afterMovedFilePath;
-
     };
 
     beforeMovedFilePaths
         .filter(beforeMovedFilePath => /\.js\.map$/.test(beforeMovedFilePath))
         .forEach(beforeMovedSourceMapFilePath => {
-
             const afterMovedSourceMapFilePath = getAfterMovedFilePath({
                 "beforeMovedFilePath": beforeMovedSourceMapFilePath
             });
 
             const sourceMapParsed: { sources: string[] } = JSON.parse(
-                fs.readFileSync(
-                    isDryRun ?
-                        beforeMovedSourceMapFilePath :
-                        afterMovedSourceMapFilePath
-                ).toString("utf8")
+                fs.readFileSync(isDryRun ? beforeMovedSourceMapFilePath : afterMovedSourceMapFilePath).toString("utf8")
             );
 
-            const sources = sourceMapParsed.sources
-                .map(
-                    filePath => path.relative(
-                        path.dirname(afterMovedSourceMapFilePath),
-                        getAfterMovedFilePath({
-                            "beforeMovedFilePath": path.join(
-                                path.dirname(beforeMovedSourceMapFilePath),
-                                filePath
-                            )
-                        })
-                    )
+            const sources = sourceMapParsed.sources.map(filePath =>
+                path.relative(
+                    path.dirname(afterMovedSourceMapFilePath),
+                    getAfterMovedFilePath({
+                        "beforeMovedFilePath": path.join(path.dirname(beforeMovedSourceMapFilePath), filePath)
+                    })
                 )
-                ;
-
-            console.log([
-                `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
-                JSON.stringify({ "sources": sourceMapParsed.sources }),
-                `-> ${JSON.stringify({ sources })}`
-            ].join(" "));
+            );
+            console.log(
+                [
+                    `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
+                    JSON.stringify({ "sources": sourceMapParsed.sources }),
+                    `-> ${JSON.stringify({ sources })}`
+                ].join(" ")
+            );
 
             walk: {
-
                 if (isDryRun) {
                     break walk;
                 }
@@ -169,68 +111,67 @@ async function run(
                 fs.writeFileSync(
                     afterMovedSourceMapFilePath,
                     Buffer.from(
-                        JSON.stringify(
-                            {
-                                ...sourceMapParsed,
-                                sources
-                            }
-                        ),
+                        JSON.stringify({
+                            ...sourceMapParsed,
+                            sources
+                        }),
                         "utf8"
                     )
                 );
-
             }
-
-        })
-        ;
+        });
 
     walk: {
+        const newPackageJsonRaw =
+            JSON.stringify(
+                {
+                    ...packageJsonParsed,
+                    ...("main" in packageJsonParsed
+                        ? {
+                              "main": getAfterMovedFilePath({
+                                  "beforeMovedFilePath": packageJsonParsed["main"]
+                              })
+                          }
+                        : {}),
+                    ...("types" in packageJsonParsed
+                        ? {
+                              "types": getAfterMovedFilePath({
+                                  "beforeMovedFilePath": packageJsonParsed["types"]
+                              })
+                          }
+                        : {}),
+                    ...("bin" in packageJsonParsed
+                        ? {
+                              "bin": (() => {
+                                  const out: Record<string, string> = {};
 
-        const newPackageJsonRaw = JSON.stringify(
-            {
-                ...packageJsonParsed,
-                ...("main" in packageJsonParsed ? {
-                    "main": getAfterMovedFilePath({
-                        "beforeMovedFilePath": packageJsonParsed["main"]
-                    })
-                } : {}),
-                ...("types" in packageJsonParsed ? {
-                    "types": getAfterMovedFilePath({
-                        "beforeMovedFilePath": packageJsonParsed["types"]
-                    })
-                } : {}),
-                ...("bin" in packageJsonParsed ? {
-                    "bin": (() => {
+                                  Object.keys(packageJsonParsed.bin)
+                                      .map(binName => [binName, packageJsonParsed.bin[binName]] as const)
+                                      .forEach(
+                                          ([binName, beforeMovedBinFilePath]) =>
+                                              (out[binName] = getAfterMovedFilePath({
+                                                  "beforeMovedFilePath": beforeMovedBinFilePath
+                                              }))
+                                      );
 
-                        const out: Record<string, string> = {};
-
-                        Object.keys(packageJsonParsed.bin)
-                            .map(binName => [binName, packageJsonParsed.bin[binName]] as const)
-                            .forEach(([binName, beforeMovedBinFilePath]) =>
-                                out[binName] = getAfterMovedFilePath({
-                                    "beforeMovedFilePath": beforeMovedBinFilePath
-                                })
-                            )
-                            ;
-
-                        return out;
-
-                    })()
-                } : {}),
-                ...(!!packageJsonFilesResolved ? {
-                    "files":
-                        packageJsonFilesResolved
-                            .map(beforeMovedFilesFilePath => getAfterMovedFilePath({
-                                "beforeMovedFilePath": beforeMovedFilesFilePath
-                            }))
-                } : {}),
-                "scripts": undefined
-            },
-            null,
-            (packageJsonRaw
-                .replace(/\t/g, "    ")
-                .match(/^(\s*)\"name\"/m) ?? [{ "length": 2 }])[1].length
-        ) + packageJsonRaw.match(/}([\r\n]*)$/)![1];
+                                  return out;
+                              })()
+                          }
+                        : {}),
+                    ...(!!packageJsonFilesResolved
+                        ? {
+                              "files": packageJsonFilesResolved.map(beforeMovedFilesFilePath =>
+                                  getAfterMovedFilePath({
+                                      "beforeMovedFilePath": beforeMovedFilesFilePath
+                                  })
+                              )
+                          }
+                        : {}),
+                    "scripts": undefined
+                },
+                null,
+                (packageJsonRaw.replace(/\t/g, "    ").match(/^(\s*)\"name\"/m) ?? [{ "length": 2 }])[1].length
+            ) + packageJsonRaw.match(/}([\r\n]*)$/)![1];
 
         console.log(`${isDryRun ? "(dry)" : ""} package.json:\n${newPackageJsonRaw}`);
 
@@ -238,20 +179,11 @@ async function run(
             break walk;
         }
 
-        fs.writeFileSync(
-            "package.json",
-            Buffer.from(newPackageJsonRaw, "utf8")
-        );
-
+        fs.writeFileSync("package.json", Buffer.from(newPackageJsonRaw, "utf8"));
     }
 
     walk: {
-
-        const denoDistDirPath =
-            path.join(
-                path.dirname(tsconfigOutDir),
-                `deno_${path.basename(tsconfigOutDir)}`
-            ); // ./deno_dist
+        const denoDistDirPath = path.join(path.dirname(tsconfigOutDir), `deno_${path.basename(tsconfigOutDir)}`); // ./deno_dist
 
         if (!fs.existsSync(denoDistDirPath)) {
             break walk;
@@ -272,17 +204,14 @@ async function run(
             break walk;
         }
 
-        fs.writeFileSync(
-            ".gitignore",
-            Buffer.from(fixedGitignoreRaw, "utf8")
-        );
-
+        fs.writeFileSync(".gitignore", Buffer.from(fixedGitignoreRaw, "utf8"));
     }
-
 }
 
 if (require.main === module) {
-    process.once("unhandledRejection", error => { throw error; });
+    process.once("unhandledRejection", error => {
+        throw error;
+    });
 
     const { isDryRun } = getIsDryRun();
 

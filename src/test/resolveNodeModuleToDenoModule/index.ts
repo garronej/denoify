@@ -1,10 +1,5 @@
-
-
 import { runSequentially } from "../../tools/runSequentially";
 
 runSequentially({
-    "scriptsPaths": [
-        "getValidImportUrl", 
-        "resolveNodeModuleToDenoModule"
-    ]
+    "scriptsPaths": ["getValidImportUrl", "resolveNodeModuleToDenoModule"]
 });

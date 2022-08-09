@@ -1,10 +1,8 @@
-
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 import { assert } from "tsafe";
-import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
+import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 
 (async () => {
-
     const moduleAddress: ModuleAddress.GitHubRepo = {
         "type": "GITHUB REPO",
         "userOrOrg": "garronej",
@@ -13,7 +11,6 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoM
     } as const;
 
     {
-
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             "moduleAddress": moduleAddress,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
@@ -24,22 +21,17 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoM
 
         const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
-        assert( typeof versionFallbackWarning === "undefined");
+        assert(typeof versionFallbackWarning === "undefined");
 
         assert(
-            await getValidImportUrl({ "target": "DEFAULT EXPORT" })
-            ===
-            "https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/deno_dist/mod.ts"
+            (await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/deno_dist/mod.ts"
         );
 
         assert(
-            await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "dist/parallel_hasher" })
-            ===
-            "https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/deno_dist/parallel_hasher.ts"
+            (await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "dist/parallel_hasher" })) ===
+                "https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/deno_dist/parallel_hasher.ts"
         );
-
     }
 
     console.log("PASS");
-
 })();

@@ -1,4 +1,3 @@
-
 import { denoifyImportExportStatementFactory } from "../lib/denoifyImportExportStatement";
 import * as path from "path";
 import { assert } from "tsafe/assert";
@@ -6,13 +5,12 @@ import { assert } from "tsafe/assert";
 const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "index.js");
 
 (async () => {
-
     for (const sep of [`"`, `'`]) {
-
         const { denoifyImportExportStatement } = denoifyImportExportStatementFactory({
-            "resolveNodeModuleToDenoModule": () => { throw new Error("never"); },
+            "resolveNodeModuleToDenoModule": () => {
+                throw new Error("never");
+            },
             "getInstalledVersionPackageJson": async ({ nodeModuleName }) => {
-
                 if (nodeModuleName !== "ipaddr.js") {
                     throw new Error("never");
                 }
@@ -33,16 +31,16 @@ const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "
             }),
             `import ipaddr from ${sep}https://jspm.dev/ipaddr.js@1.1.0${sep}`
         );
-
-
-
     }
 
     {
-
         const { denoifyImportExportStatement } = denoifyImportExportStatementFactory({
-            "resolveNodeModuleToDenoModule": () => { throw new Error("never"); },
-            "getInstalledVersionPackageJson": async () => { throw new Error("never"); },
+            "resolveNodeModuleToDenoModule": () => {
+                throw new Error("never");
+            },
+            "getInstalledVersionPackageJson": async () => {
+                throw new Error("never");
+            },
             userProvidedReplacerPath,
             "getDestDirPath": () => "whatever"
         });
@@ -56,12 +54,10 @@ const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "
             }),
             importExportStatement
         );
-
     }
 
     const { denoifyImportExportStatement } = denoifyImportExportStatementFactory({
         "resolveNodeModuleToDenoModule": async ({ nodeModuleName }) => {
-
             assert(nodeModuleName === "foo");
 
             return {
@@ -70,15 +66,13 @@ const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "
                     assert(params.target === "SPECIFIC FILE");
                     return `https://example.fr/foo/${params.specificImportPath}`;
                 }
-            }
-
-
+            };
         },
         "getInstalledVersionPackageJson": async () => {
             throw new Error("expected to throw");
         },
         userProvidedReplacerPath,
-        "getDestDirPath": ()=> "whatever"
+        "getDestDirPath": () => "whatever"
     });
 
     assert(
@@ -90,5 +84,4 @@ const userProvidedReplacerPath = path.join(__dirname, "..", "bin", "replacer", "
     );
 
     console.log("PASS");
-
 })();

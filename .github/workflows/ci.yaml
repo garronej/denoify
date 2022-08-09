@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  test_lint:
+  test_format:
     runs-on: ubuntu-latest
     if: ${{ !github.event.created && github.repository != 'garronej/ts-ci' }}
     steps:
@@ -22,11 +22,10 @@ jobs:
         if [ -f "./yarn.lock" ]; then
             PACKAGE_MANAGER=yarn
         fi
-        $PACKAGE_MANAGER run lint:check
         $PACKAGE_MANAGER run format:check
   test:
     runs-on: ${{ matrix.os }}
-    needs: test_lint
+    needs: test_format
     strategy:
       matrix:
         node: ['18', '17', '16', '14']

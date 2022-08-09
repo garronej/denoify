@@ -1,3 +1,9 @@
+## **0.12.0** (2022-08-09)  
+  
+- #51 Support scopped namespace module  
+- fmt  
+- Notice for the comunity about tracking deno_dist    
+  
 ### **0.11.7** (2022-08-01)  
   
 - Make enableShortNpmImportPath script work with tsproject.json  

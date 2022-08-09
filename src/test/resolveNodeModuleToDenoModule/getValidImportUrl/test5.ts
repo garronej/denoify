@@ -1,10 +1,14 @@
+
+
+
 import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 
 import { assert } from "tsafe";
-import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
+import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 
 //Makes sure it work when version tag is prefixed with a v.
 (async () => {
+
     const expectedScheme: ModuleAddress.GitHubRepo = {
         "type": "GITHUB REPO",
         "userOrOrg": "garronej",
@@ -12,7 +16,9 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
         "branch": undefined
     } as const;
 
+
     {
+
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             "moduleAddress": expectedScheme,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
@@ -25,8 +31,15 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
 
         assert(typeof versionFallbackWarning === "undefined");
 
-        assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://raw.githubusercontent.com/garronej/evt/v1.6.8/mod.ts");
+        assert(
+            await getValidImportUrl({ "target": "DEFAULT EXPORT" })
+            ===
+            "https://raw.githubusercontent.com/garronej/evt/v1.6.8/mod.ts"
+        );
+
+
     }
 
     console.log("PASS");
+
 })();

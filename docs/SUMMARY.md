@@ -1,3 +1,4 @@
 # Table of contents
 
--   [Quick start](README.md)
+* [Quick start](README.md)
+

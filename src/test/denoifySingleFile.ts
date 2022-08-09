@@ -1,10 +1,13 @@
+
 import { denoifySingleFileFactory } from "../lib/denoifySingleFile";
 import { assert } from "tsafe";
 import { ParsedImportExportStatement } from "../lib/types/ParsedImportExportStatement";
 
-(async () => {
-    {
-        const sourceCode = `
+(async()=>{
+
+{
+
+const sourceCode = `
 import 
 
     * as _ 
@@ -33,7 +36,7 @@ declare module 'xxx' {
 }
 `;
 
-        const expected = `
+const expected = `
 import * as _ from "xxx"; import * as foobar from "xxx"
     import * as d from "xxx";
 const ok = 3;
@@ -56,17 +59,18 @@ declare module 'yyy' {
 }
 `.replace(/xxx/g, "yyy");
 
-        const str = "foo bar";
+const str = "foo bar";
 
         const { denoifySingleFile } = denoifySingleFileFactory({
             "denoifyImportExportStatement": ({ importExportStatement, dirPath }) => {
+
                 assert(dirPath === str);
 
-                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement);
+                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
                 assert(
                     parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" &&
-                        parsedImportExportStatement.parsedArgument.nodeModuleName === "xxx"
+                    parsedImportExportStatement.parsedArgument.nodeModuleName === "xxx"
                 );
 
                 return Promise.resolve(
@@ -78,10 +82,13 @@ declare module 'yyy' {
                         }
                     })
                 );
+
             }
         });
 
+
         await (async () => {
+
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
                 "dirPath": str
@@ -90,10 +97,14 @@ declare module 'yyy' {
             assert(modifiedSourceCode === expected);
 
             console.log("PASS");
+
         })();
+
     }
 
+
     {
+
         const sourceCode = `
 console.log(__dirname,__filename);
 `;
@@ -155,12 +166,11 @@ console.log(__dirname,__filename);
 `.replace(/^\n/, "");
 
         const { denoifySingleFile } = denoifySingleFileFactory({
-            "denoifyImportExportStatement": () => {
-                throw new Error("never");
-            }
+            "denoifyImportExportStatement": () => { throw new Error("never"); }
         });
 
         await (async () => {
+
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
                 "dirPath": "whatever"
@@ -169,10 +179,13 @@ console.log(__dirname,__filename);
             assert(modifiedSourceCode === expected);
 
             console.log("PASS");
+
         })();
+
     }
 
     {
+
         const sourceCode = `
 import { Buffer } from "buffer";
 
@@ -187,11 +200,12 @@ Buffer.from("hello");
 
         const { denoifySingleFile } = denoifySingleFileFactory({
             "denoifyImportExportStatement": ({ importExportStatement }) => {
-                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement);
+
+                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
                 assert(
-                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" &&
-                        parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer"
+                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" && 
+                    parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer" 
                 );
 
                 return Promise.resolve(
@@ -203,10 +217,13 @@ Buffer.from("hello");
                         }
                     })
                 );
+
+
             }
         });
 
         await (async () => {
+
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
                 "dirPath": "whatever"
@@ -215,10 +232,13 @@ Buffer.from("hello");
             assert(modifiedSourceCode === expected);
 
             console.log("PASS");
+
         })();
+
     }
 
     {
+
         const sourceCode = `
 Buffer.from("hello");
 `;
@@ -231,11 +251,13 @@ Buffer.from("hello");
 
         const { denoifySingleFile } = denoifySingleFileFactory({
             "denoifyImportExportStatement": ({ importExportStatement }) => {
-                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement);
+
+                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
+
 
                 assert(
-                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" &&
-                        parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer"
+                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" && 
+                    parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer" 
                 );
 
                 return Promise.resolve(
@@ -247,10 +269,13 @@ Buffer.from("hello");
                         }
                     })
                 );
+
+
             }
         });
 
         await (async () => {
+
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
                 "dirPath": "whatever"
@@ -259,10 +284,13 @@ Buffer.from("hello");
             assert(modifiedSourceCode === expected);
 
             console.log("PASS");
+
         })();
+
     }
 
     {
+
         const sourceCode = `
 Buffer`;
 
@@ -273,11 +301,12 @@ Buffer`.replace(/^\n/, "");
 
         const { denoifySingleFile } = denoifySingleFileFactory({
             "denoifyImportExportStatement": ({ importExportStatement }) => {
-                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement);
+
+                const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement)
 
                 assert(
-                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" &&
-                        parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer"
+                    parsedImportExportStatement.parsedArgument.type === "DEPENDENCY" && 
+                    parsedImportExportStatement.parsedArgument.nodeModuleName === "buffer" 
                 );
 
                 return Promise.resolve(
@@ -289,10 +318,13 @@ Buffer`.replace(/^\n/, "");
                         }
                     })
                 );
+
+
             }
         });
 
         await (async () => {
+
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
                 "dirPath": "whatever"
@@ -301,10 +333,13 @@ Buffer`.replace(/^\n/, "");
             assert(modifiedSourceCode === expected);
 
             console.log("PASS");
+
         })();
+
     }
 
     {
+
         const sourceCode = `
 ArrayBuffer.from("hello");
 new BufferSource.foo()
@@ -312,12 +347,11 @@ Buffer_name
 `;
 
         const { denoifySingleFile } = denoifySingleFileFactory({
-            "denoifyImportExportStatement": () => {
-                assert(false);
-            }
+            "denoifyImportExportStatement": () => { assert(false) }
         });
 
         await (async () => {
+
             const modifiedSourceCode = await denoifySingleFile({
                 sourceCode,
                 "dirPath": "whatever"
@@ -326,6 +360,9 @@ Buffer_name
             assert(modifiedSourceCode === sourceCode);
 
             console.log("PASS");
+
         })();
+
     }
+
 })();

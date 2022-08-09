@@ -6,9 +6,15 @@ Example with `ipaddr.js`:
 
 ```typescript
 import { Version } from "../../tools/Version";
-import { ParsedImportExportStatement } from "../types/ParsedImportExportStatement";
+import { ParsedImportExportStatement } from "../types/ParsedImportExportStatement";
 
-export async function importExportStatementReplacer(params: { importExportStatement: string; version: string }): Promise<undefined | string> {
+export async function importExportStatementReplacer(
+    params: {
+        importExportStatement: string,
+        version: string
+    }
+): Promise<undefined | string> {
+
     const { importExportStatement, version } = params;
 
     const parsedImportExportStatement = ParsedImportExportStatement.parse(importExportStatement);
@@ -17,7 +23,13 @@ export async function importExportStatementReplacer(params: { importExportStatem
         return undefined;
     }
 
-    const typeVersion = Version.compare(Version.parse(version), Version.parse("1.6.0")) <= 0 ? "1.6.0" : version;
+
+    const typeVersion = Version.compare(
+        Version.parse(version),
+        Version.parse("1.6.0")
+    ) <= 0 ?
+        "1.6.0" :
+        version;
 
     return [
         `// @deno-types="https://raw.githubusercontent.com/whitequark/ipaddr.js/${typeVersion}/lib/ipaddr.js.d.ts"`,
@@ -26,5 +38,6 @@ export async function importExportStatementReplacer(params: { importExportStatem
             "argument": `https://raw.githubusercontent.com/whitequark/ipaddr.js/${version}/lib/ipaddr.js`
         })
     ].join("\n");
+
 }
 ```

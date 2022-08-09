@@ -1,5 +1,11 @@
+
 /** Equivalent of String.prototype.replace but with async replacer is async */
-export async function replaceAsync(str: string, regex: RegExp, replacerAsync: (str: string, ...args: any[]) => Promise<string>) {
+export async function replaceAsync(
+    str: string,
+    regex: RegExp,
+    replacerAsync: (str: string, ...args: any[]) => Promise<string>
+) {
+
     const promises: Promise<string>[] = [];
 
     str.replace(regex, (match, ...args) => {
@@ -11,4 +17,5 @@ export async function replaceAsync(str: string, regex: RegExp, replacerAsync: (s
     const data = await Promise.all(promises);
 
     return str.replace(regex, () => data.shift()!);
+
 }

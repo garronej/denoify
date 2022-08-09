@@ -150,7 +150,7 @@ To fix it, [create a GitHub Personal Access Token](https://docs.github.com/en/gi
 
 Example:
 ```bash
-echo ghp_xn8jsxZrUChs9nmfZPDSmxLrTJPVJy3Sxc5J > ~/.bash_profile
+echo 'export GITHUB_TOKEN=ghp_xn8jsxZrUChs9nmfZPDSmxLrTJPVJy3Sxc5J' > ~/.bash_profile
 source ~/.bash_profile
 npx denoify
 ```

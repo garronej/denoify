@@ -56,7 +56,17 @@ export namespace ParsedImportExportStatement {
 
             {
 
-                const [nodeModuleName, ...rest] = argument.split("/");
+                let [nodeModuleName, ...rest] = argument.split("/");
+
+                if( nodeModuleName.startsWith("@") && rest.length !== 0 ){
+
+                    const [scopedNodeModuleName, ...restNew]= rest;
+
+                    nodeModuleName = `${nodeModuleName}/${scopedNodeModuleName}`
+
+                    rest = restNew;
+
+                }
 
                 return id<Dependency>({
                     "type": "DEPENDENCY",

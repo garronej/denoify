@@ -350,6 +350,80 @@ import { assert } from "tsafe";
         `import { from } from "./Evt.from"`
     );
 
-    console.log("PASS");
+}
+
+{
+
+    const importStatement =
+        `import { useEvt } from "evt/hooks/useEvt"`;
+
+    const parsedImportExportStatement = ParsedImportExportStatement.parse(
+        importStatement
+    );
+
+    assert(
+        same(
+            parsedImportExportStatement,
+            {
+                "isAsyncImport": false,
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "evt",
+                    "specificImportPath": 'hooks/useEvt'
+                },
+                "isTypeOnly": false,
+                "quoteSymbol": '"',
+                "statementType": 'import',
+                "target": "{ useEvt }"
+            }
+        )
+    );
+
+    assert(
+        ParsedImportExportStatement.stringify(
+            parsedImportExportStatement
+        )
+        ===
+        importStatement
+    );
 
 }
+
+{
+
+    const importStatement =
+        `import { DefaultAzureCredential, ClientSecretCredential, } from '@azure/identity'`;
+
+    const parsedImportExportStatement = ParsedImportExportStatement.parse(
+        importStatement
+    );
+
+    assert(
+        same(
+            parsedImportExportStatement,
+            {
+                "isAsyncImport": false,
+                "parsedArgument": {
+                    "type": "DEPENDENCY",
+                    "nodeModuleName": "@azure/identity",
+                    "specificImportPath": undefined
+                },
+                "isTypeOnly": false,
+                "quoteSymbol": "'",
+                "statementType": "import",
+                "target": "{ DefaultAzureCredential, ClientSecretCredential, }"
+            }
+        )
+    );
+
+    assert(
+        ParsedImportExportStatement.stringify(
+            parsedImportExportStatement
+        )
+        ===
+        importStatement
+    );
+
+}
+
+console.log("PASS");

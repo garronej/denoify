@@ -1,25 +1,30 @@
 # Quick start
 
-{% hint style="info" %}
-I acknowledge that this project calls for a better, more exhaustive, documentation. It's coming.
-{% endhint %}
-
-## A documented success story
-
-You can check out the article wrote by the author of [the Eta template engine](https://eta.js.org).
-
-![](.gitbook/assets/image.png)
-
-\*\*\*\*[**Link to the DEV.to article**](https://dev.to/nebrelbug/adding-deno-support-to-the-eta-template-engine-28n7)\*\*\*\*
-
 ## Complete guide
 
-You should be able to find everything there is to know about denoify by reading the `README` of [this](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module) repo.
+{% embed url="https://github.com/garronej/my_dummy_npm_and_deno_module" %}
 
-![](<.gitbook/assets/image (1).png>)
+The best way to start with Keycloakify is to clone the demo project and start playing with it.&#x20;
 
-\*\*\*\*[**Link to the GitHub repo**](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module)\*\*\*\*
+```bash
+git clone https://github.com/garronej/my_dummy_npm_and_deno_module
+cd my_dummy_npm_and_deno_module
+npm install
+npm run build
 
-## Other tutorials
+# Run the sample with node
+node dist/test/test1.js
 
-* \*\*\*\*[**Как портировать модуль с Node на Deno**](https://habr.com/ru/company/vdsina/blog/527540/)\*\*\*\*
+# Run the sample with Deno
+deno run --allow-read deno_dist/test/test1.ts
+```
+
+You can have a look at how the sources are transformed from [the src directory](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/tree/master/src) into [the deno\_dist directory](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/tree/master/deno\_dist). &#x20;
+
+Then, for greater details, please refer to [the README of the demo project](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/master/README.md).  It explains the various capabilities of Denoify. &#x20;
+
+## Other resources
+
+{% embed url="https://habr.com/ru/company/vdsina/blog/527540/" %}
+
+{% embed url="https://dev.to/nebrelbug/adding-deno-support-to-the-eta-template-engine-28n7" %}

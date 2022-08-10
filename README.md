@@ -16,7 +16,7 @@ npm run build
 node dist/test/test1.js
 
 # Run the sample with Deno
-deno run --allow-read deno_dist/test/test1.ts
+deno run --allow-read --allow-env deno_dist/test/test1.ts
 ```
 
 You can have a look at how the sources are transformed from [the src directory](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/tree/master/src) into [the deno\_dist directory](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/tree/master/deno\_dist). &#x20;

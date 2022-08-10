@@ -1,29 +1,19 @@
-import { getProjectRoot } from "../tools/getProjectRoot";
-import * as fs from "fs";
-import { ModuleAddress } from "./types/ModuleAddress";
-import { is404 } from "../tools/is404";
-import { urlJoin } from "../tools/urlJoin";
+import { ModuleAddress } from "../types/ModuleAddress";
+import { is404 } from "../../tools/is404";
+import { urlJoin } from "../../tools/urlJoin";
 import { getGithubDefaultBranchName } from "get-github-default-branch-name";
-import { getThirdPartyDenoModuleInfos } from "./getThirdPartyDenoModuleInfos";
+import { getThirdPartyDenoModuleInfos } from "../getThirdPartyDenoModuleInfos";
 import fetch from "node-fetch";
 import * as commentJson from "comment-json";
 import * as path from "path";
-import { getCurrentStdVersion } from "./getCurrentStdVersion";
-import type { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
-import { addCache } from "../tools/addCache";
-import { toPosix } from "../tools/toPosix";
+import { getCurrentStdVersion } from "../getCurrentStdVersion";
+import type { getInstalledVersionPackageJsonFactory } from "../getInstalledVersionPackageJson";
+import { addCache } from "../../tools/addCache";
+import { toPosix } from "../../tools/toPosix";
 import { id } from "tsafe";
-import { getLatestTag } from "../tools/githubTags";
-import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
-
-const knownPorts: { [nodeModuleName: string]: string } = (() => {
-    const { third_party, builtins } = commentJson.parse(fs.readFileSync(path.join(getProjectRoot(), "known-ports.jsonc")).toString("utf8"));
-
-    return {
-        ...third_party,
-        ...builtins
-    };
-})();
+import { getLatestTag } from "../../tools/githubTags";
+import { isInsideOrIsDir } from "../../tools/isInsideOrIsDir";
+import { knownPorts } from "./knownPorts";
 
 type GetValidImportUrl = (
     params:
@@ -59,7 +49,7 @@ export function resolveNodeModuleToDenoModuleFactory(
     const { denoPorts } = (() => {
         const denoPorts: { [nodeModuleName: string]: string } = {};
 
-        [knownPorts, params.userProvidedPorts].forEach(record =>
+        [knownPorts.third_party, knownPorts.builtins, params.userProvidedPorts].forEach(record =>
             Object.keys(record).forEach(nodeModuleName => (denoPorts[nodeModuleName] = record[nodeModuleName]))
         );
 

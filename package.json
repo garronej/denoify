@@ -15,7 +15,8 @@
         "test": "node ./dist/test",
         "_format": "prettier '**/*.{ts,tsx,json,md}'",
         "format": "yarn _format --write",
-        "format:check": "yarn _format --list-different"
+        "format:check": "yarn _format --list-different",
+        "link_in_test_app": "node dist/bin/link_in_test_app.js"
     },
     "bin": {
         "denoify": "dist/bin/denoify.js",

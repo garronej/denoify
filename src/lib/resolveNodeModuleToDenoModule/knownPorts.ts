@@ -1,4 +1,4 @@
-{
+export const knownPorts = {
     "builtins": {
         "events": "https://deno.land/std/node/events.ts",
         "fs": "https://deno.land/std/node/fs.ts",
@@ -62,4 +62,4 @@
         More module coming soon.
         */
     }
-}
+};

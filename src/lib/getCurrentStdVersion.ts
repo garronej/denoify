@@ -7,9 +7,9 @@ export const getCurrentStdVersion = addCache(async () => {
 
     for await (const branch of listTags({
         "owner": "denoland",
-        "repo": "deno"
+        "repo": "deno_std"
     })) {
-        const match = branch.match(/^std\/([0-9]+\.[0-9]+\.[0-9]+)$/);
+        const match = branch.match(/^([0-9]+\.[0-9]+\.[0-9]+)$/);
 
         if (!match) {
             continue;
@@ -17,6 +17,8 @@ export const getCurrentStdVersion = addCache(async () => {
 
         stdBranch.push(match[1]);
     }
+
+    console.log(stdBranch);
 
     return Version.stringify(stdBranch.map(Version.parse).sort((vX, vY) => Version.compare(vY, vX))[0]);
 });

@@ -18,7 +18,5 @@ export const getCurrentStdVersion = addCache(async () => {
         stdBranch.push(match[1]);
     }
 
-    console.log(stdBranch);
-
     return Version.stringify(stdBranch.map(Version.parse).sort((vX, vY) => Version.compare(vY, vX))[0]);
 });

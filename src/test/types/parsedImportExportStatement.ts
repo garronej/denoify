@@ -254,4 +254,26 @@ import { assert } from "tsafe";
     assert(ParsedImportExportStatement.stringify(parsedImportExportStatement) === importStatement);
 }
 
+{
+    const importStatement = `import Parser, { ParserOptions } from './stream-parser'`;
+
+    const parsedImportExportStatement = ParsedImportExportStatement.parse(importStatement);
+
+    assert(
+        same(parsedImportExportStatement, {
+            "isAsyncImport": false,
+            "parsedArgument": {
+                "type": "PROJECT LOCAL FILE",
+                "relativePath": "./stream-parser"
+            },
+            "isTypeOnly": false,
+            "quoteSymbol": "'",
+            "statementType": "import",
+            "target": "Parser, { ParserOptions }"
+        })
+    );
+
+    assert(ParsedImportExportStatement.stringify(parsedImportExportStatement) === importStatement);
+}
+
 console.log("PASS");

@@ -88,7 +88,7 @@ export function denoifySingleFileFactory(params: {} & ReturnType<typeof denoifyI
                     `export\\s+\\*\\s+from\\s*${strRegExpInQuote}`, //export * from "..."
                     `(?:import|export)(?:\\s+type)?\\s*\\*\\s*as\\s+[^\\s]+\\s+from\\s*${strRegExpInQuote}`, //import/export [type] * as ns from "..."
                     `(?:import|export)(?:\\s+type)?\\s*{[^}]*}\\s*from\\s*${strRegExpInQuote}`, //import/export [type] { Cat } from "..."
-                    `import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s+from\\s*${strRegExpInQuote}`, //import [type] Foo from "..."
+                    `import(?:\\s+type)?\\s+[^\\*{][^\\s]*\\s*(?:,\\s*{[^}]*})?\\s+from\\s*${strRegExpInQuote}`, //import [type] Foo[, { Bar, Baz }] from "..."
                     `import\\s*${strRegExpInQuote}`, //import "..."
                     `declare\\s+module\\s+${strRegExpInQuote}`
                 ].map(s => `(?<=^|[\\r\\n\\s;])(?<! \\* )${s}`),

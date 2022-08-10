@@ -31,6 +31,7 @@ declare module 'xxx' {
       readonly [URI]: Array<A>
     }
 }
+import Parser, { ParserOptions, Abc } from 'xxx';
 `;
 
         const expected = `
@@ -54,6 +55,7 @@ declare module 'yyy' {
       readonly [URI]: Array<A>
     }
 }
+import Parser, { ParserOptions, Abc } from 'xxx';
 `.replace(/xxx/g, "yyy");
 
         const str = "foo bar";

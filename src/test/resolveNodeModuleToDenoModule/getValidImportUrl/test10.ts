@@ -23,7 +23,7 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
     {
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             moduleAddress,
-            "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
+            "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
             "version": "0.55.0"
             //https://deno.land/std/node/buffer.ts we voluntarily take a version that exist
             //on deno.land ( event if it is not a valid npm buffer version).

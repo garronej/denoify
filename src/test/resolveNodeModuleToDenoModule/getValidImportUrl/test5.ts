@@ -15,7 +15,7 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
     {
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             "moduleAddress": expectedScheme,
-            "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
+            "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
             "version": "1.6.8"
         });
 

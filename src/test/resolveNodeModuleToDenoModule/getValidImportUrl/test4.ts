@@ -14,7 +14,7 @@ import { getThirdPartyDenoModuleInfos } from "../../../lib/getThirdPartyDenoModu
     {
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             "moduleAddress": moduleAddress,
-            "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
+            "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
             "version": "99.99.99"
         });
 

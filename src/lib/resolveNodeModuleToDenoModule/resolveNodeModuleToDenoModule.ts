@@ -155,7 +155,7 @@ export function resolveNodeModuleToDenoModuleFactory(
 
             const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
                 "moduleAddress": gitHubRepo,
-                "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
+                "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
                 version
             });
 
@@ -186,7 +186,7 @@ export function resolveNodeModuleToDenoModuleFactory(
 
             const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
                 "moduleAddress": ModuleAddress.parse(denoPorts[nodeModuleName]),
-                "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
+                "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
                 version
             });
 
@@ -232,7 +232,7 @@ export const { getValidImportUrlFactory } = (() => {
               desc: "NOT LISTED AS A DEPENDENCY (PROBABLY NODE BUILTIN)";
           }
         | {
-              desc: "MATCH VERSION INSTALLED IN NODE_MODULE";
+              desc: "MATCH VERSION INSTALLED IN NODE_MODULES";
               version: string;
           }
     );
@@ -290,7 +290,7 @@ export const { getValidImportUrlFactory } = (() => {
             return undefined;
         }
 
-        if (params.desc === "MATCH VERSION INSTALLED IN NODE_MODULE") {
+        if (params.desc === "MATCH VERSION INSTALLED IN NODE_MODULES") {
             const { version } = params;
             yield ["v" + version, fallback];
             yield [version, fallback];

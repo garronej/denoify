@@ -19,7 +19,7 @@ import { getLatestTag } from "../../../tools/githubTags";
     {
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             moduleAddress,
-            "desc": "MATCH VERSION INSTALLED IN NODE_MODULE",
+            "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
             "version": "99.99.99"
         });
 

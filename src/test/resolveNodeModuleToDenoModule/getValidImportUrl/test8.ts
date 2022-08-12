@@ -32,15 +32,13 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
 
         assert(getValidImportUrlFactoryResult.versionFallbackWarning === undefined);
 
-        console.log(await getValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" }));
-
         assert(
             (await getValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })) ===
                 "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.2.9/deno_dist/mod.ts"
         );
 
         try {
-            await getValidImportUrlFactoryResult.getValidImportUrl({
+            const x = await getValidImportUrlFactoryResult.getValidImportUrl({
                 "target": "SPECIFIC FILE",
                 "specificImportPath": "dist/lib/Cat"
             });

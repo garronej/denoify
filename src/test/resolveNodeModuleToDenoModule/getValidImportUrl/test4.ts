@@ -32,13 +32,13 @@ import { getThirdPartyDenoModuleInfos } from "../../../lib/getThirdPartyDenoModu
         );
 
         assert(
-            (await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "tools/typeSafety" })) ===
-                `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/tools/typeSafety/index.ts`
+            (await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "hooks/useEvt" })) ===
+                `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/hooks/useEvt.ts`
         );
 
         assert(
-            (await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "tools/typeSafety/assert" })) ===
-                `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/tools/typeSafety/assert.ts`
+            (await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "hooks" })) ===
+                `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/hooks/index.ts`
         );
     }
 

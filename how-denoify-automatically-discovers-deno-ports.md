@@ -33,3 +33,29 @@ import { assert } from "https://raw.githubusercontent.com/garronej/tsafe/v0.10.
 * There is `mod.ts` file at the root, else
 * (TODO) It reads the `denoify.out` and `denoify.index` field from the `package.json`, else.
 * It reads the `compilerOption.outDir` or `compilerOption.declarationDir (TODO)` field from the `tsconfig.json` and look for a `deno_xxx` directory (usually `deno_dist`)
+
+### Examples of transformations
+
+Let's assume, in our node\_modules directory we have:
+
+* &#x20;[tsafe](https://www.npmjs.com/package/tsafe) in version `0.10.1`
+* [my-dummy-npm-and-deno-module](https://www.npmjs.com/package/my-dummy-npm-and-deno-module) in version `0.4.3`
+* [leac](https://www.npmjs.com/package/leac) in version `0.5.0`
+
+
+
+and in our source we have the following statements: &#x20;
+
+```typescript
+// src/foo.ts
+import { assert } from "tsafe/assert";
+import type { Equals } from "tsafe"; 
+```
+
+Now if we run `npx denoify` it will generates this: &#x20;
+
+```typescript
+// deno_dist/foo.ts
+import { assert } from "https://raw.githubusercontent.com/garronej/tsafe/v0.10.1/deno_dist/assert.ts";
+import type { Equals } from "https://raw.githubusercontent.com/garronej/tsafe/v0.10.1/deno_dist/mod.ts"
+```

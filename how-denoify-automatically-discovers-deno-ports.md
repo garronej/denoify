@@ -34,7 +34,7 @@ import { assert } from "https://raw.githubusercontent.com/garronej/tsafe/v0.10.
 * (TODO) It reads the `denoify.out` and `denoify.index` field from the `package.json`, else.
 * It reads the `compilerOption.outDir` or `compilerOption.declarationDir (TODO)` field from the `tsconfig.json` and look for a `deno_xxx` directory (usually `deno_dist`)
 
-### Examples of transformations
+### Examples of resolutions that denoify can perform automatically
 
 Let's assume, in our node\_modules directory we have:
 

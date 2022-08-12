@@ -1,4 +1,4 @@
-# 👩💼 Automatically discovery of Deno ports
+# 🔍 Automatic discovery of ports
 
 If have published your module both on [deno.land/x](https://deno.land/x) and NPM Denoify should be able to automatically resolve your Deno distribution, what do I mean by that? &#x20;
 
@@ -33,3 +33,17 @@ import * as ns from "https://raw.githubusercontent.com/garronej/my_dummy_npm_and
 import { Cat } from "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.4.3/deno_dist/lib/Cat.ts";
 import { createLexer } from "https://raw.githubusercontent.com/mxxii/leac/v0.5.0/deno/leac.ts";
 ```
+
+### Troubleshooting
+
+For some reason, automatic resolution dosen't work well with your module? &#x20;
+
+Please reach out by opening a discussion!
+
+{% embed url="https://github.com/garronej/denoify/discussions" %}
+
+If you want to check for common problem before contacting the community here are some things you might want to check out:&#x20;
+
+* Makes sure you have a repository field in your `package.json` that points to the correct repo. [Example](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/e92520a94d160f1f1174969b023fba57a78a744b/package.json#L4-L7)
+* Make sure you [create a git Tag](https://user-images.githubusercontent.com/6702424/184397579-b95b7115-4934-433c-9cd3-7fff48818ddc.png) for [every NPM version you release](https://user-images.githubusercontent.com/6702424/184398120-9d837245-ec8c-498d-8805-a3e721a2d4c5.png). (A git tag is created when you create a GitHub Release)
+* Make sure there is always a `tsconfig.json` file at the root of your repo, on every version tag, and that it specifies the option [`compilerOptions.outDir`](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/23b5cb6d0d88c8f64303c3c1231be941f79c1cd6/tsconfig.json#L12).

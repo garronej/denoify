@@ -1,4 +1,4 @@
 # Table of contents
 
 * [🚀 Quick start](README.md)
-* [👩💼 Automatically discovery of Deno ports](automatically-discovery-of-deno-ports.md)
+* [🔍 Automatic discovery of ports](automatic-discovery-of-ports.md)

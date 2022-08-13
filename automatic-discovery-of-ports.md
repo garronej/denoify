@@ -31,7 +31,7 @@ import { assert } from "https://raw.githubusercontent.com/garronej/tsafe/v0.10.
 import type { Equals } from "https://raw.githubusercontent.com/garronej/tsafe/v0.10.1/deno_dist/mod.ts";
 import * as ns from "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.4.3/deno_dist/mod.ts";
 import { Cat } from "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.4.3/deno_dist/lib/Cat.ts";
-import { createLexer } from "https://raw.githubusercontent.com/mxxii/leac/v0.5.0/deno/leac.ts";
+import { createLexer } from "https://raw.githubusercontent.com/mxxii/leac/v0.5.0/deno/mod.ts";
 ```
 
 ### Troubleshooting

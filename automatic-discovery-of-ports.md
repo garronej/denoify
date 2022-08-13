@@ -8,7 +8,7 @@ Let's assume we are in a project  in our `node_modules` directory we have the fo
 
 * &#x20;[tsafe](https://www.npmjs.com/package/tsafe) in version `0.10.1`
 * [my-dummy-npm-and-deno-module](https://www.npmjs.com/package/my-dummy-npm-and-deno-module) in version `0.4.3`
-* [leac](https://www.npmjs.com/package/leac) in version `0.5.0`
+* [leac](https://www.npmjs.com/package/leac) in version `0.5.2`
 
 ### Input
 
@@ -31,7 +31,7 @@ import { assert } from "https://raw.githubusercontent.com/garronej/tsafe/v0.10.
 import type { Equals } from "https://raw.githubusercontent.com/garronej/tsafe/v0.10.1/deno_dist/mod.ts";
 import * as ns from "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.4.3/deno_dist/mod.ts";
 import { Cat } from "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.4.3/deno_dist/lib/Cat.ts";
-import { createLexer } from "https://raw.githubusercontent.com/mxxii/leac/v0.5.0/deno/mod.ts";
+import { createLexer } from "https://raw.githubusercontent.com/mxxii/leac/v0.5.2/deno/mod.ts";
 ```
 
 ### Troubleshooting

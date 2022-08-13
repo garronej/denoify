@@ -276,8 +276,8 @@ function getIndexFileRelativePath(params: {
             .relative(
                 tsconfigOutDir,
                 path.normalize(packageJsonParsed["main"]) // ./dist/lib/index.js
-            ) // ./lib/index.js
-            .replace(/\.js$/i, ".ts")
+            ) // ./lib/index.js, NOTE: The the extension is commonly .js but it can be .cjs, .jsx...
+            .replace(/\.[^.]+$/i, ".ts") // ./lib/index.ts
     );
 
     return indexFileRelativePath;

@@ -14,6 +14,7 @@ import { id } from "tsafe";
 import { getLatestTag } from "../../tools/githubTags";
 import { isInsideOrIsDir } from "../../tools/isInsideOrIsDir";
 import { knownPorts } from "./knownPorts";
+import { assert } from "tsafe/assert";
 
 type GetValidImportUrl = (
     params:
@@ -355,16 +356,89 @@ export const { getValidImportUrlFactory } = (() => {
         }
     }
 
-    /** Throws if 404 */
-    const getTsconfigOutDir = addCache(async (params: { moduleAddress: ModuleAddress.GitHubRepo; branchForVersion: string }): Promise<string> => {
-        const { branchForVersion, moduleAddress } = params;
+    const getTsconfigOutDir = addCache(async (params: { moduleAddress: ModuleAddress.GitHubRepo; gitTag: string }): Promise<string | undefined> => {
+        const { moduleAddress, gitTag } = params;
 
         const { buildUrl } = buildUrlFactory({ moduleAddress });
 
-        return path.normalize(
-            commentJson.parse(await fetch(buildUrl(branchForVersion, "tsconfig.json")).then(res => res.text()))["compilerOptions"]["outDir"]
+        const tsconfigJson = await fetch(buildUrl(gitTag, "tsconfig.json")).then(
+            res => (`${res.status}`.startsWith("2") ? res.text() : undefined),
+            () => undefined
         );
+
+        if (tsconfigJson === undefined) {
+            return undefined;
+        }
+
+        const outDir: string | undefined = commentJson.parse(tsconfigJson)["compilerOptions"]?.["outDir"];
+
+        if (typeof outDir !== "string") {
+            return undefined;
+        }
+
+        return path.normalize(toPosix(outDir));
     });
+
+    const { getDenoifyOutDir } = (() => {
+        const getExplicitDenoifyOutDir = addCache(async (params: { gitTag: string; moduleAddress: ModuleAddress.GitHubRepo }) => {
+            const { gitTag, moduleAddress } = params;
+
+            const { buildUrl } = buildUrlFactory({ moduleAddress });
+
+            const packageJson = await fetch(buildUrl(gitTag, "package.json")).then(
+                res => (`${res.status}`.startsWith("2") ? res.text() : undefined),
+                () => undefined
+            );
+
+            if (packageJson === undefined) {
+                return undefined;
+            }
+
+            const denoifyOut: string | undefined = JSON.parse(packageJson)["denoify"]?.["out"];
+
+            if (denoifyOut === undefined) {
+                return undefined;
+            }
+
+            return path.normalize(toPosix(denoifyOut));
+        });
+
+        async function getDenoifyOutDir(params: {
+            //TODO: Through out the codebase we name "branch" what are better described by tags.
+            //Maybe we should use the consecrated therm "targetCommitish"
+            gitTag: string;
+            moduleAddress: ModuleAddress.GitHubRepo;
+        }) {
+            const { gitTag, moduleAddress } = params;
+
+            explicitely_specified: {
+                const denoifyOutDir = await getExplicitDenoifyOutDir({ moduleAddress, gitTag });
+
+                if (denoifyOutDir === undefined) {
+                    break explicitely_specified;
+                }
+
+                return denoifyOutDir;
+            }
+
+            default_based_on_tsconfig_outDir: {
+                const tsconfigOutDir = await getTsconfigOutDir({ moduleAddress, gitTag });
+
+                if (tsconfigOutDir === undefined) {
+                    break default_based_on_tsconfig_outDir;
+                }
+
+                return path.join(
+                    path.dirname(tsconfigOutDir), // .
+                    `deno_${path.basename(tsconfigOutDir)}` //deno_dist
+                ); // deno_dist
+            }
+
+            return undefined;
+        }
+
+        return { getDenoifyOutDir };
+    })();
 
     async function resolveVersion(params: Params) {
         const { moduleAddress } = params;
@@ -386,26 +460,19 @@ export const { getValidImportUrlFactory } = (() => {
                     continue;
                 }
                 case "GITHUB REPO": {
-                    const tsConfigOutDir = await getTsconfigOutDir({
-                        moduleAddress,
-                        "branchForVersion": candidateBranch
-                    }).catch(() => undefined);
+                    const denoifyOutDir = await getDenoifyOutDir({ moduleAddress, "gitTag": candidateBranch });
 
-                    if (tsConfigOutDir === undefined) {
-                        /*
-                        NOTE: When we have a GITHUB REPO it 
-                        must point to a denoified module.
-                        */
+                    if (denoifyOutDir === undefined) {
                         continue;
                     }
 
-                    indexUrl = buildUrl(candidateBranch, path.join(`deno_${path.basename(tsConfigOutDir)}`, "mod.ts"));
+                    indexUrl = buildUrl(candidateBranch, path.join(denoifyOutDir, "mod.ts"));
 
-                    if (!(await is404(indexUrl))) {
-                        break;
+                    if (await is404(indexUrl)) {
+                        continue;
                     }
 
-                    continue;
+                    break;
                 }
             }
 
@@ -442,29 +509,27 @@ export const { getValidImportUrlFactory } = (() => {
 
                 const { specificImportPath } = params;
 
-                let url = buildUrl(
-                    branchForVersion,
-                    await (async () => {
+                let url = await (async () => {
+                    const pathToFile = await (async () => {
                         switch (moduleAddress.type) {
                             case "DENO.LAND URL":
                             case "GITHUB-RAW URL":
                                 return `${specificImportPath}.ts`;
-
                             case "GITHUB REPO":
-                                const tsConfigOutDir = await getTsconfigOutDir({
-                                    moduleAddress,
-                                    branchForVersion
-                                });
+                                const denoifyOutDir = await getDenoifyOutDir({ moduleAddress, "gitTag": branchForVersion });
+
+                                //NOTE: resolveVersion was successful so we can assert that:
+                                assert(denoifyOutDir !== undefined);
+
+                                const tsconfigOutDir = await getTsconfigOutDir({ moduleAddress, "gitTag": branchForVersion });
 
                                 return (
                                     path.join(
-                                        path.join(
-                                            path.dirname(tsConfigOutDir), // .
-                                            `deno_${path.basename(tsConfigOutDir)}` //deno_dist
-                                        ), // deno_dist
-                                        isInsideOrIsDir({ "dirPath": tsConfigOutDir, "fileOrDirPath": specificImportPath })
+                                        denoifyOutDir, //deno_dist
+                                        tsconfigOutDir !== undefined &&
+                                            isInsideOrIsDir({ "dirPath": tsconfigOutDir, "fileOrDirPath": specificImportPath })
                                             ? path.relative(
-                                                  tsConfigOutDir,
+                                                  tsconfigOutDir,
                                                   specificImportPath // dist/tools/typeSafety
                                               ) //  tools/typeSafety
                                             : specificImportPath // tools/typeSafety ( when using enable short path )
@@ -472,8 +537,13 @@ export const { getValidImportUrlFactory } = (() => {
                                     ".ts"
                                 ); // deno_dist/tool/typeSafety.ts
                         }
-                    })()
-                );
+                    })();
+
+                    return buildUrl(branchForVersion, pathToFile);
+                })();
+
+                if (url === undefined) {
+                }
 
                 walk: {
                     if (await is404(url)) {

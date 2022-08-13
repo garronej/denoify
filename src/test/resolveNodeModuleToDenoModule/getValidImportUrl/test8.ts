@@ -38,7 +38,7 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
         );
 
         try {
-            const x = await getValidImportUrlFactoryResult.getValidImportUrl({
+            await getValidImportUrlFactoryResult.getValidImportUrl({
                 "target": "SPECIFIC FILE",
                 "specificImportPath": "dist/lib/Cat"
             });

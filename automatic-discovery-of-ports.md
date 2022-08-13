@@ -44,6 +44,8 @@ Please reach out by opening a discussion!
 
 If you want to check for common problem before contacting the community here are some things you might want to check out:&#x20;
 
+* If you are using [the `--out` CLI parameter](https://github.com/garronej/denoify/blob/07acce8a93bc2fae2f877a2068ec3bcca3a8bb05/src/bin/denoify.ts#L25) define [`denoify.out` in your `package.json`](https://github.com/mxxii/leac/blob/20bc039ee3446f7b13cf3f52737b538fece75094/package.json#L87) instead. &#x20;
+* Makes sure you do not get [this message](https://github.com/garronej/denoify/blob/07acce8a93bc2fae2f877a2068ec3bcca3a8bb05/src/lib/denoify.ts#L228-L230) when you run `npx denoify`.  If you do make sur your  [`main` property of your `package.json`](https://github.com/mxxii/leac/blob/20bc039ee3446f7b13cf3f52737b538fece75094/package.json#L27) is correct.&#x20;
 * Makes sure you have a repository field in your `package.json` that points to the correct repo. [Example](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/e92520a94d160f1f1174969b023fba57a78a744b/package.json#L4-L7)
 * Make sure you [create a git Tag](https://user-images.githubusercontent.com/6702424/184397579-b95b7115-4934-433c-9cd3-7fff48818ddc.png) for [every NPM version you release](https://user-images.githubusercontent.com/6702424/184398120-9d837245-ec8c-498d-8805-a3e721a2d4c5.png). (A git tag is created when you create a GitHub Release)
 * Make sure there is always a `tsconfig.json` file at the root of your repo, on every version tag, and that it specifies the option [`compilerOptions.outDir`](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/23b5cb6d0d88c8f64303c3c1231be941f79c1cd6/tsconfig.json#L12).

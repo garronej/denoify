@@ -1,6 +1,6 @@
 {
     "name": "denoify",
-    "version": "0.15.1",
+    "version": "0.15.2",
     "homepage": "https://denoify.land",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
     "main": "dist/lib/index.js",
@@ -40,7 +40,7 @@
         "@types/comment-json": "^1.1.1",
         "commander": "^4.1.1",
         "comment-json": "^3.0.2",
-        "tsafe": "^0.10.1",
+        "tsafe": "^1.0.0",
         "get-github-default-branch-name": "^0.0.4",
         "gitignore-parser": "0.0.2",
         "glob": "^7.1.6",

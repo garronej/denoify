@@ -114,11 +114,9 @@ export function denoifyImportExportStatementFactory(
 
         const nodeToDenoModuleResolutionResult = await resolveNodeModuleToDenoModule({ nodeModuleName });
 
-        if (nodeToDenoModuleResolutionResult.result === "NON-FATAL UNMET DEPENDENCY") {
+        if (nodeToDenoModuleResolutionResult.result === "UNKNOWN BUILTIN") {
             return stringify(
-                `${ParsedImportExportStatement.ParsedArgument.stringify(parsedImportExportStatement.parsedArgument)} DENOIFY: DEPENDENCY UNMET (${
-                    nodeToDenoModuleResolutionResult.kind
-                })`
+                `${ParsedImportExportStatement.ParsedArgument.stringify(parsedImportExportStatement.parsedArgument)} DENOIFY: UNKNOWN NODE BUILTIN`
             );
         }
 

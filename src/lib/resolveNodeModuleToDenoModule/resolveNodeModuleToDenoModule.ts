@@ -33,8 +33,7 @@ type Result =
           getValidImportUrl: GetValidImportUrl;
       }
     | {
-          result: "NON-FATAL UNMET DEPENDENCY";
-          kind: "DEV DEPENDENCY" | "BUILTIN";
+          result: "UNKNOWN BUILTIN";
       };
 
 export function resolveNodeModuleToDenoModuleFactory(
@@ -62,8 +61,6 @@ export function resolveNodeModuleToDenoModuleFactory(
         ...params.devDependencies
     };
 
-    const devDependenciesNames = Object.keys(params.devDependencies);
-
     const isInUserProvidedPort = (nodeModuleName: string) => nodeModuleName in params.userProvidedPorts;
     const resolveNodeModuleToDenoModule = addCache(async (params: { nodeModuleName: string }): Promise<Result> => {
         const {
@@ -76,10 +73,7 @@ export function resolveNodeModuleToDenoModuleFactory(
             }
 
             if (!(nodeModuleName in denoPorts)) {
-                return {
-                    "result": "NON-FATAL UNMET DEPENDENCY",
-                    "kind": "BUILTIN"
-                };
+                return { "result": "UNKNOWN BUILTIN" };
             }
 
             const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
@@ -88,10 +82,7 @@ export function resolveNodeModuleToDenoModuleFactory(
             });
 
             if (!getValidImportUrlFactoryResult.couldConnect) {
-                return {
-                    "result": "NON-FATAL UNMET DEPENDENCY",
-                    "kind": "BUILTIN"
-                };
+                return { "result": "UNKNOWN BUILTIN" };
             }
 
             const { getValidImportUrl } = getValidImportUrlFactoryResult;
@@ -211,14 +202,20 @@ export function resolveNodeModuleToDenoModuleFactory(
             };
         }
 
-        if (devDependenciesNames.includes(nodeModuleName)) {
-            return {
-                "result": "NON-FATAL UNMET DEPENDENCY",
-                "kind": "DEV DEPENDENCY"
-            };
-        }
-
-        throw new Error(`You need to provide a deno port for ${nodeModuleName}`);
+        return {
+            "result": "SUCCESS",
+            "getValidImportUrl": params =>
+                Promise.resolve(
+                    `npm:${nodeModuleName}@${version}${(() => {
+                        switch (params.target) {
+                            case "DEFAULT EXPORT":
+                                return "";
+                            case "SPECIFIC FILE":
+                                return `/${params.specificImportPath}`;
+                        }
+                    })()}`
+                )
+        };
     });
 
     return { resolveNodeModuleToDenoModule };

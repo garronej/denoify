@@ -29,26 +29,6 @@
 > -   If your module belong in the 10% of NPM modules that doesn't work out of the box. Denoify can help you
 >     providing Deno implementation for specific file of your module (xxx.deno.ts).
 
-> 🗣 NOTE TO THE COMMUNITY: I am please to see an increasing number of project using Denoify! 🎉  
-> That said, looking at your setup, I see that you are almost all tracking the `deno_dist` directory
-> on your default branch...  
-> `deno_dist` should be git ignored, it's not source code!  
-> I encourage you all to read [the related section of the readme](#github-actions-setup) and have a look at how [tsafe](https://github.com/garronej/tsafe) is setup.  
-> Please, do not hesitate [to reach out](https://github.com/garronej/denoify/discussions) if you need a hand.
-
-> What's new in `v0.11`: Support or partial support fro many new Node API:
-> [`console`](https://deno.land/std/node/console.ts), [`cluster`](https://deno.land/std/node/cluster.ts),
-> [`dgram`](https://deno.land/std/node/dgram.ts), [`dns`](https://deno.land/std/node/dns.ts),
-> [`http`](https://deno.land/std/node/http.ts), [`http2`](https://deno.land/std/node/http2.ts),
-> [`https`](https://deno.land/std/node/https.ts), [`inspector`](https://deno.land/std/node/inspector.ts),
-> [`module`](https://deno.land/std/node/module.ts), [`net`](https://deno.land/std/node/net.ts),
-> [`perf_hooks`](https://deno.land/std/node/perf_hooks.ts), [`readline`](https://deno.land/std/node/readline.ts),
-> [`repl`](https://deno.land/std/node/repl.ts), [`string_decoder`](https://deno.land/std/node/string_decoder.ts),
-> [`sys`](https://deno.land/std/node/sys.ts), [`tls`](https://deno.land/std/node/tls.ts),
-> [`tty`](https://deno.land/std/node/tty.ts), [`v8`](https://deno.land/std/node/v8.ts),
-> [`vm`](https://deno.land/std/node/vm.ts), [`wasi`](https://deno.land/std/node/wasi.ts),
-> [`worker_threads`](https://deno.land/std/node/worker_threads.ts), [`zlib`](https://deno.land/std/node/zlib.ts).
-
 <br>
 
 # What it is
@@ -62,13 +42,6 @@ A build tool that takes as input a TypeScript codebase that was meant to target 
 > **NOTE:** Denoify is capable of **recursively** resolving **dependencies**!  
 > It works out of the box with dependencies that uses denoify
 > and there are many option for dealing with dependencies that won't transpile automatically. [See specific documentation](https://github.com/garronej/my_dummy_npm_and_deno_module)
-
-If you are just looking for a quick way to load NPM modules in your Deno project
-you can check out [CommonJS module Loading](https://github.com/denoland/deno_std/tree/main/node#commonjs-module-loading),
-unlike Denoify, it won't give you types definitions, it will involve `node_modules/`
-and require `--allow-read` but it will also be easier to get working.
-Some NPM modules can also be imported into Deno using CDN like [Skypack](https://www.skypack.dev) (ex [Pika](https://www.pika.dev/cdn)) or [jspm](https://jspm.org)
-checkout [Soremwar/deno_types](https://github.com/Soremwar/deno_types) for some examples.
 
 This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their modules and do so without introducing breaking changes.
 
@@ -93,12 +66,6 @@ Some modules that have been made cross-runtime using Denoify:
 -   [Yolk](https://github.com/nestdotland/yolk)
 -   [...and many more great modules](https://github.com/garronej/denoify/network/dependents?package_id=UGFja2FnZS0yNzE2MjkwMjI%3D)
 
-# Introduction video
-
-**NOTE: New features have been introduced since this meeting was hold**
-
-[![Watch the video](https://user-images.githubusercontent.com/6702424/85890466-af09ab00-b7ed-11ea-9cf4-10c9bbfb3621.png)](https://youtu.be/vJQdfTPeeXw)
-
 # Limitations
 
 Coming up next is a detailed guide on how to set up denoify with your project and how
@@ -106,23 +73,15 @@ to publish on [deno.land/x](https://deno.land/x) but before anything
 here are the current limitations you need to be aware of.
 
 -   If your module is vanilla JS it needs to be ported to TypeScript first. (1)
--   Not all Node's builtin modules are supported yet. (2) But thanks to the new mechanism,
-    [à la React Native](https://reactnative.dev/docs/platform-specific-code#platform-specific-extensions),
-    that let you have specific deno implementation for some of your files, the
-    lack of support for `"https"` or `"net"`, while being annoying, is no longer a dead end.
--   If your module has dependencies you will have to enable those dependencies to run on Deno.
-    While well documented, be aware that it is a time consuming process.
--   `require()` is not yet supported.
--   You can't (yet) `fs.readFile()` files that are part of the module ( files inside a `res/`
-    directory for example ). (4)
+-   `require()` is not supported.
+-   You can't `fs.readFile()` files that are part of the module ( files inside a `res/`
+    directory for example ). (2)
 
 (1) _Don't be afraid, renaming your source with `.ts` and dropping some `any` here
 and there will do the trick.
 You will be able to pull it off even if you aren't familiar with typescript. [Ref](https://github.com/garronej/my_dummy_npm_and_deno_module#enable-strict-mode-and-fixes-errors-if-any)_
 
-(2) _You can consult [here](https://deno.land/std/node#supported-builtins) the current state of the Node's builtin support._
-
-(4) _In Deno the files that forms your module won’t be pre-fetched and
+(2) _In Deno the files that forms your module won’t be pre-fetched and
 placed in `node_module` like in node so you won’t be able to access files that are not
 on the disk._
 
@@ -132,7 +91,13 @@ Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) 
 
 Need a hand? Do not hesitate to [open a discussion](https://github.com/garronej/denoify/discussions).
 
-# GitHub Actions setup
+# Publishing on deno.land/x
+
+> 🗣 NOTE TO THE COMMUNITY: I am please to see an increasing number of project using Denoify! 🎉  
+> That said, looking at your setup, I see that you are almost all tracking the `deno_dist` directory
+> on your default branch...  
+> `deno_dist` should be git ignored, it's not source code!  
+> Please, do not hesitate [to reach out](https://github.com/garronej/denoify/discussions) if you need a hand.
 
 ![denoify_ci](https://user-images.githubusercontent.com/6702424/82036935-c52a3480-96a1-11ea-9794-e982a23e5612.png)
 
@@ -165,6 +130,13 @@ npx denoify
 ```
 
 # What's new
+
+**NEW IN v1**
+
+-   `import express from "express";` automatically converted into:  
+    `import express from "npm:express@5";`  
+    (See [this update](https://deno.com/blog/changes#compatibility-with-node-and-npm))  
+    Most project will now transpile successfully out of the box.
 
 **NEW IN v0.10**
 
@@ -202,3 +174,9 @@ npx denoify
 -   All Denoify parameters are now gathered under a uniq `"denoify"` field.
 -   Possibility to specify which files should be copied to the `deno_dist` directory (Previously only `README.md` was copied).  
     [Valid config example](https://github.com/garronej/my_dummy_npm_and_deno_module/blob/master/package.json)
+
+# Introduction video
+
+**NOTE: New features have been introduced since this meeting was hold**
+
+[![Watch the video](https://user-images.githubusercontent.com/6702424/85890466-af09ab00-b7ed-11ea-9cf4-10c9bbfb3621.png)](https://youtu.be/vJQdfTPeeXw)

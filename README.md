@@ -2,7 +2,7 @@
     <img src="https://user-images.githubusercontent.com/6702424/79351107-900eb300-7f38-11ea-8272-91ff725d29f3.png">
 </p>
 <p align="center">
-    <i>🦕 Support Deno and release on NPM with a single codebase.🦕</i>
+    <i>🦕 Release on NPM and on deno.land/x with a single codebase🦕</i>
     <br>
     <br>
     <a href="https://github.com/garronej/denoify/actions">
@@ -19,6 +19,15 @@
   -
   <a href="https://docs.denoify.land">Documentation</a>
 </p>
+
+> IMPORTANT: [Deno will soon support NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
+> This mean, for NPM module author that you'll just need to tell your user to import your module like this in deno:  
+> `import express from "npm:express@5";`.  
+> Knowing that why would you want to use Denoify?
+>
+> -   To publish your module on [deno.land/x](https://deno.land/x) there by signaling that you care about Deno.
+> -   If your module belong in the 10% of NPM modules that doesn't work out of the box. Denoify can help you
+>     providing Deno implementation for specific file of your module (xxx.deno.ts).
 
 > 🗣 NOTE TO THE COMMUNITY: I am please to see an increasing number of project using Denoify! 🎉  
 > That said, looking at your setup, I see that you are almost all tracking the `deno_dist` directory

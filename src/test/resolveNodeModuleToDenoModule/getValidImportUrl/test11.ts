@@ -9,24 +9,21 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             "moduleAddress": id<ModuleAddress.GitHubRepo>({
                 "type": "GITHUB REPO",
-                "userOrOrg": "garronej",
-                //"userOrOrg": "mxxii",
+                "userOrOrg": "mxxii",
                 "repositoryName": "leac",
                 "branch": undefined
             }),
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
-            "version": "0.5.0"
+            "version": "0.6.0"
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
 
         const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
-        //assert(versionFallbackWarning === undefined);
-        assert(versionFallbackWarning !== undefined);
+        assert(versionFallbackWarning === undefined);
 
-        //assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://raw.githubusercontent.com/garronej/leac/v0.5.0/deno/mod.ts");
-        assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://raw.githubusercontent.com/garronej/leac/main/deno/mod.ts");
+        assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://raw.githubusercontent.com/mxxii/leac/v0.6.0/deno/mod.ts");
     }
 
     console.log("PASS");

@@ -141,37 +141,6 @@ export function resolveNodeModuleToDenoModuleFactory(
         }
 
         walk: {
-            if (gitHubRepo === undefined) {
-                break walk;
-            }
-
-            const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
-                "moduleAddress": gitHubRepo,
-                "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
-                version
-            });
-
-            if (!getValidImportUrlFactoryResult.couldConnect) {
-                break walk;
-            }
-
-            const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
-
-            if (versionFallbackWarning) {
-                log(versionFallbackWarning);
-            }
-
-            if (isInUserProvidedPort(nodeModuleName)) {
-                log([`NOTE: ${nodeModuleName} is a denoified module,`, `there is no need for an entry for in package.json denoPorts`].join(" "));
-            }
-
-            return {
-                result: "SUCCESS",
-                getValidImportUrl
-            };
-        }
-
-        walk: {
             if (!(nodeModuleName in denoPorts)) {
                 break walk;
             }
@@ -198,6 +167,37 @@ export function resolveNodeModuleToDenoModuleFactory(
 
             return {
                 "result": "SUCCESS",
+                getValidImportUrl
+            };
+        }
+
+        walk: {
+            if (gitHubRepo === undefined) {
+                break walk;
+            }
+
+            const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
+                "moduleAddress": gitHubRepo,
+                "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
+                version
+            });
+
+            if (!getValidImportUrlFactoryResult.couldConnect) {
+                break walk;
+            }
+
+            const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
+
+            if (versionFallbackWarning) {
+                log(versionFallbackWarning);
+            }
+
+            if (isInUserProvidedPort(nodeModuleName)) {
+                log([`NOTE: ${nodeModuleName} is a denoified module,`, `there is no need for an entry for in package.json denoPorts`].join(" "));
+            }
+
+            return {
+                result: "SUCCESS",
                 getValidImportUrl
             };
         }

@@ -21,7 +21,7 @@
 </p>
 
 > IMPORTANT: [Deno will soon support NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
-> This mean, for NPM module author that you'll just need to tell your user to import your module like this in deno:  
+> For NPM module authors this means that you'll just need to tell your users to import your module like:   
 > `import express from "npm:express@5";`.  
 > Knowing that why would you want to use Denoify?
 >

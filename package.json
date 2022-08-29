@@ -1,6 +1,6 @@
 {
     "name": "denoify",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "homepage": "https://denoify.land",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
     "main": "dist/lib/index.js",

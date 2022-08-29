@@ -40,7 +40,7 @@
         "@types/comment-json": "^1.1.1",
         "commander": "^4.1.1",
         "comment-json": "^3.0.2",
-        "tsafe": "^1.0.0",
+        "tsafe": "^1.0.1",
         "get-github-default-branch-name": "^0.0.4",
         "gitignore-parser": "0.0.2",
         "glob": "^7.1.6",
@@ -48,7 +48,7 @@
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.13",
         "url-join": "^4.0.1",
-        "evt": "^2.3.2"
+        "evt": "^2.4.0"
     },
     "keywords": [
         "deno",

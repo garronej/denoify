@@ -510,6 +510,9 @@ export const { getValidImportUrlFactory } = (() => {
                     const pathToFile = await (async () => {
                         switch (moduleAddress.type) {
                             case "DENO.LAND URL":
+                                return moduleAddress.isStd
+                                    ? `${moduleAddress.pathToIndex.replace(/\.ts$/, "")}/${specificImportPath}.ts`
+                                    : `${specificImportPath}.ts`;
                             case "GITHUB-RAW URL":
                                 return `${specificImportPath}.ts`;
                             case "GITHUB REPO":

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import "minimal-polyfills/Object.fromEntries";
 import * as path from "path";
 import { pathDepth } from "../tools/pathDepth";
 import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel";
@@ -138,6 +139,30 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                               "types": getAfterMovedFilePath({
                                   "beforeMovedFilePath": packageJsonParsed["types"]
                               })
+                          }
+                        : {}),
+                    ...("module" in packageJsonParsed
+                        ? {
+                              "module": getAfterMovedFilePath({
+                                  "beforeMovedFilePath": packageJsonParsed["module"]
+                              })
+                          }
+                        : {}),
+                    ...("exports" in packageJsonParsed
+                        ? {
+                              "exports": Object.fromEntries(
+                                  Object.entries(packageJsonParsed["exports"]).map(([path, obj]) => [
+                                      path,
+                                      Object.fromEntries(
+                                          Object.entries(obj as Record<string, string>).map(([type, path]) => [
+                                              type,
+                                              getAfterMovedFilePath({
+                                                  "beforeMovedFilePath": path
+                                              })
+                                          ])
+                                      )
+                                  ])
+                              )
                           }
                         : {}),
                     ...("bin" in packageJsonParsed

@@ -1,6 +1,6 @@
 {
     "name": "denoify",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "homepage": "https://denoify.land",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
     "main": "dist/lib/index.js",
@@ -48,7 +48,7 @@
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.13",
         "url-join": "^4.0.1",
-        "evt": "^2.4.0",
+        "evt": "^2.4.1",
         "minimal-polyfills": "^2.2.2"
     },
     "keywords": [

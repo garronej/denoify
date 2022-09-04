@@ -156,9 +156,10 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                                       Object.fromEntries(
                                           Object.entries(obj as Record<string, string>).map(([type, path]) => [
                                               type,
-                                              getAfterMovedFilePath({
-                                                  "beforeMovedFilePath": path
-                                              })
+                                              "./" +
+                                                  getAfterMovedFilePath({
+                                                      "beforeMovedFilePath": path
+                                                  })
                                           ])
                                       )
                                   ])

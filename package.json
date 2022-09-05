@@ -11,11 +11,13 @@
     },
     "scripts": {
         "grant-exec-perms": "chmod +x ./dist/bin/*.js",
-        "build": "tsc && npm run grant-exec-perms",
+        "build": "tsc -p tsconfig.build.json",
+        "postbuild": "yarn grant-exec-perms",
+        "pretest": "yarn build",
         "test": "node ./dist/test",
-        "_format": "prettier '**/*.{ts,tsx,json,md}'",
-        "format": "yarn _format --write",
-        "format:check": "yarn _format --list-different",
+        "prettier": "prettier '**/*.{ts,tsx,json,md}'",
+        "format": "yarn prettier --write",
+        "format:check": "yarn prettier --list-different",
         "link_in_test_app": "node dist/bin/link_in_test_app.js"
     },
     "bin": {
@@ -40,16 +42,18 @@
         "@types/comment-json": "^1.1.1",
         "commander": "^4.1.1",
         "comment-json": "^3.0.2",
-        "tsafe": "^1.0.1",
+        "cosmiconfig": "^7.0.1",
+        "evt": "^2.4.1",
         "get-github-default-branch-name": "^0.0.4",
         "gitignore-parser": "0.0.2",
         "glob": "^7.1.6",
+        "minimal-polyfills": "^2.2.2",
         "node-fetch": "^2.6.7",
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.13",
+        "tsafe": "^1.0.1",
         "url-join": "^4.0.1",
-        "evt": "^2.4.1",
-        "minimal-polyfills": "^2.2.2"
+        "yaml": "^2.1.1"
     },
     "keywords": [
         "deno",
@@ -58,7 +62,6 @@
         "CommonJs"
     ],
     "files": [
-        "known-ports.jsonc",
         "src/",
         "!src/test/",
         "dist/",
@@ -70,10 +73,10 @@
         "@types/node": "^10.0.0",
         "@types/node-fetch": "^2.5.6",
         "@types/url-join": "^4.0.0",
-        "js-yaml": "^3.13.1",
-        "prettier": "^2.3.0",
-        "lint-staged": "^11.0.0",
         "husky": "^4.3.8",
+        "js-yaml": "^3.13.1",
+        "lint-staged": "^11.0.0",
+        "prettier": "^2.3.0",
         "typescript": "^4.7.3"
     }
 }

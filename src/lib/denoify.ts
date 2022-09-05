@@ -12,6 +12,7 @@ import { id } from "tsafe";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
 import { arrPartition } from "evt/tools/reducers/partition";
 import { fsCopy } from "../tools/fsCopy";
+import { getDenoifyParamsWithCosmiconfig } from "./parseParams";
 
 export async function denoify(params: {
     projectPath: string;
@@ -21,7 +22,7 @@ export async function denoify(params: {
 }) {
     process.chdir(params.projectPath ?? ".");
 
-    const srcDirPath = !!params.srcDirPath ? params.srcDirPath : ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath));
+    const srcDirPath = params.srcDirPath ? params.srcDirPath : ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath));
     console.log(`Denoify is reading sources files from ${srcDirPath}`);
 
     if (!srcDirPath) {
@@ -30,53 +31,21 @@ export async function denoify(params: {
 
     const packageJsonParsed = JSON.parse(fs.readFileSync("package.json").toString("utf8"));
 
-    const denoifyParamsFromPackageJson: {
-        replacer?: string;
-        ports?: { [portName: string]: string };
-        includes?: (string | { src: string; destDir?: string; destBasename?: string })[];
-        out?: string;
-        index?: string;
-    } = packageJsonParsed["denoify"] ?? {};
-
-    {
-        const { includes, ports, replacer } = denoifyParamsFromPackageJson;
-
-        if (
-            (includes !== undefined &&
-                !includes.every(
-                    pathOrObj =>
-                        typeof pathOrObj === "string" ||
-                        (pathOrObj instanceof Object &&
-                            typeof pathOrObj.src === "string" &&
-                            (pathOrObj.destDir === undefined || typeof pathOrObj.destDir === "string") &&
-                            (pathOrObj.destBasename === undefined || typeof pathOrObj.destBasename === "string"))
-                )) ||
-            (ports !== undefined && !(ports instanceof Object && Object.keys(ports).every(key => typeof ports![key] === "string"))) ||
-            (replacer !== undefined && typeof replacer !== "string")
-        ) {
-            console.log(
-                [
-                    "Denoify configuration Error",
-                    'The "denoify" in the package.json is malformed',
-                    "See: https://github.com/garronej/my_dummy_npm_and_deno_module"
-                ].join("\n")
-            );
-
-            process.exit(-1);
-        }
-    }
+    const denoifyParams = await getDenoifyParamsWithCosmiconfig();
 
     const tsconfigOutDir = getTsConfigOutDir();
-    let denoDistPath: string;
-    if (params.denoDistPath !== undefined) {
-        denoDistPath = params.denoDistPath;
-    } else if (typeof denoifyParamsFromPackageJson.out === "string") {
-        denoDistPath = denoifyParamsFromPackageJson.out;
-    } else if (tsconfigOutDir != null) {
-        denoDistPath = path.join(path.dirname(tsconfigOutDir), `deno_${path.basename(tsconfigOutDir)}`);
-    } else {
-        throw new Error(`You should specify output directory by --out option or specify "outDir" in tsconfig.json`);
-    }
+
+    const denoDistPath = (() => {
+        if (params.denoDistPath !== undefined) {
+            return params.denoDistPath;
+        } else if (denoifyParams?.out !== undefined) {
+            return denoifyParams?.out;
+        } else if (tsconfigOutDir !== undefined) {
+            return path.join(path.dirname(tsconfigOutDir), `deno_${path.basename(tsconfigOutDir)}`);
+        } else {
+            throw new Error(`You should specify output directory by --out option or specify "outDir" in tsconfig.json`);
+        }
+    })();
 
     console.log(`Deno distribution will be generated at ${denoDistPath}`);
 
@@ -89,7 +58,7 @@ export async function denoify(params: {
             const { denoifyImportExportStatement } = denoifyImportExportStatementFactory(
                 (() => {
                     const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
-                        "userProvidedPorts": denoifyParamsFromPackageJson.ports ?? {},
+                        "userProvidedPorts": denoifyParams?.ports ?? {},
                         "dependencies": packageJsonParsed["dependencies"] ?? {},
                         "devDependencies": packageJsonParsed["devDependencies"] ?? {},
                         "log": console.log,
@@ -99,7 +68,7 @@ export async function denoify(params: {
                     return id<Parameters<typeof denoifyImportExportStatementFactory>[0]>({
                         "getDestDirPath": ({ dirPath }) => path.join(denoDistPath, path.relative(srcDirPath, dirPath)),
                         resolveNodeModuleToDenoModule,
-                        "userProvidedReplacerPath": denoifyParamsFromPackageJson.replacer,
+                        "userProvidedReplacerPath": denoifyParams?.replacer,
                         getInstalledVersionPackageJson
                     });
                 })()
@@ -162,11 +131,11 @@ export async function denoify(params: {
         tsconfigOutDir,
         denoDistPath,
         srcDirPath,
-        "explicitlyProvidedIndexFilePath": params.indexFilePath ?? denoifyParamsFromPackageJson.index
+        "explicitlyProvidedIndexFilePath": params.indexFilePath ?? denoifyParams?.index
     });
 
     {
-        const includes = (denoifyParamsFromPackageJson.includes ?? ["README.md", "LICENSE"]).map(pathOrObj =>
+        const includes = (denoifyParams?.includes ?? ["README.md", "LICENSE"]).map(pathOrObj =>
             typeof pathOrObj === "string"
                 ? path.normalize(pathOrObj)
                 : {

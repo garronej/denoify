@@ -89,12 +89,12 @@ export function configuration() {
     const packageJson = "package.json";
     const supportedConfigFile = (() => {
         const denoify = "denoify";
-        const rcs = ["", ".json", ".yaml", ".yml", ".js", ".cjs"];
-        const configs = ["config.js", "config.cjs"];
+        const rcs = ["", ".json", ".yaml", ".yml"];
+        const configs = [".js", ".cjs"];
         // in order of precedence
         return [packageJson].concat(
-            rcs.map(extension => `.${denoify}rc${extension}`),
-            configs.map(extension => `${denoify}.${extension}`)
+            rcs.concat(configs).map(extension => `.${denoify}rc${extension}`),
+            configs.map(extension => `${denoify}.config${extension}`)
         );
     })();
 

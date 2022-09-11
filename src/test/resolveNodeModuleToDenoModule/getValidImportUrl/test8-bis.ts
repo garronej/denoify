@@ -23,11 +23,11 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
 
         assert(
             (await getValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })) ===
-                "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.4.3/deno_dist/mod.ts"
+                "https://deno.land/x/my_dummy_npm_and_deno_module@v0.4.3/mod.ts"
         );
         assert(
             (await getValidImportUrlFactoryResult.getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "dist/lib/Cat" })) ===
-                "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module/v0.4.3/deno_dist/lib/Cat.ts"
+                "https://deno.land/x/my_dummy_npm_and_deno_module@v0.4.3/lib/Cat.ts"
         );
     }
 

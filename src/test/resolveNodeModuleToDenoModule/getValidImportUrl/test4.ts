@@ -26,19 +26,16 @@ import { getThirdPartyDenoModuleInfos } from "../../../lib/getThirdPartyDenoModu
 
         const { latestVersion } = (await getThirdPartyDenoModuleInfos({ "denoModuleName": "evt" }))!;
 
-        assert(
-            (await getValidImportUrl({ "target": "DEFAULT EXPORT" })) ===
-                `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/mod.ts`
-        );
+        assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === `https://deno.land/x/evt@${latestVersion}/mod.ts`);
 
         assert(
             (await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "hooks/useEvt" })) ===
-                `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/hooks/useEvt.ts`
+                `https://deno.land/x/evt@${latestVersion}/hooks/useEvt.ts`
         );
 
         assert(
             (await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "hooks" })) ===
-                `https://raw.githubusercontent.com/garronej/evt/${latestVersion}/deno_dist/hooks/index.ts`
+                `https://deno.land/x/evt@${latestVersion}/hooks/index.ts`
         );
     }
 

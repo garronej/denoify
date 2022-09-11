@@ -445,10 +445,10 @@ esprima@^4.0.0, esprima@^4.0.1:
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
 
-evt@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.1.tgz#68beca2f7bd7eb755fdda5b263a80b934100e046"
-  integrity sha512-eo7sZcfDbiVWD5Aw6STkIEMmchYLdeGnJB6tVaM9AXZc7pViin3PmQhb6fgFIFHfl0re9zSEHtSjyu70Y7dRJg==
+evt@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.2.tgz#8f29f53a71609f1f5ad09ba313ad8cc0b9c63077"
+  integrity sha512-wPGX4eGgxh5NRff+1VkRfdTRaJA5vbr9rC9CRUIgprVDGDFtI0/vF9I0Yp3HAEGuFbUO978QAsaH6lIgpRCFAg==
   dependencies:
     minimal-polyfills "^2.2.2"
     run-exclusive "^2.2.16"

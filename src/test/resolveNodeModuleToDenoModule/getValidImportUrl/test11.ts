@@ -23,7 +23,7 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
 
         assert(versionFallbackWarning === undefined);
 
-        assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://raw.githubusercontent.com/mxxii/leac/v0.6.0/deno/mod.ts");
+        assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://deno.land/x/leac@v0.6.0/mod.ts");
     }
 
     console.log("PASS");

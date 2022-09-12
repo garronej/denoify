@@ -16,7 +16,7 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
         const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
             "moduleAddress": expectedScheme,
             "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
-            "version": "1.6.8"
+            "version": "2.4.1"
         });
 
         assert(getValidImportUrlFactoryResult.couldConnect === true);
@@ -25,7 +25,7 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
 
         assert(typeof versionFallbackWarning === "undefined");
 
-        assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://raw.githubusercontent.com/garronej/evt/v1.6.8/mod.ts");
+        assert((await getValidImportUrl({ "target": "DEFAULT EXPORT" })) === "https://deno.land/x/evt@v2.4.1/mod.ts");
     }
 
     console.log("PASS");

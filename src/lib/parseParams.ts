@@ -165,7 +165,7 @@ export function configuration() {
                     return parseAsDenoifyParams(configFileType.configFileBasename !== packageJson ? parsed : parsed.denoify);
                 }
                 case "js": {
-                    const denoifyCacheDirPath = `${process.cwd()}/node_modules/.cache/denoify`;
+                    const denoifyCacheDirPath = `${process.cwd()}/node_modules/.cache/denoify/cacheDirPath`;
                     if (!fs.existsSync(denoifyCacheDirPath)) {
                         fs.mkdir(denoifyCacheDirPath, () => undefined);
                     }

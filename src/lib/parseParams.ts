@@ -24,9 +24,9 @@ type ConfigFileType =
           type: "absent";
       }
     | {
-          type: "json" | "js" | "yaml" | "extensionless";
-          file: string;
-          config: string;
+          type: "json" | "js" | "yaml";
+          configFileBasename: string;
+          configFileRawContent: string;
       };
 
 function parseAsStringElseUndefined(param: unknown) {
@@ -52,32 +52,32 @@ function parseAsDenoifyParams(denoifyParams: any): DenoifyParams | undefined {
     }
     const { includes } = denoifyParams;
     return {
-        replacer: parseAsStringElseUndefined(denoifyParams.replacer),
-        out: parseAsStringElseUndefined(denoifyParams.out),
-        index: parseAsStringElseUndefined(denoifyParams.index),
-        includes: !Array.isArray(includes)
+        "replacer": parseAsStringElseUndefined(denoifyParams.replacer),
+        "out": parseAsStringElseUndefined(denoifyParams.out),
+        "index": parseAsStringElseUndefined(denoifyParams.index),
+        "includes": !Array.isArray(includes)
             ? undefined
             : includes.map(elem =>
                   typeof elem === "string"
                       ? elem
                       : {
-                            destDir: parseAsStringElseUndefined(elem.destDir),
-                            destBasename: parseAsStringElseUndefined(elem.destBasename),
-                            src: parseAsStringElseThrow({
-                                param: elem.src,
-                                type: "src in includes array"
+                            "destDir": parseAsStringElseUndefined(elem.destDir),
+                            "destBasename": parseAsStringElseUndefined(elem.destBasename),
+                            "src": parseAsStringElseThrow({
+                                "param": elem.src,
+                                "type": "src in includes array"
                             })
                         }
               ),
-        ports:
+        "ports":
             denoifyParams.ports !== undefined || denoifyParams.ports !== null
                 ? undefined
                 : Object.entries(denoifyParams.ports).reduce(
                       (prev, [portName, value]) => ({
                           ...prev,
                           [portName]: parseAsStringElseThrow({
-                              param: value,
-                              type: "value of ports object"
+                              "param": value,
+                              "type": "value of ports object"
                           })
                       }),
                       {}
@@ -107,26 +107,20 @@ export function configuration() {
         if (file.endsWith(".json")) {
             return {
                 type: "json",
-                file,
-                config
-            };
-        } else if (file.split(".").length === 2) {
-            return {
-                type: "extensionless",
-                file,
-                config
+                configFileBasename: file,
+                configFileRawContent: config
             };
         } else if (file.endsWith(".cjs") || file.endsWith(".js")) {
             return {
                 type: "js",
-                file,
-                config
+                configFileBasename: file,
+                configFileRawContent: config
             };
-        } else if (file.endsWith(".yaml") || file.endsWith(".yml")) {
+        } else if (file.split(".").length === 2 || file.endsWith(".yaml") || file.endsWith(".yml")) {
             return {
                 type: "yaml",
-                file,
-                config
+                configFileBasename: file,
+                configFileRawContent: config
             };
         } else {
             return {
@@ -136,51 +130,47 @@ export function configuration() {
     }
 
     return {
-        getFileTypeAndContent(content: (file: string) => Promise<string | undefined>) {
+        "getFileTypeAndContent": (getConfigFileRawContent: (configFileBasename: string) => Promise<string | undefined>) => {
             return supportedConfigFile.reduce(async (configFileType, file) => {
                 if ((await configFileType).type !== "absent") {
                     return configFileType;
-                } else {
-                    const config = await content(file);
-                    if (!config) {
-                        return configFileType;
-                    } else if (file !== packageJson) {
-                        return parseConfig({
-                            file,
-                            config
-                        });
-                    } else if (!YAML.parse(config).denoify) {
-                        return configFileType;
-                    } else {
-                        return parseConfig({
-                            file,
-                            config
-                        });
-                    }
                 }
+                const config = await getConfigFileRawContent(file);
+                if (!config) {
+                    return configFileType;
+                }
+                if (file !== packageJson) {
+                    return parseConfig({
+                        file,
+                        config
+                    });
+                }
+                if (!YAML.parse(config).denoify) {
+                    return configFileType;
+                }
+                return parseConfig({
+                    file,
+                    config
+                });
             }, Promise.resolve({ type: "absent" }) as Promise<ConfigFileType>);
         },
-        parseAsDenoifyConfig(configFileType: ConfigFileType) {
+        "parseAsDenoifyConfig": (configFileType: ConfigFileType) => {
             switch (configFileType.type) {
                 case "absent":
                     return undefined;
                 case "json":
-                case "yaml":
-                case "extensionless":
+                case "yaml": {
                     // yaml is a superset of json
-                    const parsed = YAML.parse(configFileType.config);
-                    return parseAsDenoifyParams(configFileType.file !== packageJson ? parsed : parsed.denoify);
+                    const parsed = YAML.parse(configFileType.configFileRawContent);
+                    return parseAsDenoifyParams(configFileType.configFileBasename !== packageJson ? parsed : parsed.denoify);
+                }
                 case "js": {
-                    const denoify = `${process.cwd()}/node_modules/.cache/denoify`;
-                    if (!fs.existsSync(denoify)) {
-                        fs.mkdir(denoify, error => {
-                            if (error) {
-                                console.error(error);
-                            }
-                        });
+                    const denoifyCacheDirPath = `${process.cwd()}/node_modules/.cache/denoify`;
+                    if (!fs.existsSync(denoifyCacheDirPath)) {
+                        fs.mkdir(denoifyCacheDirPath, () => undefined);
                     }
-                    const path = `${denoify}/config.js`;
-                    fs.writeFileSync(path, configFileType.config);
+                    const path = `${denoifyCacheDirPath}/config.js`;
+                    fs.writeFileSync(path, configFileType.configFileRawContent);
                     // cosmiconfig internally uses import-fresh to parse JS config
                     // import-fresh only support commonjs export, so we can use require
                     return parseAsDenoifyParams(require(path));

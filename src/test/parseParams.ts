@@ -17,16 +17,6 @@ import { assert } from "tsafe";
     const isConfigValid = (
         [
             {
-                type: "extensionless",
-                file: ".denoifyrc",
-                config: `
-out: 
-    ${configDummy.out}
-index:
-    "${configDummy.index}"
-        `
-            },
-            {
                 type: "yaml",
                 file: ".denoifyrc.yaml",
                 config: `
@@ -70,8 +60,8 @@ exports.name = {
     ).every(({ type, file, config }) => {
         const yaml = configuration().parseAsDenoifyConfig({
             type,
-            file,
-            config
+            configFileBasename: file,
+            configFileRawContent: config
         });
         return yaml !== undefined && yaml.out === configDummy.out && yaml.index === configDummy.index;
     });

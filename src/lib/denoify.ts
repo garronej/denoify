@@ -22,7 +22,7 @@ export async function denoify(params: {
 }) {
     process.chdir(params.projectPath ?? ".");
 
-    const srcDirPath = params.srcDirPath ? params.srcDirPath : ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath));
+    const srcDirPath = params.srcDirPath !== undefined ? params.srcDirPath : ["src", "lib"].find(sourceDirPath => fs.existsSync(sourceDirPath));
     console.log(`Denoify is reading sources files from ${srcDirPath}`);
 
     if (!srcDirPath) {
@@ -38,13 +38,14 @@ export async function denoify(params: {
     const denoDistPath = (() => {
         if (params.denoDistPath !== undefined) {
             return params.denoDistPath;
-        } else if (denoifyParams?.out !== undefined) {
-            return denoifyParams?.out;
-        } else if (tsconfigOutDir !== undefined) {
-            return path.join(path.dirname(tsconfigOutDir), `deno_${path.basename(tsconfigOutDir)}`);
-        } else {
-            throw new Error(`You should specify output directory by --out option or specify "outDir" in tsconfig.json`);
         }
+        if (denoifyParams?.out !== undefined) {
+            return denoifyParams?.out;
+        }
+        if (tsconfigOutDir !== undefined) {
+            return path.join(path.dirname(tsconfigOutDir), `deno_${path.basename(tsconfigOutDir)}`);
+        }
+        throw new Error(`You should specify output directory by --out option or specify "outDir" in tsconfig.json`);
     })();
 
     console.log(`Deno distribution will be generated at ${denoDistPath}`);

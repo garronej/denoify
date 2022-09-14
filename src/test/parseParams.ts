@@ -18,8 +18,8 @@ import { assert } from "tsafe";
         [
             {
                 type: "yaml",
-                file: ".denoifyrc.yaml",
-                config: `
+                configFileBasename: ".denoifyrc.yaml",
+                configFileRawContent: `
 out: 
     ${configDummy.out}
 index:
@@ -28,8 +28,8 @@ index:
             },
             {
                 type: "json",
-                file: ".denoifyrc.json",
-                config: `
+                configFileBasename: ".denoifyrc.json",
+                configFileRawContent: `
 {
   "out": "${configDummy.out}",
   "index": "${configDummy.index}"
@@ -38,8 +38,8 @@ index:
             },
             {
                 type: "js",
-                file: ".denoifyrc.js",
-                config: `
+                configFileBasename: ".denoifyrc.js",
+                configFileRawContent: `
 module.exports = {
   out: "${configDummy.out}",
   index: "${configDummy.index}"
@@ -48,8 +48,8 @@ module.exports = {
             },
             {
                 type: "js",
-                file: ".denoifyrc.js",
-                config: `
+                configFileBasename: ".denoifyrc.js",
+                configFileRawContent: `
 exports.name = {
   out: "${configDummy.out}",
   index: "${configDummy.index}"
@@ -57,11 +57,11 @@ exports.name = {
         `
             }
         ] as const
-    ).every(({ type, file, config }) => {
+    ).every(({ type, configFileBasename, configFileRawContent }) => {
         const yaml = configuration().parseAsDenoifyConfig({
             type,
-            configFileBasename: file,
-            configFileRawContent: config
+            configFileBasename,
+            configFileRawContent
         });
         return yaml !== undefined && yaml.out === configDummy.out && yaml.index === configDummy.index;
     });

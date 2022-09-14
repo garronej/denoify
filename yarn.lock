@@ -379,18 +379,7 @@ core-util-is@^1.0.2:
   resolved "https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.3.tgz"
   integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
 
-cosmiconfig@^7.0.0:
-  version "7.0.1"
-  resolved "https://registry.npmjs.org/cosmiconfig/-/cosmiconfig-7.0.1.tgz"
-  integrity sha512-a1YWNUV2HwGimB7dU2s1wUMurNKjpx60HxBB6xUM8Re+2s1g1IIfJvFR0/iCF+XHdE0GMTKTuLR32UQff4TEyQ==
-  dependencies:
-    "@types/parse-json" "^4.0.0"
-    import-fresh "^3.2.1"
-    parse-json "^5.0.0"
-    path-type "^4.0.0"
-    yaml "^1.10.0"
-
-cosmiconfig@^7.0.1:
+cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/cosmiconfig/-/cosmiconfig-7.0.1.tgz#714d756522cace867867ccb4474c5d01bbae5d6d"
   integrity sha512-a1YWNUV2HwGimB7dU2s1wUMurNKjpx60HxBB6xUM8Re+2s1g1IIfJvFR0/iCF+XHdE0GMTKTuLR32UQff4TEyQ==
@@ -456,10 +445,10 @@ esprima@^4.0.0, esprima@^4.0.1:
   resolved "https://registry.npmjs.org/esprima/-/esprima-4.0.1.tgz"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
 
-evt@^2.4.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.1.tgz#68beca2f7bd7eb755fdda5b263a80b934100e046"
-  integrity sha512-eo7sZcfDbiVWD5Aw6STkIEMmchYLdeGnJB6tVaM9AXZc7pViin3PmQhb6fgFIFHfl0re9zSEHtSjyu70Y7dRJg==
+evt@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.2.tgz#8f29f53a71609f1f5ad09ba313ad8cc0b9c63077"
+  integrity sha512-wPGX4eGgxh5NRff+1VkRfdTRaJA5vbr9rC9CRUIgprVDGDFtI0/vF9I0Yp3HAEGuFbUO978QAsaH6lIgpRCFAg==
   dependencies:
     minimal-polyfills "^2.2.2"
     run-exclusive "^2.2.16"
@@ -941,10 +930,15 @@ rxjs@^7.5.1:
   dependencies:
     tslib "^2.1.0"
 
-scripting-tools@^0.19.12, scripting-tools@^0.19.13:
+scripting-tools@^0.19.12:
   version "0.19.13"
   resolved "https://registry.npmjs.org/scripting-tools/-/scripting-tools-0.19.13.tgz"
   integrity sha512-d09H8vzSVa8p4XUTJqHZDbjKDyl5TG3SyPfNPUUkfyOwjwykStmfK8AXyWq7VRWjcgzTpkTiJ9uMk1NytMQY7w==
+
+scripting-tools@^0.19.14:
+  version "0.19.14"
+  resolved "https://registry.yarnpkg.com/scripting-tools/-/scripting-tools-0.19.14.tgz#d46cdea3dcf042b103b1712103b007e72c4901d5"
+  integrity sha512-KGRES70dEmcaCdpx3R88bLWmfA4mQ/EGikCQy0FGTZwx3y9F5yYkzEhwp02+ZTgpvF25JcNOhDBbOqL6z92kwg==
 
 semver-compare@^1.0.0:
   version "1.0.0"
@@ -1090,9 +1084,9 @@ type-fest@^0.21.3:
   integrity sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==
 
 typescript@^4.7.3:
-  version "4.7.4"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-4.7.4.tgz"
-  integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
+  version "4.8.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.3.tgz#d59344522c4bc464a65a730ac695007fdb66dd88"
+  integrity sha512-goMHfm00nWPa8UvR/CPSvykqf6dVV8x/dp0c5mFTMTIu0u0FlGWRioyy7Nn0PGAdHxpJZnuO/ut+PpQ8UiHAig==
 
 universal-user-agent@^6.0.0:
   version "6.0.0"

@@ -46,7 +46,7 @@
         "glob": "^7.1.6",
         "node-fetch": "^2.6.7",
         "path-depth": "^1.0.0",
-        "scripting-tools": "^0.19.13",
+        "scripting-tools": "^0.19.14",
         "url-join": "^4.0.1",
         "evt": "^2.4.2",
         "minimal-polyfills": "^2.2.2"

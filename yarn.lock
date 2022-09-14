@@ -930,10 +930,15 @@ rxjs@^7.5.1:
   dependencies:
     tslib "^2.1.0"
 
-scripting-tools@^0.19.12, scripting-tools@^0.19.13:
+scripting-tools@^0.19.12:
   version "0.19.13"
   resolved "https://registry.yarnpkg.com/scripting-tools/-/scripting-tools-0.19.13.tgz#836df7d9c2ec99aea91984d1d5b2bd110670afec"
   integrity sha512-d09H8vzSVa8p4XUTJqHZDbjKDyl5TG3SyPfNPUUkfyOwjwykStmfK8AXyWq7VRWjcgzTpkTiJ9uMk1NytMQY7w==
+
+scripting-tools@^0.19.14:
+  version "0.19.14"
+  resolved "https://registry.yarnpkg.com/scripting-tools/-/scripting-tools-0.19.14.tgz#d46cdea3dcf042b103b1712103b007e72c4901d5"
+  integrity sha512-KGRES70dEmcaCdpx3R88bLWmfA4mQ/EGikCQy0FGTZwx3y9F5yYkzEhwp02+ZTgpvF25JcNOhDBbOqL6z92kwg==
 
 semver-compare@^1.0.0:
   version "1.0.0"

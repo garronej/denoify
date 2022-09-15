@@ -153,15 +153,14 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                               "exports": Object.fromEntries(
                                   Object.entries(packageJsonParsed["exports"]).map(([path, obj]) => [
                                       path,
-                                      Object.fromEntries(
-                                          Object.entries(obj as Record<string, string>).map(([type, path]) => [
-                                              type,
-                                              "./" +
-                                                  getAfterMovedFilePath({
-                                                      "beforeMovedFilePath": path
-                                                  })
-                                          ])
-                                      )
+                                      typeof obj === "string"
+                                          ? `./${getAfterMovedFilePath({ "beforeMovedFilePath": obj })}`
+                                          : Object.fromEntries(
+                                                Object.entries(obj as Record<string, string>).map(([type, path]) => [
+                                                    type,
+                                                    `./${getAfterMovedFilePath({ "beforeMovedFilePath": path })}`
+                                                ])
+                                            )
                                   ])
                               )
                           }

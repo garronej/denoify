@@ -110,29 +110,24 @@ export function configuration() {
                 configFileBasename: file,
                 configFileRawContent: config
             };
-        } else if (file.endsWith(".cjs") || file.endsWith(".js")) {
+        }
+        if (file.endsWith(".cjs") || file.endsWith(".js")) {
             return {
                 type: "js",
                 configFileBasename: file,
                 configFileRawContent: config
             };
-        } else if (file.split(".").length === 2 || file.endsWith(".yaml") || file.endsWith(".yml")) {
+        }
+        if (file.split(".").length === 2 || file.endsWith(".yaml") || file.endsWith(".yml")) {
             return {
                 type: "yaml",
                 configFileBasename: file,
                 configFileRawContent: config
             };
-        } else {
-            return {
-                type: "absent"
-            };
         }
-    }
-
-    function createDirIfNotExists(dir: string) {
-        if (!fs.existsSync(dir)) {
-            fs.mkdir(dir, () => undefined);
-        }
+        return {
+            type: "absent"
+        };
     }
 
     return {
@@ -171,15 +166,12 @@ export function configuration() {
                     return parseAsDenoifyParams(configFileType.configFileBasename !== packageJson ? parsed : parsed.denoify);
                 }
                 case "js": {
-                    const cacheFolder = "node_modules/.cache";
-                    createDirIfNotExists(cacheFolder);
-
-                    const denoify = `${process.cwd()}/${cacheFolder}/denoify`;
-                    createDirIfNotExists(denoify);
-
-                    const denoifyCacheDirPath = `${denoify}/cacheDirPath`;
-                    createDirIfNotExists(denoifyCacheDirPath);
-
+                    const denoifyCacheDirPath = `node_modules/.cache/denoify/cacheDirPath`;
+                    if (!fs.existsSync(denoifyCacheDirPath)) {
+                        fs.mkdirSync(denoifyCacheDirPath, {
+                            "recursive": true
+                        });
+                    }
                     const path = `${denoifyCacheDirPath}/config.js`;
                     fs.writeFileSync(path, configFileType.configFileRawContent);
                     // cosmiconfig internally uses import-fresh to parse JS config

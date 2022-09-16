@@ -166,13 +166,13 @@ export function configuration() {
                     return parseAsDenoifyParams(configFileType.configFileBasename !== packageJson ? parsed : parsed.denoify);
                 }
                 case "js": {
-                    const denoifyCacheDirPath = `node_modules/.cache/denoify/cacheDirPath`;
+                    const denoifyCacheDirPath = "node_modules/.cache/denoify/cacheDirPath";
                     if (!fs.existsSync(denoifyCacheDirPath)) {
                         fs.mkdirSync(denoifyCacheDirPath, {
                             "recursive": true
                         });
                     }
-                    const path = `${denoifyCacheDirPath}/config.js`;
+                    const path = `${process.cwd()}/${denoifyCacheDirPath}/config.js`;
                     fs.writeFileSync(path, configFileType.configFileRawContent);
                     // cosmiconfig internally uses import-fresh to parse JS config
                     // import-fresh only support commonjs export, so we can use require

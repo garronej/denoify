@@ -43,19 +43,16 @@
         "commander": "^4.1.1",
         "comment-json": "^3.0.2",
         "cosmiconfig": "^7.0.1",
-        "evt": "^2.4.2",
+        "evt": "^2.4.4",
         "tsafe": "^1.1.1",
         "get-github-default-branch-name": "^0.0.4",
         "gitignore-parser": "0.0.2",
         "glob": "^7.1.6",
-        "minimal-polyfills": "^2.2.2",
         "node-fetch": "^2.6.7",
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.14",
-        "tsafe": "^1.0.1",
         "url-join": "^4.0.1",
-        "yaml": "^2.1.1"
-        "evt": "^2.4.4",
+        "yaml": "^2.1.1",
         "minimal-polyfills": "^2.2.2"
     },
     "keywords": [

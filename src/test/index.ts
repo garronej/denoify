@@ -7,6 +7,7 @@ runSequentially({
         "denoifyImportExportStatement",
         "denoifySingleFile",
         "getInstalledVersionPackageJson",
-        "replacer"
+        "replacer",
+        "parseParams"
     ]
 });

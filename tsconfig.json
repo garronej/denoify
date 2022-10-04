@@ -9,7 +9,6 @@
         "newLine": "LF",
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "incremental": true,
         "strict": true
     },
     "filesGlob": ["src/**/*"],

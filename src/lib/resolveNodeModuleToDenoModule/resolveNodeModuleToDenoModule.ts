@@ -15,6 +15,7 @@ import { getLatestTag } from "../../tools/githubTags";
 import { isInsideOrIsDir } from "../../tools/isInsideOrIsDir";
 import { knownPorts } from "./knownPorts";
 import { assert } from "tsafe/assert";
+import { exclude } from "tsafe/exclude";
 
 type GetValidImportUrl = (
     params:
@@ -400,39 +401,41 @@ export const { getValidImportUrlFactory } = (() => {
             return path.normalize(toPosix(denoifyOut));
         });
 
-        async function getDenoifyOutDir(params: {
-            //TODO: Through out the codebase we name "branch" what are better described by tags.
-            //Maybe we should use the consecrated therm "targetCommitish"
-            gitTag: string;
-            moduleAddress: ModuleAddress.GitHubRepo;
-        }) {
-            const { gitTag, moduleAddress } = params;
+        const getDenoifyOutDir = addCache(
+            async (params: {
+                //TODO: Through out the codebase we name "branch" what are better described by tags.
+                //Maybe we should use the consecrated therm "targetCommitish"
+                gitTag: string;
+                moduleAddress: ModuleAddress.GitHubRepo;
+            }) => {
+                const { gitTag, moduleAddress } = params;
 
-            explicitely_specified: {
-                const denoifyOutDir = await getExplicitDenoifyOutDir({ moduleAddress, gitTag });
+                explicitely_specified: {
+                    const denoifyOutDir = await getExplicitDenoifyOutDir({ moduleAddress, gitTag });
 
-                if (denoifyOutDir === undefined) {
-                    break explicitely_specified;
+                    if (denoifyOutDir === undefined) {
+                        break explicitely_specified;
+                    }
+
+                    return denoifyOutDir;
                 }
 
-                return denoifyOutDir;
-            }
+                default_based_on_tsconfig_outDir: {
+                    const tsconfigOutDir = await getTsconfigOutDir({ moduleAddress, gitTag });
 
-            default_based_on_tsconfig_outDir: {
-                const tsconfigOutDir = await getTsconfigOutDir({ moduleAddress, gitTag });
+                    if (tsconfigOutDir === undefined) {
+                        break default_based_on_tsconfig_outDir;
+                    }
 
-                if (tsconfigOutDir === undefined) {
-                    break default_based_on_tsconfig_outDir;
+                    return path.join(
+                        path.dirname(tsconfigOutDir), // .
+                        `deno_${path.basename(tsconfigOutDir)}` //deno_dist
+                    ); // deno_dist
                 }
 
-                return path.join(
-                    path.dirname(tsconfigOutDir), // .
-                    `deno_${path.basename(tsconfigOutDir)}` //deno_dist
-                ); // deno_dist
+                return undefined;
             }
-
-            return undefined;
-        }
+        );
 
         return { getDenoifyOutDir };
     })();
@@ -498,6 +501,9 @@ export const { getValidImportUrlFactory } = (() => {
 
         const { branchForVersion, versionFallbackWarning, indexUrl } = versionResolutionResult;
 
+        const denoifyOutDir =
+            moduleAddress.type !== "GITHUB REPO" ? undefined : await getDenoifyOutDir({ moduleAddress, "gitTag": branchForVersion });
+
         const getValidImportUrl = addCache(
             id<GetValidImportUrl>(async params => {
                 if (params.target === "DEFAULT EXPORT") {
@@ -516,8 +522,6 @@ export const { getValidImportUrlFactory } = (() => {
                             case "GITHUB-RAW URL":
                                 return `${specificImportPath}.ts`;
                             case "GITHUB REPO":
-                                const denoifyOutDir = await getDenoifyOutDir({ moduleAddress, "gitTag": branchForVersion });
-
                                 //NOTE: resolveVersion was successful so we can assert that:
                                 assert(denoifyOutDir !== undefined);
 
@@ -529,7 +533,7 @@ export const { getValidImportUrlFactory } = (() => {
                                         tsconfigOutDir !== undefined &&
                                             isInsideOrIsDir({ "dirPath": tsconfigOutDir, "fileOrDirPath": specificImportPath })
                                             ? path.relative(
-                                                  tsconfigOutDir,
+                                                  tsconfigOutDir, // dist
                                                   specificImportPath // dist/tools/typeSafety
                                               ) //  tools/typeSafety
                                             : specificImportPath // tools/typeSafety ( when using enable short path )
@@ -565,10 +569,66 @@ export const { getValidImportUrlFactory } = (() => {
             })
         );
 
+        const rawGitHubUserContentUrlToDenoLandXUrl = addCache(
+            async (params: { validRawGitHubUserContentUrl: string; denoifyOutDir: string }): Promise<string> => {
+                const { validRawGitHubUserContentUrl, denoifyOutDir } = params;
+
+                // https://raw.githubusercontent.com/garronej/tsafe/v0.10.1/deno_dist/assert.ts;
+                // https://deno.land/x/tsafe@v0.10.1/assert.ts
+
+                const regExpMatchArray = validRawGitHubUserContentUrl.match(
+                    /^https:\/\/raw\.githubusercontent\.com\/[^\/]+\/([^\/]+)+\/([^\/]+)\/(.*)$/
+                );
+
+                assert(regExpMatchArray !== null);
+
+                const [, repoName, version, fullPathToFile] = regExpMatchArray;
+
+                for (const moduleName of [repoName.replace(/-/g, "_"), repoName.replace(/-/g, "")]) {
+                    const buildDenoLandXUrl = (pathToFile: string) => urlJoin("https://deno.land/x", `${moduleName}@${version}`, toPosix(pathToFile));
+
+                    for (const pathToFile of [
+                        isInsideOrIsDir({ "dirPath": denoifyOutDir, "fileOrDirPath": fullPathToFile })
+                            ? path.relative(denoifyOutDir, fullPathToFile)
+                            : undefined,
+                        fullPathToFile
+                    ].filter(exclude(undefined))) {
+                        const denoLandXUrl = buildDenoLandXUrl(pathToFile);
+
+                        const fetchResponse = await fetch(denoLandXUrl, { "timeout": 4000 });
+
+                        if (fetchResponse.status === 404 || fetchResponse.status === 400) {
+                            continue;
+                        }
+
+                        const [denoLandXRawFileContent, gitHubUserContentFileContent] = await Promise.all([
+                            fetchResponse.text(),
+                            fetch(validRawGitHubUserContentUrl).then(resp => resp.text())
+                        ]);
+
+                        if (denoLandXRawFileContent !== gitHubUserContentFileContent) {
+                            continue;
+                        }
+
+                        return denoLandXUrl;
+                    }
+                }
+
+                return validRawGitHubUserContentUrl;
+            }
+        );
+
         return {
             "couldConnect": true,
             versionFallbackWarning,
-            getValidImportUrl
+            "getValidImportUrl":
+                moduleAddress.type !== "GITHUB REPO"
+                    ? getValidImportUrl
+                    : async params =>
+                          rawGitHubUserContentUrlToDenoLandXUrl({
+                              "validRawGitHubUserContentUrl": await getValidImportUrl(params),
+                              "denoifyOutDir": (assert(denoifyOutDir !== undefined), denoifyOutDir)
+                          })
         };
     });
 

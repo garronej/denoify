@@ -78,7 +78,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     };
 
     beforeMovedFilePaths
-        .filter(beforeMovedFilePath => /\.js\.map$/.test(beforeMovedFilePath))
+        .filter(beforeMovedFilePath => /\.c?js\.map$/.test(beforeMovedFilePath))
         .forEach(beforeMovedSourceMapFilePath => {
             const afterMovedSourceMapFilePath = getAfterMovedFilePath({
                 "beforeMovedFilePath": beforeMovedSourceMapFilePath
@@ -151,16 +151,18 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     ...("exports" in packageJsonParsed
                         ? {
                               "exports": Object.fromEntries(
-                                  Object.entries(packageJsonParsed["exports"]).map(([path, obj]) => [
+                                  Object.entries(packageJsonParsed["exports"]).map(([path, pathOrObj]) => [
                                       path,
-                                      typeof obj === "string"
-                                          ? `./${getAfterMovedFilePath({ "beforeMovedFilePath": obj })}`
-                                          : Object.fromEntries(
-                                                Object.entries(obj as Record<string, string>).map(([type, path]) => [
-                                                    type,
-                                                    `./${getAfterMovedFilePath({ "beforeMovedFilePath": path })}`
-                                                ])
-                                            )
+                                      (() => {
+                                          const fRec = <T extends string | Record<string, unknown>>(pathOrObj: T): T =>
+                                              typeof pathOrObj === "string"
+                                                  ? `./${getAfterMovedFilePath({ "beforeMovedFilePath": pathOrObj })}`
+                                                  : (Object.fromEntries(
+                                                        Object.entries(pathOrObj).map(([type, pathOrObj]) => [type, fRec(pathOrObj as any)])
+                                                    ) as any);
+
+                                          return fRec(pathOrObj as any);
+                                      })()
                                   ])
                               )
                           }

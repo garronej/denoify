@@ -542,9 +542,6 @@ export const { getValidImportUrlFactory } = (() => {
                     return buildUrl(branchForVersion, pathToFile);
                 })();
 
-                if (url === undefined) {
-                }
-
                 walk: {
                     if (await is404(url)) {
                         break walk;

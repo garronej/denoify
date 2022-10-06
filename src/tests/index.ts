@@ -1,6 +1,7 @@
 import testParseParams from "./parseParams";
+import testReplacer from "./replacer";
 
-const tests: ReadonlyArray<readonly [() => void, "only"?]> = [[testParseParams]];
+const tests: ReadonlyArray<readonly [() => void, "only"?]> = [[testParseParams], [testReplacer, "only"]];
 
 const selectedTests = tests.filter(([_, only]) => only);
 

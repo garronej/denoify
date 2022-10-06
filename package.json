@@ -18,7 +18,9 @@
         "prettier": "prettier '**/*.{ts,tsx,json,md}'",
         "format": "yarn prettier --write",
         "format:check": "yarn prettier --list-different",
-        "link_in_test_app": "node dist/bin/link_in_test_app.js"
+        "link_in_test_app": "node dist/bin/link_in_test_app.js",
+        "vitest": "vitest",
+        "coverage": "vitest run --coverage"
     },
     "bin": {
         "denoify": "dist/bin/denoify.js",
@@ -77,6 +79,7 @@
         "js-yaml": "^3.13.1",
         "lint-staged": "^11.0.0",
         "prettier": "^2.3.0",
-        "typescript": "^4.7.3"
+        "typescript": "^4.7.3",
+        "vitest": "^0.23.4"
     }
 }

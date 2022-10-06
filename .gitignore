@@ -39,6 +39,7 @@ jspm_packages
 .vscode
 
 .DS_Store
+*/.DS_Store
 
 /dist
 /.yarn_home

@@ -6,6 +6,7 @@ export default defineConfig({
         "globals": true,
         "include": ["src/tests/index.ts"],
         "watch": false,
-        "outputFile": "./vitest-report.json"
+        "outputFile": "./vitest-report.json",
+        "testTimeout": 43600
     }
 });

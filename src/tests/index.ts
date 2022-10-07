@@ -1,7 +1,8 @@
 import testParseParams from "./parseParams";
 import testReplacer from "./replacer";
+import testGetInstalledVersionPackageJson from "./getInstalledVersionPackageJson";
 
-const tests: ReadonlyArray<readonly [() => void, "only"?]> = [[testParseParams], [testReplacer, "only"]];
+const tests: ReadonlyArray<readonly [() => void, "only"?]> = [[testParseParams], [testReplacer], [testGetInstalledVersionPackageJson, "only"]];
 
 const selectedTests = tests.filter(([_, only]) => only);
 

@@ -5,7 +5,7 @@ import * as path from "path";
 const testReplacer = () =>
     describe("replacer for changing import/export statement from node-compatible to deno-compatible import", () => {
         const { consumeExecutableReplacer } = consumeExecutableReplacerFactory({
-            "executableFilePath": path.join(__dirname, "../..", "dist", "bin", "replacer", "index.js")
+            "executableFilePath": path.join(__dirname, "..", "..", "dist", "bin", "replacer", "index.js")
         });
 
         it("should change the import specifier", async () => {

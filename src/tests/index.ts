@@ -4,8 +4,9 @@ import testGetInstalledVersionPackageJson from "./getInstalledVersionPackageJson
 import testParsedImportExportStatementTypes from "./types/parsedImportExportStatement";
 import { Tests } from "./shared";
 import testGetValidImportUrl from "./resolveNodeModuleToDenoModule/getValidImportUrl";
-import testReadConfigFile from "./configFile";
+import testParseAndReadConfigFile from "./configFile";
 import testResolveNodeModuleToDenoModule from "./resolveNodeModuleToDenoModule/resolveNodeModuleToDenoModule";
+import testDenoifyImportExportStatement from "./denoifyImportExportStatement";
 
 const tests: Tests = [
     [testParseParams],
@@ -13,8 +14,9 @@ const tests: Tests = [
     [testGetInstalledVersionPackageJson],
     [testParsedImportExportStatementTypes],
     [testGetValidImportUrl],
-    [testReadConfigFile],
-    [testResolveNodeModuleToDenoModule, "only"]
+    [testParseAndReadConfigFile],
+    [testResolveNodeModuleToDenoModule],
+    [testDenoifyImportExportStatement, "only"]
 ];
 
 const selectedTests = tests.filter(([_, only]) => only);

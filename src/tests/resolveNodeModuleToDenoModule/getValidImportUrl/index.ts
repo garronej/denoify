@@ -1,8 +1,9 @@
 import { Tests } from "../../shared";
 import test1 from "./test1";
+import test2 from "./test2";
 
 const testGetValidImportUrl = () => {
-    const tests: Tests = [[test1]];
+    const tests: Tests = [[test1], [test2, "only"]];
 
     const selectedTests = tests.filter(([_, only]) => only);
 

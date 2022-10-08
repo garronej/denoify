@@ -29,6 +29,27 @@ const test4 = () =>
             );
         });
 
+        it("should get the valid for leac from github repo", async () => {
+            const moduleAddress: ModuleAddress.GitHubRepo = {
+                "type": "GITHUB REPO",
+                "userOrOrg": "mxxii",
+                "repositoryName": "leac",
+                "branch": undefined
+            };
+            const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
+                moduleAddress,
+                "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
+                "version": "0.6.0"
+            });
+
+            expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+
+            const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+
+            expect(versionFallbackWarning).toBeUndefined();
+            expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe("https://deno.land/x/leac@v0.6.0/mod.ts");
+        });
+
         it("should get the valid for my_dummy_npm_and_deno_module from github raw url", async () => {
             const moduleAddress: ModuleAddress.GitHubRawUrl = {
                 "type": "GITHUB-RAW URL",

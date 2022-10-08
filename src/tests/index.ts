@@ -7,6 +7,7 @@ import testGetValidImportUrl from "./resolveNodeModuleToDenoModule/getValidImpor
 import testParseAndReadConfigFile from "./configFile";
 import testResolveNodeModuleToDenoModule from "./resolveNodeModuleToDenoModule/resolveNodeModuleToDenoModule";
 import testDenoifyImportExportStatement from "./denoifyImportExportStatement";
+import testDenoifySingleFile from "./denoifySingleFile";
 
 const tests: Tests = [
     [testParseParams],
@@ -16,7 +17,8 @@ const tests: Tests = [
     [testGetValidImportUrl],
     [testParseAndReadConfigFile],
     [testResolveNodeModuleToDenoModule],
-    [testDenoifyImportExportStatement, "only"]
+    [testDenoifyImportExportStatement],
+    [testDenoifySingleFile, "only"]
 ];
 
 const selectedTests = tests.filter(([_, only]) => only);

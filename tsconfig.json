@@ -9,8 +9,9 @@
         "newLine": "LF",
         "noUnusedLocals": true,
         "noUnusedParameters": true,
-        "strict": true
+        "strict": true,
+        "skipLibCheck": true
     },
-    "filesGlob": ["src/**/*"],
+    "include": ["src"],
     "exclude": ["node_modules", "res/**/*", "dist/**/*"]
 }

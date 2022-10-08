@@ -223,6 +223,16 @@ export function resolveNodeModuleToDenoModuleFactory(
     return { resolveNodeModuleToDenoModule };
 }
 
+export type ValidImportUrlResult =
+    | {
+          couldConnect: false;
+      }
+    | {
+          couldConnect: true;
+          versionFallbackWarning: string | undefined;
+          getValidImportUrl: GetValidImportUrl;
+      };
+
 /** Exported only for tests purpose */
 export const { getValidImportUrlFactory } = (() => {
     type Params = {
@@ -236,16 +246,6 @@ export const { getValidImportUrlFactory } = (() => {
               version: string;
           }
     );
-
-    type Result =
-        | {
-              couldConnect: false;
-          }
-        | {
-              couldConnect: true;
-              versionFallbackWarning: string | undefined;
-              getValidImportUrl: GetValidImportUrl;
-          };
 
     /**
      * Perform no check, just synchronously assemble the url
@@ -489,7 +489,7 @@ export const { getValidImportUrlFactory } = (() => {
         return undefined;
     }
 
-    const getValidImportUrlFactory = addCache(async (params: Params): Promise<Result> => {
+    const getValidImportUrlFactory = addCache(async (params: Params): Promise<ValidImportUrlResult> => {
         const { moduleAddress } = params;
 
         const { buildUrl } = buildUrlFactory({ moduleAddress });

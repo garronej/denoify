@@ -3,7 +3,7 @@ import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoMo
 import { getThirdPartyDenoModuleInfos } from "../../../lib/getThirdPartyDenoModuleInfos";
 import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
 
-const test2 = () => {
+const test2 = () =>
     describe("test 2", () => {
         it("should fallback to available latest version and get the content of valid url file path for evt when the latest version specified is not available", async () => {
             const moduleAddress: ModuleAddress.GitHubRepo = {
@@ -65,6 +65,4 @@ const test2 = () => {
             console.log("PASS");
         });
     });
-};
-
 export default test2;

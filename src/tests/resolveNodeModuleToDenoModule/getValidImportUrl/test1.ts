@@ -2,6 +2,7 @@ import { ModuleAddress } from "../../../lib/types/ModuleAddress";
 import { same } from "evt/tools/inDepth";
 import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
 import { getLatestTag } from "../../../tools/githubTags";
+import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
 
 const test1 = () =>
     describe("test 1", () => {
@@ -24,7 +25,8 @@ const test1 = () =>
             expect(results).toHaveLength(prefixes.length);
             expect(results.every(result => result)).toBe(true);
         });
-        it("should get content of valid url file path for ts-md5", async () => {
+
+        it("should fallback to available latest version and get the content of valid url file path for ts-md5 when the latest version specified is not available", async () => {
             const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
                 "moduleAddress": moduleAddress,
                 "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
@@ -33,14 +35,7 @@ const test1 = () =>
 
             expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
 
-            const { versionFallbackWarning, getValidImportUrl } = (() => {
-                switch (getValidImportUrlFactoryResult.couldConnect) {
-                    case false:
-                        throw new Error("couldConnect of getValidImportUrlFactoryResult cannot be false");
-                    case true:
-                        return getValidImportUrlFactoryResult;
-                }
-            })();
+            const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
 
             expect(typeof versionFallbackWarning).toBe("string");
 
@@ -66,6 +61,28 @@ const test1 = () =>
             );
             expect(results).toHaveLength(4);
             expect(results.every(result => result)).toBe(true);
+        });
+
+        it("should get the latest version and its content of valid url file path for ts-md5 when the latest version specified is available", async () => {
+            const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
+                "moduleAddress": moduleAddress,
+                "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
+                "version": "1.2.7"
+            });
+
+            expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+
+            const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+
+            expect(versionFallbackWarning).toBeUndefined();
+
+            expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(
+                "https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/deno_dist/mod.ts"
+            );
+
+            expect(await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "dist/parallel_hasher" })).toBe(
+                "https://raw.githubusercontent.com/garronej/ts-md5/v1.2.7/deno_dist/parallel_hasher.ts"
+            );
         });
     });
 

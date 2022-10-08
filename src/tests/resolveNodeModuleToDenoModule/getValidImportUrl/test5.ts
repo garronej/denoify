@@ -5,8 +5,8 @@ import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
 
 const test5 = () =>
     describe("test 5 (deno std)", () => {
-        it("should get the valid url file path for deno std", async () => {
-            const fileModuleAddress: ModuleAddress.DenoLandUrl = {
+        it("should get the valid url for deno std fs", async () => {
+            const moduleAddress: ModuleAddress.DenoLandUrl = {
                 "type": "DENO.LAND URL",
                 "isStd": true,
                 "baseUrlWithoutBranch": "https://deno.land/std",
@@ -14,27 +14,27 @@ const test5 = () =>
                 "pathToIndex": "node/fs.ts"
             };
 
-            expect(ModuleAddress.parse("https://deno.land/std/node/fs.ts")).toStrictEqual(fileModuleAddress);
-            expect(ModuleAddress.parse("https://deno.land/std@0.153.0/node/fs.ts")).toStrictEqual({ ...fileModuleAddress, "branch": "0.153.0" });
+            expect(ModuleAddress.parse("https://deno.land/std/node/fs.ts")).toStrictEqual(moduleAddress);
+            expect(ModuleAddress.parse("https://deno.land/std@0.153.0/node/fs.ts")).toStrictEqual({ ...moduleAddress, "branch": "0.153.0" });
 
-            const fileGetValidImportUrlFactoryResult = await getValidImportUrlFactory({
-                moduleAddress: fileModuleAddress,
+            const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
+                moduleAddress,
                 "desc": "NOT LISTED AS A DEPENDENCY (PROBABLY NODE BUILTIN)"
             });
 
-            expect(fileGetValidImportUrlFactoryResult.couldConnect).toBe(true);
+            expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
 
-            const parsedFileGetValidImportUrlFactoryResult = parseGetValidImportUrlResultAsCouldConnect(fileGetValidImportUrlFactoryResult);
+            const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
 
-            expect(parsedFileGetValidImportUrlFactoryResult.versionFallbackWarning).toBeUndefined();
-            expect(await parsedFileGetValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(
-                `https://deno.land/std@${await getCurrentStdVersion()}/node/fs.ts`
+            expect(versionFallbackWarning).toBeUndefined();
+            expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(`https://deno.land/std@${await getCurrentStdVersion()}/node/fs.ts`);
+            expect(await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "promises" })).toBe(
+                `https://deno.land/std@${await getCurrentStdVersion()}/node/fs/promises.ts`
             );
-            expect(
-                await parsedFileGetValidImportUrlFactoryResult.getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "promises" })
-            ).toBe(`https://deno.land/std@${await getCurrentStdVersion()}/node/fs/promises.ts`);
+        });
 
-            const eventModuleAddress: ModuleAddress.DenoLandUrl = {
+        it("should get the valid url for deno std event", async () => {
+            const moduleAddress: ModuleAddress.DenoLandUrl = {
                 "type": "DENO.LAND URL",
                 "isStd": true,
                 "baseUrlWithoutBranch": "https://deno.land/std",
@@ -42,24 +42,26 @@ const test5 = () =>
                 "pathToIndex": "node/events.ts"
             };
 
-            expect(ModuleAddress.parse("https://deno.land/std/node/events.ts")).toStrictEqual(eventModuleAddress);
-            expect(ModuleAddress.parse("https://deno.land/std@0.153.0/node/events.ts")).toStrictEqual({ ...eventModuleAddress, "branch": "0.153.0" });
+            expect(ModuleAddress.parse("https://deno.land/std/node/events.ts")).toStrictEqual(moduleAddress);
+            expect(ModuleAddress.parse("https://deno.land/std@0.153.0/node/events.ts")).toStrictEqual({ ...moduleAddress, "branch": "0.153.0" });
 
-            const eventGetValidImportUrlFactoryResult = await getValidImportUrlFactory({
-                moduleAddress: eventModuleAddress,
+            const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
+                moduleAddress,
                 "desc": "NOT LISTED AS A DEPENDENCY (PROBABLY NODE BUILTIN)"
             });
 
-            assert(eventGetValidImportUrlFactoryResult.couldConnect === true);
+            assert(getValidImportUrlFactoryResult.couldConnect === true);
 
-            const parsedEventGetValidImportUrlFactoryResult = parseGetValidImportUrlResultAsCouldConnect(eventGetValidImportUrlFactoryResult);
+            const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
 
-            expect(parsedEventGetValidImportUrlFactoryResult.versionFallbackWarning).toBeUndefined();
-            expect(await parsedEventGetValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(
+            expect(versionFallbackWarning).toBeUndefined();
+            expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(
                 `https://deno.land/std@${await getCurrentStdVersion()}/node/events.ts`
             );
+        });
 
-            const bufferModuleAddress: ModuleAddress.DenoLandUrl = {
+        it("should get the valid url file path for deno std buffer", async () => {
+            const moduleAddress: ModuleAddress.DenoLandUrl = {
                 "type": "DENO.LAND URL",
                 "isStd": true,
                 "baseUrlWithoutBranch": "https://deno.land/std",
@@ -67,11 +69,11 @@ const test5 = () =>
                 "pathToIndex": "node/buffer.ts"
             };
 
-            expect(ModuleAddress.parse("https://deno.land/std/node/buffer.ts")).toStrictEqual(bufferModuleAddress);
-            expect(ModuleAddress.parse("https://deno.land/std@master/node/buffer.ts")).toStrictEqual({ ...bufferModuleAddress, "branch": "master" });
+            expect(ModuleAddress.parse("https://deno.land/std/node/buffer.ts")).toStrictEqual(moduleAddress);
+            expect(ModuleAddress.parse("https://deno.land/std@master/node/buffer.ts")).toStrictEqual({ ...moduleAddress, "branch": "master" });
 
-            const bufferGetValidImportUrlFactoryResult = await getValidImportUrlFactory({
-                moduleAddress: bufferModuleAddress,
+            const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
+                moduleAddress,
                 "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
                 "version": "0.55.0"
                 //https://deno.land/std/node/buffer.ts we voluntarily take a version that exist
@@ -79,9 +81,9 @@ const test5 = () =>
                 //to ensure that it does not resolve.
             });
 
-            expect(bufferGetValidImportUrlFactoryResult.couldConnect).toBe(true);
+            expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
 
-            const parsedBufferGetValidImportUrlFactoryResult = parseGetValidImportUrlResultAsCouldConnect(bufferGetValidImportUrlFactoryResult);
+            const parsedBufferGetValidImportUrlFactoryResult = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
 
             expect(parsedBufferGetValidImportUrlFactoryResult.versionFallbackWarning).toBeUndefined();
             expect(await parsedBufferGetValidImportUrlFactoryResult.getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(

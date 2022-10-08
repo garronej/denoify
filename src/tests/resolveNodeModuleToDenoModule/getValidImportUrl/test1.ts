@@ -26,7 +26,7 @@ const test1 = () =>
             expect(results.every(result => result)).toBe(true);
         });
 
-        it("should fallback to available latest version and get the content of valid url file path for ts-md5 when the latest version specified is not available", async () => {
+        it("should fallback to available latest version and get the valid url file path for ts-md5 when the latest version specified is not available", async () => {
             const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
                 "moduleAddress": moduleAddress,
                 "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",
@@ -63,7 +63,7 @@ const test1 = () =>
             expect(results.every(result => result)).toBe(true);
         });
 
-        it("should get the latest version and its content of valid url file path for ts-md5 when the latest version specified is available", async () => {
+        it("should get the latest version and its valid url file path for ts-md5 when the latest version specified is available", async () => {
             const getValidImportUrlFactoryResult = await getValidImportUrlFactory({
                 "moduleAddress": moduleAddress,
                 "desc": "MATCH VERSION INSTALLED IN NODE_MODULES",

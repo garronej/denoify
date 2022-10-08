@@ -5,8 +5,8 @@ import { getLatestTag } from "../../../tools/githubTags";
 import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
 
 const test3 = () =>
-    describe("test 3", () => {
-        it("should fallback to available latest version and get the content of valid url file path for js-yaml when the latest version specified is not available", async () => {
+    describe("test 3 (deno non std)", () => {
+        it("should fallback to available latest version and get the valid url file path for js-yaml when the latest version specified is not available", async () => {
             const moduleAddress: ModuleAddress.DenoLandUrl = {
                 "type": "DENO.LAND URL",
                 "isStd": false,
@@ -34,7 +34,7 @@ const test3 = () =>
             expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(`https://deno.land/x/js_yaml_port@${latestTag}/js-yaml.js`);
         });
 
-        it("should get the latest version and its content of valid url file path for js-yaml when the latest version specified is available", async () => {
+        it("should get the latest version and its valid url file path for js-yaml when the latest version specified is available", async () => {
             const moduleAddress: ModuleAddress.DenoLandUrl = {
                 "type": "DENO.LAND URL",
                 "isStd": false,

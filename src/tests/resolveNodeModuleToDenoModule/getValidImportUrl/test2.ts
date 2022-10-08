@@ -5,7 +5,7 @@ import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
 
 const test2 = () =>
     describe("test 2", () => {
-        it("should fallback to available latest version and get the content of valid url file path for evt when the latest version specified is not available", async () => {
+        it("should fallback to available latest version and get the valid url file path for evt when the latest version specified is not available", async () => {
             const moduleAddress: ModuleAddress.GitHubRepo = {
                 "type": "GITHUB REPO",
                 "userOrOrg": "garronej",
@@ -38,7 +38,7 @@ const test2 = () =>
             );
         });
 
-        it("should get the latest version and its content of valid url file path for evt when the latest version specified is available", async () => {
+        it("should get the latest version and its valid url file path for evt when the latest version specified is available", async () => {
             const expectedScheme: ModuleAddress.GitHubRepo = {
                 "type": "GITHUB REPO",
                 "userOrOrg": "garronej",

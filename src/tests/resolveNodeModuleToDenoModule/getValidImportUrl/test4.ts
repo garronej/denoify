@@ -4,7 +4,7 @@ import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
 
 const test4 = () =>
     describe("test 4", () => {
-        it("should get the valid content for my_dummy_npm_and_deno_module from github repo", async () => {
+        it("should get the valid for my_dummy_npm_and_deno_module from github repo", async () => {
             const moduleAddress: ModuleAddress.GitHubRepo = {
                 "type": "GITHUB REPO",
                 "userOrOrg": "garronej",
@@ -29,7 +29,7 @@ const test4 = () =>
             );
         });
 
-        it("should get the valid content for my_dummy_npm_and_deno_module from github raw url", async () => {
+        it("should get the valid for my_dummy_npm_and_deno_module from github raw url", async () => {
             const moduleAddress: ModuleAddress.GitHubRawUrl = {
                 "type": "GITHUB-RAW URL",
                 "baseUrlWithoutBranch": "https://raw.githubusercontent.com/garronej/my_dummy_npm_and_deno_module",

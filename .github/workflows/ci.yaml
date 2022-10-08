@@ -6,8 +6,6 @@ on:
     pull_request:
         branches:
             - main
-        env:
-            IS_CI: true
 
 jobs:
     test_format:
@@ -32,6 +30,8 @@ jobs:
                 node: ["18", "17", "16", "14"]
                 os: [windows-latest, ubuntu-latest]
         name: Test with Node v${{ matrix.node }} on ${{ matrix.os }}
+        env:
+            IS_CI: true
         steps:
             - name: Tell if project is using npm or yarn
               id: step1

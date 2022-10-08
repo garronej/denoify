@@ -1,9 +1,9 @@
-import { ModuleAddress } from "../../../lib/types/ModuleAddress";
-import { getValidImportUrlFactory } from "../../../lib/resolveNodeModuleToDenoModule";
-import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
+import { getValidImportUrlFactory } from "../lib/resolveNodeModuleToDenoModule";
+import { ModuleAddress } from "../lib/types/ModuleAddress";
+import { parseGetValidImportUrlResultAsCouldConnect } from "./resolveNodeModuleToDenoModule/getValidImportUrl/shared";
 
-const test6 = () =>
-    describe("test 6 (config file)", () => {
+const testReadConfigFile = () =>
+    describe("get config file and parse its content", () => {
         it("should get the url of my_dummy_npm_and_deno_module_test_config_file without specifying out", async () => {
             const userOrOrg = "garronej";
             const repositoryName = "my_dummy_npm_and_deno_module_test_config_file";
@@ -92,4 +92,4 @@ const test6 = () =>
         });
     });
 
-export default test6;
+export default testReadConfigFile;

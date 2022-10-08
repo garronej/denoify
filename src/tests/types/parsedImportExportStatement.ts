@@ -81,7 +81,7 @@ const testParsedImportExportStatementTypes = () =>
             });
             expect(ParsedImportExportStatement.stringify(parsedImportExportStatement5)).toBe(importStatement5);
 
-            const importStatement6 = 'import ("xxx")';
+            const importStatement6 = 'import("xxx")';
             const parsedImportExportStatement6 = ParsedImportExportStatement.parse(` ${importStatement6}`);
             expect(parsedImportExportStatement6).toStrictEqual({
                 "isAsyncImport": true,
@@ -90,8 +90,7 @@ const testParsedImportExportStatementTypes = () =>
                     "type": "DEPENDENCY",
                     "nodeModuleName": "xxx",
                     "specificImportPath": undefined
-                },
-                "target": undefined
+                }
             });
             expect(ParsedImportExportStatement.stringify(parsedImportExportStatement6)).toBe(importStatement6);
 

@@ -10,7 +10,7 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "strict": true,
-        "types": ["vitest/globals"]
+        "skipLibCheck": true
     },
     "filesGlob": ["src/**/*"],
     "exclude": ["node_modules", "res/**/*", "dist/**/*"]

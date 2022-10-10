@@ -18,6 +18,8 @@
   <a href="https://www.denoify.land">Home</a>
   -
   <a href="https://docs.denoify.land">Documentation</a>
+  -
+  <a href="https://github.com/garronej/my_dummy_npm_and_deno_module">Demo repo</a>
 </p>
 
 > IMPORTANT: [Deno will soon support NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  

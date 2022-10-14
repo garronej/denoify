@@ -7,7 +7,6 @@ import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel";
 import { getIsDryRun } from "./lib/getIsDryRun";
 import * as fs from "fs";
 import * as commentJson from "comment-json";
-import { removeFromGitignore } from "../tools/removeFromGitignore";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
 
 //TODO: Test on windows!
@@ -207,31 +206,6 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
         }
 
         fs.writeFileSync("package.json", Buffer.from(newPackageJsonRaw, "utf8"));
-    }
-
-    walk: {
-        const denoDistDirPath = path.join(path.dirname(tsconfigOutDir), `deno_${path.basename(tsconfigOutDir)}`); // ./deno_dist
-
-        if (!fs.existsSync(denoDistDirPath)) {
-            break walk;
-        }
-
-        const { fixedGitignoreRaw } = removeFromGitignore({
-            "pathToTargetModule": ".",
-            "fileOrDirPathsToAccept": [denoDistDirPath]
-        });
-
-        if (!fixedGitignoreRaw) {
-            break walk;
-        }
-
-        console.log(`\n${isDryRun ? "(dry)" : ""} .gitignore:\n\n${fixedGitignoreRaw}`);
-
-        if (isDryRun) {
-            break walk;
-        }
-
-        fs.writeFileSync(".gitignore", Buffer.from(fixedGitignoreRaw, "utf8"));
     }
 }
 

@@ -1,37 +1,96 @@
 #!/usr/bin/env node
 
-import * as path from "path";
+import { join as pathJoin, normalize as pathNormalize, dirname as pathDirname, basename as pathBasename } from "path";
 import { getIsDryRun } from "./lib/getIsDryRun";
 import * as fs from "fs";
 import * as commentJson from "comment-json";
 import { removeFromGitignore } from "../tools/removeFromGitignore";
+import { toPosix } from "../tools/toPosix";
+import { configuration } from "../lib/parseParams";
+import { assert } from "tsafe/assert";
 
-//TODO: Test on windows!
+const { getDenoifyOutDir } = (() => {
+    async function getExplicitDenoifyOutDir(params: { moduleDirPath: string }) {
+        const { moduleDirPath } = params;
+
+        const config = configuration();
+
+        const denoifyOut = config.parseAsDenoifyConfig(
+            await config.getFileTypeAndContent(file => Promise.resolve(fs.readFileSync(pathJoin(moduleDirPath, file)).toString("utf8")))
+        )?.out;
+
+        if (denoifyOut === undefined) {
+            return undefined;
+        }
+
+        return pathNormalize(toPosix(denoifyOut));
+    }
+
+    function getTsconfigOutDir(params: { moduleDirPath: string }): string | undefined {
+        const { moduleDirPath } = params;
+
+        const tsconfigJson = fs.readFileSync(pathJoin(moduleDirPath, "tsconfig.json")).toString("utf8");
+
+        const outDir: string | undefined = commentJson.parse(tsconfigJson)["compilerOptions"]?.["outDir"];
+
+        if (typeof outDir !== "string") {
+            return undefined;
+        }
+
+        return pathNormalize(toPosix(outDir));
+    }
+
+    async function getDenoifyOutDir(params: { moduleDirPath: string }) {
+        const { moduleDirPath } = params;
+
+        explicitely_specified: {
+            const denoifyOutDir = await getExplicitDenoifyOutDir({ moduleDirPath });
+
+            if (denoifyOutDir === undefined) {
+                break explicitely_specified;
+            }
+
+            return denoifyOutDir;
+        }
+
+        default_based_on_tsconfig_outDir: {
+            const tsconfigOutDir = getTsconfigOutDir({ moduleDirPath });
+
+            if (tsconfigOutDir === undefined) {
+                break default_based_on_tsconfig_outDir;
+            }
+
+            return pathJoin(
+                pathDirname(tsconfigOutDir), // .
+                `deno_${pathBasename(tsconfigOutDir)}` //deno_dist
+            ); // deno_dist
+        }
+
+        return undefined;
+    }
+
+    return { getDenoifyOutDir };
+})();
 
 /**
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
  * This function Change change the working directory.
  * */
-async function run(params: { pathToTargetModule: string; denoDistDirPath: string | undefined; isDryRun: boolean }) {
-    const {
-        pathToTargetModule,
-        isDryRun,
-        denoDistDirPath = (() => {
-            const tsconfigOutDir = commentJson.parse(fs.readFileSync("./tsconfig.json").toString("utf8"))["compilerOptions"]["outDir"] as string;
-            return path.join(path.dirname(tsconfigOutDir), `deno_${path.basename(tsconfigOutDir)}`); // ./deno_dist
-        })()
-    } = params;
+export async function run(params: { moduleDirPath: string; isDryRun: boolean }) {
+    const { moduleDirPath, isDryRun } = params;
 
-    process.chdir(pathToTargetModule);
+    const denoifyOutDir = await getDenoifyOutDir({ moduleDirPath });
 
-    if (!fs.existsSync(denoDistDirPath)) {
+    assert(denoifyOutDir !== undefined);
+
+    if (!fs.existsSync(denoifyOutDir)) {
         console.log("exit 1");
         return;
     }
 
     const { fixedGitignoreRaw } = removeFromGitignore({
-        "pathToTargetModule": ".",
-        "fileOrDirPathsToAccept": [denoDistDirPath]
+        "pathToTargetModule": moduleDirPath,
+        "fileOrDirPathsToAccept": [denoifyOutDir]
     });
 
     if (!fixedGitignoreRaw) {
@@ -56,8 +115,7 @@ if (require.main === module) {
     const { isDryRun } = getIsDryRun();
 
     run({
-        "pathToTargetModule": ".",
-        "denoDistDirPath": process.argv[2],
+        "moduleDirPath": ".",
         isDryRun
     });
 }

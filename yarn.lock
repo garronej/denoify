@@ -630,14 +630,14 @@ esprima@^4.0.0, esprima@^4.0.1:
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
 
-evt@^2.4.5:
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.5.tgz#9e383c20a7917977e26b9fbad178585916ea8142"
-  integrity sha512-shiXMrEhTHqTl5PacT3vdA1U9i3usnInuxt77Lj0Ph9igNM982b1Uf/3L24OSzI0SqLx/XIRVIJcgzUZ2Ij8AA==
+evt@^2.4.6:
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.6.tgz#79e242cd2f84c2ec0b8119478712f7af80368832"
+  integrity sha512-4kSu9YVklCeddEAu/UCzIISrxc5SAD82hX7gXjBox4yyrPNblYrmJr4GgTOOQpNXTGYci+UIpFUYikgZa9fyTQ==
   dependencies:
     minimal-polyfills "^2.2.2"
     run-exclusive "^2.2.16"
-    tsafe "^1.1.2"
+    tsafe "^1.1.3"
 
 execa@^5.1.1:
   version "5.1.1"
@@ -1371,7 +1371,7 @@ tr46@~0.0.3:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==
 
-tsafe@^1.1.2, tsafe@^1.1.3:
+tsafe@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.1.3.tgz#fa7c2ae7da689884292b70ee30febbca5c665d03"
   integrity sha512-QQQoed5Acb7Qe/sjMwE/qg57mxD5MXqY5HcGN4i3QyhJiplpo79ABEZiOBvL1cRTOYIzeryWvWQ3xsotTA49MQ==

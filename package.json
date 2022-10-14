@@ -1,6 +1,6 @@
 {
     "name": "denoify",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "homepage": "https://denoify.land",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
     "main": "dist/lib/index.js",
@@ -43,7 +43,7 @@
         "commander": "^4.1.1",
         "comment-json": "^3.0.2",
         "cosmiconfig": "^7.0.1",
-        "evt": "^2.4.5",
+        "evt": "^2.4.6",
         "get-github-default-branch-name": "^0.0.4",
         "gitignore-parser": "0.0.2",
         "glob": "^7.1.6",

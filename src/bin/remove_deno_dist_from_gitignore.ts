@@ -16,7 +16,13 @@ const { getDenoifyOutDir } = (() => {
         const config = configuration();
 
         const denoifyOut = config.parseAsDenoifyConfig(
-            await config.getFileTypeAndContent(file => Promise.resolve(fs.readFileSync(pathJoin(moduleDirPath, file)).toString("utf8")))
+            await config.getFileTypeAndContent(fileBasename => {
+                const filePath = pathJoin(moduleDirPath, fileBasename);
+                if (!fs.existsSync(filePath)) {
+                    return Promise.resolve(undefined);
+                }
+                return Promise.resolve(fs.readFileSync(filePath).toString("utf8"));
+            })
         )?.out;
 
         if (denoifyOut === undefined) {

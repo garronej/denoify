@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import "minimal-polyfills/Object.fromEntries";
 import * as path from "path";
 import { pathDepth } from "../tools/pathDepth";
 import { moveContentUpOneLevelFactory } from "../tools/moveContentUpOneLevel";
@@ -8,8 +7,6 @@ import { getIsDryRun } from "./lib/getIsDryRun";
 import * as fs from "fs";
 import * as commentJson from "comment-json";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
-
-//TODO: Test on windows!
 
 /**
  * To disable dry run mode  DRY_RUN=1 env variable must be set.

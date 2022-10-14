@@ -22,8 +22,8 @@
     },
     "bin": {
         "denoify": "dist/bin/denoify.js",
-        "enable_short_npm_import_path": "dist/bin/enableShortNpmImportPath.js",
-        "remove_deno_dist_from_gitignore": "dist/bin/removeDenoDistFromGitignore.js"
+        "enable_short_npm_import_path": "dist/bin/enable_short_npm_import_path.js",
+        "remove_deno_dist_from_gitignore": "dist/bin/remove_deno_dist_from_gitignore.js"
     },
     "lint-staged": {
         "*.{ts,tsx,json,md}": [

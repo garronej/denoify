@@ -11,7 +11,7 @@ import testParseParams from "./config";
 
 testCases({
     tests: [
-        [testParseParams, "only"],
+        [testParseParams],
         [testReplacer],
         [testGetInstalledVersionPackageJson],
         [testParsedImportExportStatementTypes],

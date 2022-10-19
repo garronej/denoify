@@ -48,7 +48,7 @@ const testParseParams = () =>
             }
         );
 
-        it.only.each([[".denoifyrc.js", "denoify.config.js", "denoify.config.cjs"]])(
+        it.each([[".denoifyrc.js", "denoify.config.js", "denoify.config.cjs"]])(
             "should parse each JavaScript config and return the value of each key-value pairs",
             async configFileBasename => {
                 const configFileRawContent = `module.exports = {${[`out: "${configDummy.out}"`, `index: "${configDummy.index}"`].join(",")}}`;

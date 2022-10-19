@@ -42,7 +42,6 @@ export function parseAsDenoifyParams(denoifyParams: any): DenoifyParams | undefi
     if (denoifyParams === undefined) {
         return undefined;
     }
-    console.log({ denoifyParams });
     const { includes } = denoifyParams;
     return {
         "replacer": parseAsStringElseUndefined(denoifyParams.replacer),
@@ -97,7 +96,6 @@ export function parseAsDenoifyConfig({ configFileType }: { configFileType: Confi
             fs.writeFileSync(path, configFileType.configFileRawContent);
             // cosmiconfig internally uses import-fresh to parse JS config
             // import-fresh only support commonjs export, so we can use require
-            console.log(require(path));
             return parseAsDenoifyParams(require(path));
         }
     }

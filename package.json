@@ -15,7 +15,7 @@
         "postbuild": "yarn grant-exec-perms",
         "pretest": "yarn build",
         "test": "vitest",
-        "prettier": "prettier --ignore-path .gitignore '**/*.{ts,tsx,json,md}'",
+        "prettier": "prettier '**/*.{ts,tsx,json,md}'",
         "format": "yarn prettier --write",
         "format:check": "yarn prettier --list-different",
         "link_in_test_app": "node dist/bin/link_in_test_app.js"

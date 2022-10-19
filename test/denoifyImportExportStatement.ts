@@ -6,35 +6,31 @@ const testDenoifyImportExportStatement = () =>
     describe("denoify import export statement", () => {
         const userProvidedReplacerPath = path.join(__dirname, "..", "dist", "bin", "replacer", "index.js");
 
-        it("should denoify import statement with different quotation", async () => {
-            const canDenoifyImports = [`"`, `'`].every(async sep => {
-                const { denoifyImportExportStatement } = denoifyImportExportStatementFactory({
-                    "resolveNodeModuleToDenoModule": () => {
+        it.each([`"`, `'`])("should denoify import statement with quotation of '%s'", async sep => {
+            const { denoifyImportExportStatement } = denoifyImportExportStatementFactory({
+                "resolveNodeModuleToDenoModule": () => {
+                    throw new Error("never");
+                },
+                "getInstalledVersionPackageJson": async ({ nodeModuleName }) => {
+                    if (nodeModuleName !== "ipaddr.js") {
                         throw new Error("never");
-                    },
-                    "getInstalledVersionPackageJson": async ({ nodeModuleName }) => {
-                        if (nodeModuleName !== "ipaddr.js") {
-                            throw new Error("never");
-                        }
+                    }
 
-                        return {
-                            "version": "1.1.0",
-                            "repository": { "url": "git://github.com/whitequark/ipaddr.js.git" }
-                        };
-                    },
-                    userProvidedReplacerPath,
-                    "getDestDirPath": () => "whatever"
-                });
-
-                return (
-                    (await denoifyImportExportStatement({
-                        "dirPath": "irrelevant here...",
-                        "importExportStatement": `import * as ipaddr from ${sep}ipaddr.js${sep}`
-                    })) === `import ipaddr from ${sep}https://jspm.dev/ipaddr.js@1.1.0${sep}`
-                );
+                    return {
+                        "version": "1.1.0",
+                        "repository": { "url": "git://github.com/whitequark/ipaddr.js.git" }
+                    };
+                },
+                userProvidedReplacerPath,
+                "getDestDirPath": () => "whatever"
             });
 
-            expect(canDenoifyImports).toBe(true);
+            expect(
+                await denoifyImportExportStatement({
+                    "dirPath": "irrelevant here...",
+                    "importExportStatement": `import * as ipaddr from ${sep}ipaddr.js${sep}`
+                })
+            ).toBe(`import ipaddr from ${sep}https://jspm.dev/ipaddr.js@1.1.0${sep}`);
         });
 
         it("should remain imported url as it is", async () => {

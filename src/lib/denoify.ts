@@ -12,7 +12,7 @@ import { id } from "tsafe";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
 import { arrPartition } from "evt/tools/reducers/partition";
 import { fsCopy } from "../tools/fsCopy";
-import { getDenoifyParamsWithCosmiconfig } from "./parseParams";
+import { getDenoifyParamsWithCosmiconfig } from "./config/parseParams";
 
 export async function denoify(params: {
     projectPath: string;

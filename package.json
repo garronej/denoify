@@ -1,6 +1,6 @@
 {
     "name": "denoify",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "homepage": "https://denoify.land",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
     "main": "dist/lib/index.js",
@@ -71,6 +71,7 @@
         "@types/node": "^10.0.0",
         "@types/node-fetch": "^2.5.6",
         "@types/url-join": "^4.0.0",
+        "cases-of-test": "^0.0.0",
         "husky": "^4.3.8",
         "js-yaml": "^3.13.1",
         "lint-staged": "^11.0.0",

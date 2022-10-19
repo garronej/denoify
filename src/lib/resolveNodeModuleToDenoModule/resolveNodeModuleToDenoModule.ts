@@ -15,8 +15,9 @@ import { getLatestTag } from "../../tools/githubTags";
 import { isInsideOrIsDir } from "../../tools/isInsideOrIsDir";
 import { knownPorts } from "./knownPorts";
 import { assert } from "tsafe/assert";
-import { configuration } from "../parseParams";
 import { exclude } from "tsafe/exclude";
+import getFileTypeAndContent from "../config/fileAndContent";
+import { parseAsDenoifyConfig } from "../config/parseParams";
 
 type GetValidImportUrl = (
     params:
@@ -383,17 +384,15 @@ export const { getValidImportUrlFactory } = (() => {
             const { gitTag, moduleAddress } = params;
             const { buildUrl } = buildUrlFactory({ moduleAddress });
 
-            const config = configuration();
-
-            const denoifyOut = config.parseAsDenoifyConfig(
-                await config.getFileTypeAndContent(
-                    async file =>
+            const denoifyOut = parseAsDenoifyConfig({
+                "configFileType": await getFileTypeAndContent({
+                    "getConfigFileRawContent": async file =>
                         await fetch(buildUrl(gitTag, file)).then(
                             res => (`${res.status}`.startsWith("2") ? res.text() : undefined),
                             () => undefined
                         )
-                )
-            )?.out;
+                })
+            })?.out;
 
             if (denoifyOut === undefined) {
                 return undefined;

@@ -6,24 +6,25 @@ import * as fs from "fs";
 import * as commentJson from "comment-json";
 import { removeFromGitignore } from "../tools/removeFromGitignore";
 import { toPosix } from "../tools/toPosix";
-import { configuration } from "../lib/parseParams";
 import { assert } from "tsafe/assert";
+import { parseAsDenoifyConfig } from "../lib/config/parseParams";
+import getFileTypeAndContent from "../lib/config/fileAndContent";
 
 const { getDenoifyOutDir } = (() => {
     async function getExplicitDenoifyOutDir(params: { moduleDirPath: string }) {
         const { moduleDirPath } = params;
 
-        const config = configuration();
-
-        const denoifyOut = config.parseAsDenoifyConfig(
-            await config.getFileTypeAndContent(fileBasename => {
-                const filePath = pathJoin(moduleDirPath, fileBasename);
-                if (!fs.existsSync(filePath)) {
-                    return Promise.resolve(undefined);
+        const denoifyOut = parseAsDenoifyConfig({
+            "configFileType": await getFileTypeAndContent({
+                "getConfigFileRawContent": fileBasename => {
+                    const filePath = pathJoin(moduleDirPath, fileBasename);
+                    if (!fs.existsSync(filePath)) {
+                        return Promise.resolve(undefined);
+                    }
+                    return Promise.resolve(fs.readFileSync(filePath).toString("utf8"));
                 }
-                return Promise.resolve(fs.readFileSync(filePath).toString("utf8"));
             })
-        )?.out;
+        })?.out;
 
         if (denoifyOut === undefined) {
             return undefined;

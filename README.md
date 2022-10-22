@@ -35,6 +35,7 @@
 >     a specific version. If you don't use Denoify and users import your module like `import abc from "npm:your-module@1.2.3`
 >     Deno will pull the last version of https://deno.land/std/node. An update there could theoretically end up breaking your module
 >     on Deno.
+> -   You have very few chances to see your module be embedded in others Deno modules if you don't provide a distribution on `deno.land/x`.
 
 <br>
 
@@ -92,51 +93,17 @@ You will be able to pull it off even if you aren't familiar with typescript. [Re
 placed in `node_module` like in node so you won’t be able to access files that are not
 on the disk._
 
-# Step by step tutorial
-
-Check out [this repo](https://github.com/garronej/my_dummy_npm_and_deno_module) to see in practice how to set up Denoify in your project.
-
-Need a hand? Do not hesitate to [open a discussion](https://github.com/garronej/denoify/discussions).
-
-# Publishing on deno.land/x
-
-> 🗣 NOTE TO THE COMMUNITY: I am please to see an increasing number of project using Denoify! 🎉  
-> That said, looking at your setup, I see that you are almost all tracking the `deno_dist` directory
-> on your default branch...  
-> `deno_dist` should be git ignored, it's not source code!  
-> Please, do not hesitate [to reach out](https://github.com/garronej/denoify/discussions) if you need a hand.
-
-![denoify_ci](https://user-images.githubusercontent.com/6702424/82036935-c52a3480-96a1-11ea-9794-e982a23e5612.png)
-
-Once you'll have successfully build your module for Deno you will want to publish it on [deno.land/x](https://deno.land/x)
-to do that in a clean way, without tracking the `deno_dist/` on your main branch you'll need to setup a
-CI workflow.  
-To do that you can use the [`.github/workflow/ci.yaml`](https://github.com/garronej/tsafe/blob/main/.github/workflows/ci.yaml) from [tsafe](https://github.com/garronej/tsafe), you can copy paste it, it's portable.  
-The idea is that it creates [a `latest` branch](https://github.com/garronej/tsafe/tree/latest) on every release (when you bump the package.json version) where the `deno_dist` is present.
-
-![image](https://user-images.githubusercontent.com/6702424/117559526-6ade6c80-b086-11eb-8575-3084f0835bbb.png)
-
-When registering your module on [deno.land/x](https://deno.land/x) you will need to specify the subdirectory:
-
-![deno_registration](https://user-images.githubusercontent.com/6702424/117559462-c9571b00-b085-11eb-9ea5-683a0b0bb866.png)
-
-Do not hesitate [to open a discursion](https://github.com/garronej/denoify/discussions) if you are having issues.
-
-# Deal with `GitHub API rate limit exceeded`
-
-If you run Denoify a lot outside of GitHub Actions pipelines you will eventually get the following error:  
-`RequestError [HttpError]: API rate limit exceeded for 176.170.197.165. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)`.
-To fix it, [create a GitHub Personal Access Token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) and provide it as the environnement variable `GITHUB_TOKEN` when you run the build tool.
-
-Example:
-
-```bash
-echo 'export GITHUB_TOKEN=ghp_xn8jsxZrUChs9nmfZPDSmxLrTJPVJy3Sxc5J' > ~/.bash_profile
-source ~/.bash_profile
-npx denoify
-```
+<p align="center">  
+    <br />
+    <br />
+    <a href="https://docs.denoify.land/">🚀 Get started 🚀</a>
+</p>
 
 # What's new
+
+**NEW IN v1.3.1**
+
+-   Denoify now has [a proper documentation website](https://docs.denoify.land)!
 
 **NEW IN v1.3**
 

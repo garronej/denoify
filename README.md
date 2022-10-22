@@ -138,6 +138,10 @@ npx denoify
 
 # What's new
 
+**NEW IN v1.3**
+
+-   Support for `// @denoify-line-ignore` special comment.
+
 **NEW IN v1**
 
 -   `import express from "express";` automatically converted into:  

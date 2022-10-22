@@ -1,18 +1,12 @@
-# Config
+# 🔧 Build options
 
-### Configuration
+{% hint style="info" %}
+The Denoify configurations used to be specified [in the `package.json`](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/346b2291366aa7ef76ec0bde113699d84e65ed9e/package.json#L19-L36) file. It's still supported for legacy reasons but you are now encoraged to use a configuration separate configuration file. &#x20;
+{% endhint %}
 
-`denoify` will search up the directory tree for the following file to read its configurations, in the order of priority
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>The configuration file as shown when using the vscode-icons extension (soon)</p></figcaption></figure>
 
-1. `package.json`
-2. `.denoifyrc`
-3. `.denoifyrc.json`
-4. `.denoifyrc.yml`
-5. `.denoifyrc.yaml`
-6. `.denoifyrc.js`
-7. `.denoifyrc.cjs`
-8. `denoify.config.js`
-9. `denoify.config.cjs`
+Denoify be looking in the root of your project for a `.denoifyrc.json`, `.denoifyrc.yml` or `.denoifyrc.js` configuration file. Pick the format that is more conveignent for you. &#x20;
 
 ### Options
 

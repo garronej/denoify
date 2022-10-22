@@ -168,7 +168,7 @@ console.log(__dirname,__filename);
             expect(modifiedSourceCode).toBe(expected);
         });
 
-        it("should denoify source code by chaning the import statement", async () => {
+        it("should denoify source code by chaining the import statement", async () => {
             const sourceCode = `
 import { Buffer } from "buffer";
 

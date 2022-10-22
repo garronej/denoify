@@ -55,7 +55,7 @@ Usually the index of your module is specified in the [main field of your package
 }
 ```
 
-### includes
+### `includes`
 
 Specify what files should be copied over to the deno\_dist directory. By default it's the `README.md` and the `LICENSE` file. &#x20;
 

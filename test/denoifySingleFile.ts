@@ -1,6 +1,7 @@
 import { describe, it, expect, assert } from "vitest";
 import { denoifySingleFileFactory } from "../src/lib/denoifySingleFile";
 import { ParsedImportExportStatement } from "../src/lib/types/ParsedImportExportStatement";
+import { assert as tsafeAssert } from "tsafe/assert";
 
 const testDenoifySingleFile = () =>
     describe("denoify single file", () => {
@@ -305,6 +306,24 @@ Buffer_name
             });
 
             expect(modifiedSourceCode).toBe(sourceCode);
+        });
+        it("should remove the lines next to special comment // @denoify-line-ignore", async () => {
+            const sourceCode = `// @denoify-line-ignore: no need for polyfills\nimport 'minimal-polyfills';\nconsole.log('hello world');\n// @denoify-line-ignore\nimport 'minimal-polyfills/Object.fromEntries';\nconsole.log('// @denoify-line-ignore');`;
+
+            const expected = `console.log('hello world');\nconsole.log('// @denoify-line-ignore');`;
+
+            const { denoifySingleFile } = denoifySingleFileFactory({
+                "denoifyImportExportStatement": () => {
+                    tsafeAssert(false);
+                }
+            });
+
+            const modifiedSourceCode = await denoifySingleFile({
+                sourceCode,
+                "dirPath": ""
+            });
+
+            expect(modifiedSourceCode).toBe(expected);
         });
     });
 

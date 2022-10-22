@@ -11,6 +11,27 @@ export function denoifySingleFileFactory(params: {} & ReturnType<typeof denoifyI
 
         let modifiedSourceCode = sourceCode;
 
+        modifiedSourceCode = (function dealWithDenoifyLineIgnoreSpecialComment(sourceCode: string): string {
+            let split = sourceCode.split("\n");
+
+            split = split.map((line, i) => (i === split.length - 1 ? line : `${line}\n`));
+
+            const outSplit = [];
+
+            for (let i = 0; i < split.length; i++) {
+                const line = split[i];
+
+                if (!line.startsWith("// @denoify-line-ignore")) {
+                    outSplit.push(line);
+                    continue;
+                }
+
+                i++;
+            }
+
+            return outSplit.join("");
+        })(modifiedSourceCode);
+
         if (usesBuiltIn("__filename", sourceCode)) {
             modifiedSourceCode = [
                 `const __filename = (() => {`,

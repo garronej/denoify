@@ -1,7 +1,7 @@
 import { get_caller_file_path } from "scripting-tools";
 import * as child_process from "child_process";
 import * as path from "path";
-import { Deferred } from "../tools/Deferred";
+import { Deferred } from "evt/tools/Deferred";
 
 export async function runSequentially(params: { scriptsPaths: string[] }) {
     const { scriptsPaths } = params;

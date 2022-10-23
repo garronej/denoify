@@ -51,7 +51,8 @@
         "path-depth": "^1.0.0",
         "scripting-tools": "^0.19.14",
         "tsafe": "^1.1.3",
-        "url-join": "^4.0.1"
+        "url-join": "^4.0.1",
+        "evt": "^2.4.10"
     },
     "keywords": [
         "deno",

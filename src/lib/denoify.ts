@@ -10,7 +10,7 @@ import { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPack
 import { toPosix } from "../tools/toPosix";
 import { id } from "tsafe";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
-import { arrPartition } from "../tools/reducers/partition";
+import { arrPartition } from "evt/tools/reducers/partition";
 import { fsCopy } from "../tools/fsCopy";
 import { getDenoifyParamsWithCosmiconfig } from "./config/parseParams";
 

@@ -4,7 +4,7 @@
 The Denoify configurations used to be specified [in the `package.json`](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/346b2291366aa7ef76ec0bde113699d84e65ed9e/package.json#L19-L36) file. It's still supported for legacy reasons but you are now encoraged to use a configuration separate configuration file. &#x20;
 {% endhint %}
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption><p>The configuration file as shown when using the vscode-icons extension (soon)</p></figcaption></figure>
+<figure><img src=".gitbook/assets/denoifyvscode.JPG" alt=""><figcaption><p>The configuration file as shown when using the vscode-icons extension (soon)</p></figcaption></figure>
 
 Denoify be looking in the root of your project for a `denoifyrc.config.json` or `denoifyrc.config.js` configuration file. Pick the format that is more conveignent for you. &#x20;
 

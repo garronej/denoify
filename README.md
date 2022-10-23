@@ -27,7 +27,8 @@
 > `import express from "npm:express@5";`.  
 > Knowing that why would you want to use Denoify?
 >
-> -   To publish your module on [deno.land/x](https://deno.land/x).
+> -   To publish your module on [deno.land/x](https://deno.land/x). You have very few chances to see your module be embedded in 
+      others Deno modules if you aren't there`.
 > -   To ensure your module is retro compatible with Deno versions that do not feature NPM support.
 > -   If your module belong in the 10% of NPM modules that doesn't work out of the box. Denoify can help you
 >     providing Deno implementation for specific file of your module (xxx.deno.ts).
@@ -35,7 +36,6 @@
 >     a specific version. If you don't use Denoify and users import your module like `import abc from "npm:your-module@1.2.3`
 >     Deno will pull the last version of https://deno.land/std/node. An update there could theoretically end up breaking your module
 >     on Deno.
-> -   You have very few chances to see your module be embedded in others Deno modules if you don't provide a distribution on `deno.land/x`.
 
 <br>
 

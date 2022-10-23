@@ -56,10 +56,10 @@ const testParseAndReadConfigFile = () =>
 
             expect(versionFallbackWarning).toBeUndefined();
             expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(
-                `https://raw.githubusercontent.com/${userOrOrg}/${repositoryName}/1.0.0/custom_deno_dist_dir_name/mod.ts`
+                `https://raw.githubusercontent.com/${userOrOrg}/${repositoryName}/v1.0.0/custom_deno_dist_dir_name/mod.ts`
             );
             expect(await getValidImportUrl({ "target": "SPECIFIC FILE", "specificImportPath": "dist/lib/Cat" })).toBe(
-                `https://raw.githubusercontent.com/${userOrOrg}/${repositoryName}/1.0.0/custom_deno_dist_dir_name/lib/Cat.ts`
+                `https://raw.githubusercontent.com/${userOrOrg}/${repositoryName}/v1.0.0/custom_deno_dist_dir_name/lib/Cat.ts`
             );
         });
 

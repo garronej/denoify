@@ -4,13 +4,9 @@
 The Denoify configurations used to be specified [in the `package.json`](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/346b2291366aa7ef76ec0bde113699d84e65ed9e/package.json#L19-L36) file. It's still supported for legacy reasons but you are now encoraged to use a configuration separate configuration file. &#x20;
 {% endhint %}
 
-{% hint style="danger" %}
-We will probably switch to using .denoify.config.json and .denoify.config.js in the next few days. Sorry about the upcoming breaking change. We'll do the change quick. &#x20;
-{% endhint %}
-
 <figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption><p>The configuration file as shown when using the vscode-icons extension (soon)</p></figcaption></figure>
 
-Denoify be looking in the root of your project for a `.denoifyrc.json`, `.denoifyrc.yml` or `.denoifyrc.js` configuration file. Pick the format that is more conveignent for you. &#x20;
+Denoify be looking in the root of your project for a `denoifyrc.config.json` or `denoifyrc.config.js` configuration file. Pick the format that is more conveignent for you. &#x20;
 
 Following is the type definition of the object expected to be represented in the denoify configuration file: &#x20;
 

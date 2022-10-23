@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as YAML from "yaml";
 import { cosmiconfig } from "cosmiconfig";
 import config from ".";
 import { ConfigFileType } from "./fileAndContent";
@@ -81,8 +80,8 @@ export function parseAsDenoifyConfig({ configFileType }: { configFileType: Confi
     switch (configFileType.type) {
         case "absent":
             return undefined;
-        case "yaml": {
-            const parsed = YAML.parse(configFileType.configFileRawContent);
+        case "json": {
+            const parsed = JSON.parse(configFileType.configFileRawContent);
             return parseAsDenoifyParams(configFileType.configFileBasename !== config.packageJson ? parsed : parsed.denoify);
         }
         case "js": {

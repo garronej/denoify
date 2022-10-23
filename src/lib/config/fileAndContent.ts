@@ -1,4 +1,3 @@
-import * as YAML from "yaml";
 import config from ".";
 
 export type ConfigFileType =
@@ -6,15 +5,14 @@ export type ConfigFileType =
           type: "absent";
       }
     | {
-          // yaml is superset of json, we can treat it as yaml instead
-          type: "js" | "yaml";
+          type: "js" | "json";
           configFileBasename: string;
           configFileRawContent: string;
       };
 
-function tryParseAsYamlCompatible(content: string) {
+function tryParseAsJson(content: string) {
     try {
-        return YAML.parse(content);
+        return JSON.parse(content);
     } catch {
         return undefined;
     }
@@ -36,20 +34,14 @@ function parseConfig({
             type: "absent"
         };
     }
-    if (
-        (configFileBasename === ".denoifyrc" ||
-            configFileBasename.endsWith(".json") ||
-            configFileBasename.endsWith(".yaml") ||
-            configFileBasename.endsWith(".yml")) &&
-        tryParseAsYamlCompatible(configFileRawContent)
-    ) {
+    if (configFileBasename.endsWith(".json") && tryParseAsJson(configFileRawContent)) {
         return {
-            type: "yaml",
+            type: "json",
             configFileBasename,
             configFileRawContent
         };
     }
-    if (configFileBasename.endsWith(".cjs") || configFileBasename.endsWith(".js")) {
+    if (configFileBasename.endsWith(".js")) {
         return {
             type: "js",
             configFileBasename,
@@ -71,7 +63,7 @@ export default function getFileTypeAndContent({
             return configFileType;
         }
         const configFileRawContent = await getConfigFileRawContent(configFileBasename);
-        if (!configFileRawContent || (configFileBasename === config.packageJson && !tryParseAsYamlCompatible(configFileRawContent)?.denoify)) {
+        if (!configFileRawContent || (configFileBasename === config.packageJson && !tryParseAsJson(configFileRawContent)?.denoify)) {
             return configFileType;
         }
         return parseConfig({

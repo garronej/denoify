@@ -5,7 +5,7 @@ const config = (() => {
     const packageJson = "package.json";
     return {
         packageJson,
-        "supportedConfigFile": (() => [packageJson, ...[".json", ".js"].map(extension => `denoify.config.${extension}`)])(),
+        "supportedConfigFile": [packageJson, ...["json", "js"].map(extension => `denoify.config.${extension}`)],
         "getDenoifyParamsWithCosmiconfig": async () => {
             const explorer = cosmiconfig("denoify");
             const search = await explorer.search();

@@ -21,53 +21,49 @@ const testParseParams = () =>
         });
 
         it("should parse each JSON config from '%s' and return the value of each key-value pairs", async () => {
+            const configJson = "denoify.config.json";
             const configFileRawContent = JSON.stringify(configDummy);
             const configFileType = await getFileTypeAndContent({
-                "getConfigFileRawContent": async configFileBasename =>
-                    configFileBasename !== "denoify.config.json" ? undefined : configFileRawContent
+                "getConfigFileRawContent": async configFileBasename => (configFileBasename !== configJson ? undefined : configFileRawContent)
             });
 
-            expect(configFileType.type).toBe("json");
+            expect(configFileType).toStrictEqual({
+                type: "json",
+                configFileBasename: configJson,
+                configFileRawContent
+            });
 
-            assert(configFileType.type === "json");
-
-            expect(configFileType.configFileBasename).toBe("denoify.config.json");
-            expect(configFileType.configFileRawContent).toBe(configFileRawContent);
-
-            const yaml = parseAsDenoifyConfig({
+            const json = parseAsDenoifyConfig({
                 configFileType
             });
 
-            expect(yaml).toBeTruthy();
-            assert(yaml !== undefined);
-            expect(yaml.out).toBe(configDummy.out);
-            expect(yaml.index).toBe(configDummy.index);
+            expect(json).toBeTruthy();
+            assert(json !== undefined);
+            expect(json.out).toBe(configDummy.out);
+            expect(json.index).toBe(configDummy.index);
         });
 
         it("should parse each JavaScript config and return the value of each key-value pairs", async () => {
+            const configJs = "denoify.config.js";
             const configFileRawContent = `module.exports = ${JSON.stringify(configDummy)}`;
             const configFileType = await getFileTypeAndContent({
-                "getConfigFileRawContent": async configFileBasename => (configFileBasename !== "denoify.config.js" ? undefined : configFileRawContent)
+                "getConfigFileRawContent": async configFileBasename => (configFileBasename !== configJs ? undefined : configFileRawContent)
             });
 
-            expect(configFileType.type).toBe("js");
+            expect(configFileType).toStrictEqual({
+                type: "js",
+                configFileBasename: configJs,
+                configFileRawContent
+            });
 
-            switch (configFileType.type) {
-                case "json":
-                case "absent":
-                    throw new Error("The only valid type is js and its asserted to be so");
-            }
-
-            expect(configFileType.configFileBasename).toBe("denoify.config.js");
-            expect(configFileType.configFileRawContent).toBe(configFileRawContent);
-
-            const moduleExports = parseAsDenoifyConfig({
+            const js = parseAsDenoifyConfig({
                 configFileType
             });
-            assert(moduleExports !== undefined);
 
-            expect(moduleExports.out).toBe(configDummy.out);
-            expect(moduleExports.index).toBe(configDummy.index);
+            expect(js).toBeTruthy();
+            assert(js !== undefined);
+            expect(js.out).toBe(configDummy.out);
+            expect(js.index).toBe(configDummy.index);
         });
     });
 

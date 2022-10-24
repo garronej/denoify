@@ -1129,6 +1129,11 @@ parent-module@^1.0.0:
   dependencies:
     callsites "^3.0.0"
 
+parse-dont-validate@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/parse-dont-validate/-/parse-dont-validate-4.0.1.tgz#ed41f6f144e110482d194ad8a1001db05c608891"
+  integrity sha512-GquPPUA2y7mUnfSS5BpuLTfKs/l2LQ77LFg5k84tFiPKuXZD/6S/mT8NFF+hU6TBmbl+17i9LeiCBVipmaAJsg==
+
 parse-json@^5.0.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/parse-json/-/parse-json-5.2.0.tgz#c76fc66dee54231c962b22bcc8a72cf2f99753cd"

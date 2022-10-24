@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { cosmiconfig } from "cosmiconfig";
 import config from ".";
 import { ConfigFileType } from "./fileAndContent";
+import parse from "parse-dont-validate";
 
 export type DenoifyParams = {
     replacer?: string;
@@ -20,45 +21,49 @@ export type DenoifyParams = {
     )[];
 };
 
-function parseAsStringElseUndefined(param: unknown) {
-    return typeof param === "string" ? param : undefined;
-}
-
-function parseAsStringElseThrow({ param, type }: { param: unknown; type: string }) {
-    if (typeof param === "string") {
-        return param;
-    }
-    throw new Error(
-        [
-            "Denoify configuration Error",
-            `Expect ${type} to be string, got ${param} instead`,
-            "See: https://github.com/garronej/my_dummy_npm_and_deno_module"
-        ].join("\n")
-    );
-}
-
 export function parseAsDenoifyParams(denoifyParams: any): DenoifyParams | undefined {
     if (denoifyParams === undefined) {
         return undefined;
     }
+
+    const generateErrorMessage = ({ name, type, param }: { name: string; type: string; param: unknown }) =>
+        [
+            "Denoify configuration Error",
+            `Expect ${name} to be ${type}, got ${param} instead`,
+            "See: https://github.com/garronej/my_dummy_npm_and_deno_module"
+        ].join("\n");
+
     const { includes } = denoifyParams;
     return {
-        "replacer": parseAsStringElseUndefined(denoifyParams.replacer),
-        "out": parseAsStringElseUndefined(denoifyParams.out),
-        "index": parseAsStringElseUndefined(denoifyParams.index),
+        "replacer": parse(denoifyParams.replacer).asString().elseGet(undefined),
+        "out": parse(denoifyParams.out).asString().elseGet(undefined),
+        "index": parse(denoifyParams.index).asString().elseGet(undefined),
         "includes": !Array.isArray(includes)
             ? undefined
-            : includes.map(elem =>
-                  typeof elem === "string"
-                      ? elem
-                      : {
-                            "destDir": parseAsStringElseUndefined(elem.destDir),
-                            "destBasename": parseAsStringElseUndefined(elem.destBasename),
-                            "src": parseAsStringElseThrow({
-                                "param": elem.src,
-                                "type": "src in includes array"
-                            })
-                        }
+            : includes.map(
+                  elem =>
+                      parse(elem).asString().elseGet(undefined) ??
+                      parse(elem)
+                          .asMutableObject(elem => ({
+                              "destDir": parse(elem.destDir).asString().elseGet(undefined),
+                              "destBasename": parse(elem.destBasename).asString().elseGet(undefined),
+                              "src": parse(elem.src)
+                                  .asString()
+                                  .elseThrow(
+                                      generateErrorMessage({
+                                          "type": "string",
+                                          "param": elem.src,
+                                          "name": "src in includes array"
+                                      })
+                                  )
+                          }))
+                          .elseThrow(
+                              generateErrorMessage({
+                                  "param": includes,
+                                  "name": "elem in includes",
+                                  "type": "object with type: { destDir: string?, destBasename: string?, src: string }"
+                              })
+                          )
               ),
         "ports":
             denoifyParams.ports !== undefined || denoifyParams.ports !== null
@@ -66,10 +71,15 @@ export function parseAsDenoifyParams(denoifyParams: any): DenoifyParams | undefi
                 : Object.entries(denoifyParams.ports).reduce(
                       (prev, [portName, value]) => ({
                           ...prev,
-                          [portName]: parseAsStringElseThrow({
-                              "param": value,
-                              "type": "value of ports object"
-                          })
+                          [portName]: parse(value)
+                              .asString()
+                              .elseThrow(
+                                  generateErrorMessage({
+                                      "param": value,
+                                      "type": "string",
+                                      "name": "value of ports object"
+                                  })
+                              )
                       }),
                       {}
                   )

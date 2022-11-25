@@ -6,7 +6,6 @@ import * as fs from "fs";
 import * as commentJson from "comment-json";
 import { removeFromGitignore } from "../tools/removeFromGitignore";
 import { toPosix } from "../tools/toPosix";
-import { assert } from "tsafe/assert";
 import { parseAsDenoifyConfig } from "../lib/config/parseParams";
 import getFileTypeAndContent from "../lib/config/fileAndContent";
 
@@ -88,7 +87,9 @@ export async function run(params: { moduleDirPath: string; isDryRun: boolean }) 
 
     const denoifyOutDir = await getDenoifyOutDir({ moduleDirPath });
 
-    assert(denoifyOutDir !== undefined);
+    if (denoifyOutDir === undefined) {
+        throw new Error("Wrong assertion encountered");
+    }
 
     if (!fs.existsSync(denoifyOutDir)) {
         console.log("exit 1");

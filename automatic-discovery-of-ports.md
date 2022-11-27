@@ -4,7 +4,7 @@ If you have published your module both on [deno.land/x](https://deno.land/x) and
 
 ### Examples of resolutions that denoify can perform automatically
 
-Let's assume we are in a project  in our `node_modules` directory we have the following three Denoified modules:
+Let's assume we are in a project, in our `node_modules` directory we have the following three Denoified modules:
 
 * &#x20;[tsafe](https://www.npmjs.com/package/tsafe) in version `0.10.1`
 * [my-dummy-npm-and-deno-module](https://www.npmjs.com/package/my-dummy-npm-and-deno-module) in version `0.4.3`
@@ -34,7 +34,7 @@ import { Cat } from "https://deno.land/x/my_dummy_npm_and_deno_module@v0.4.3/lib
 import { createLexer } from "https://deno.land/x/leac/v0.6.0/mod.ts";
 ```
 
-If tsafe wasn't published on deno.land/x instead of `https://deno.land/x/tsafe@v0.10.1/assert.ts` we would have `https://raw.githubusercontent.com/garronej/tsafe/v0.10.1/deno_dist/assert.ts`. &#x20;
+If `tsafe` wasn't published on deno.land/x instead of `https://deno.land/x/tsafe@v0.10.1/assert.ts` we would have `https://raw.githubusercontent.com/garronej/tsafe/v0.10.1/deno_dist/assert.ts`. &#x20;
 
 Denoify always find the files on GitHub first and then try to see if it can get the same file with a deno.land/x url on a best effort basis. &#x20;
 

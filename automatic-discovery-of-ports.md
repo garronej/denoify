@@ -1,6 +1,6 @@
 # 🔍 Automatic discovery of ports
 
-If have published your module both on [deno.land/x](https://deno.land/x) and NPM Denoify should be able to automatically resolve your Deno distribution, what do I mean by that? &#x20;
+If you have published your module both on [deno.land/x](https://deno.land/x) and NPM Denoify should be able to automatically resolve your Deno distribution, what do I mean by that? &#x20;
 
 ### Examples of resolutions that denoify can perform automatically
 

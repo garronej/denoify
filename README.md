@@ -22,9 +22,12 @@
   <a href="https://github.com/garronej/my_dummy_npm_and_deno_module">Demo repo</a>
 </p>
 
-> IMPORTANT: [Deno will soon support NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
-> For NPM module authors this means that you'll just need to tell your users to import your module like:  
-> `import express from "npm:express@5";`.  
+> 🗣️ If your project has no dependency you don't need Denoify, you can use TypeScript compiler option `moduleResolution: bundler`
+> This [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719) for more info.
+
+> 🗣️ [Deno now supports NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
+> For NPM module authors this means that you jus need to tell your users to import your module like:  
+> `import express from "npm:your-module@5";`.  
 > Knowing that why would you want to use Denoify?
 >
 > -   To publish your module on [deno.land/x](https://deno.land/x). You have very few chances to see your module

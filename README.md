@@ -22,7 +22,7 @@
   <a href="https://github.com/garronej/my_dummy_npm_and_deno_module">Demo repo</a>
 </p>
 
-> 🗣️ If your project has no dependency and is not using any Node builtins (fs, https, process ect...), you don't need Denoify, you can use TypeScript compiler option `moduleResolution: bundler`
+> 🗣️ If your project has **no dependencies** and **is not using any Node builtins** (fs, https, process ect...), you don't need Denoify, you can use TypeScript compiler option `moduleResolution: bundler`.  
 > See [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719) for more info.
 
 > 🗣️ [Deno now supports NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  

@@ -6,7 +6,22 @@ The Denoify configurations used to be specified [in the `package.json`](https://
 
 <figure><img src=".gitbook/assets/denoifyvscode.JPG" alt=""><figcaption><p>The configuration file as shown when using the vscode-icons extension (soon)</p></figcaption></figure>
 
-Denoify be looking in the root of your project for a `denoifyrc.config.json` or `denoifyrc.config.js` configuration file. Pick the format that is more conveignent for you. &#x20;
+Denoify be looking at the root of your project for a `denoifyrc.config.js` (or a `denoifyrc.config.json`) configuration file. &#x20;
+
+You can set it up this way: &#x20;
+
+{% code title="denoify.config.js" %}
+```javascript
+// @ts-check
+
+/** @type { import('denoify/lib/config/parseParams').DenoifyParams } */
+const config = {
+   //...your options
+}
+```
+{% endcode %}
+
+<figure><img src="https://user-images.githubusercontent.com/1681269/210899134-4409368a-1997-487e-86c1-3a9b4f7b1ee8.gif" alt=""><figcaption><p>With the @type annotation you'll get type safety</p></figcaption></figure>
 
 Following is the type definition of the object expected to be represented in the denoify configuration file: &#x20;
 

@@ -23,7 +23,7 @@
 </p>
 
 > 🗣️ If your project has no dependency you don't need Denoify, you can use TypeScript compiler option `moduleResolution: bundler`
-> This [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719) for more info.
+> See [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719) for more info.
 
 > 🗣️ [Deno now supports NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
 > For NPM module authors this means that you jus need to tell your users to import your module like:  

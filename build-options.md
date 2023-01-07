@@ -6,7 +6,7 @@ The Denoify configurations used to be specified [in the `package.json`](https://
 
 <figure><img src=".gitbook/assets/denoifyvscode.JPG" alt=""><figcaption><p>The configuration file as shown when using the vscode-icons extension (soon)</p></figcaption></figure>
 
-Denoify be looking at the root of your project for a `denoifyrc.config.js` (or a `denoifyrc.config.json`) configuration file. &#x20;
+Denoify be looking at the root of your project for a `denoify.config.js` (or a `denoify.config.json`) configuration file. &#x20;
 
 You can set it up this way: &#x20;
 
@@ -18,6 +18,8 @@ You can set it up this way: &#x20;
 const config = {
    //...your options
 }
+
+module.exports = config;
 ```
 {% endcode %}
 

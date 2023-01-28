@@ -23,7 +23,7 @@
 </p>
 
 > 🗣️ If your project has **no dependencies** and **is not using any Node builtins** (fs, https, process ect...), you will soon be able to do
-> without Denoify by using TypeScript compiler option `moduleResolution: bundler`.  
+> without Denoify by using TypeScript compiler option `moduleResolution: bundler` and `allowImportingTsExtensions: true`.  
 > See [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719) for more infos.
 
 > 🗣️ [Deno now supports NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  

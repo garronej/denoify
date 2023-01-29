@@ -32,7 +32,7 @@
 > Knowing that why would you want to use Denoify?
 >
 > -   To publish your module on [deno.land/x](https://deno.land/x). You have very few chances to see your module
->     be embedded in others Deno modules if you aren't there.
+>     be embedded in others Deno modules if you aren't releasing a Deno specific distribution.
 > -   To ensure your module is retro compatible with Deno versions that do not feature NPM support.
 > -   If your module belong in the 10% of NPM modules that doesn't work out of the box. Denoify can help you
 >     providing Deno implementation for specific file of your module (xxx.deno.ts).

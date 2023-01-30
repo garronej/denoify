@@ -35,6 +35,8 @@ jobs:
     - run: yarn build
     - run: yarn test-precheck
     - run: yarn test
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
   check_if_version_upgraded:
     name: Check if version upgrade

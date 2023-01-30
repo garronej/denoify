@@ -231,7 +231,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
             break walk;
         }
 
-        fs.writeFileSync("package.json", Buffer.from(newPackageJsonRaw, "utf8"));
+        fs.writeFileSync("package.json: ", Buffer.from(newPackageJsonRaw, "utf8"));
     }
 }
 

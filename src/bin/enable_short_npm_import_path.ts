@@ -27,7 +27,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
 
     const packageJsonParsed = JSON.parse(packageJsonRaw);
 
-    const packageJsonFilesResolved: string[] | undefined = await (() => {
+    const packageJsonFilesResolved: string[] | undefined = (() => {
         const pathWithWildcards: string[] | undefined = packageJsonParsed.files;
         return !pathWithWildcards ? undefined : resolvePathsWithWildcards({ pathWithWildcards });
     })();
@@ -43,11 +43,11 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     }
 
     if (pathDepth(tsconfigOutDir) !== 1) {
-        throw new Error("For this script to work tsconfig out dir must be a directory at the root of the project");
+        throw new Error("For this script to work tsconfig outDir must be a directory at the root of the project");
     }
 
     const moveSourceFiles = "types" in packageJsonParsed ? !packageJsonParsed["types"].match(/\.d\.ts$/i) : false;
-    console.log(moveSourceFiles ? "Putting .ts files alongside .js files" : "Leaving .ts file in the src/ directory");
+    //console.log(moveSourceFiles ? "Putting .ts files alongside .js files" : "Leaving .ts file in the src/ directory");
 
     const beforeMovedFilePaths = await (async () => {
         const moveAndReplace = (dirPath: string) =>
@@ -56,9 +56,33 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     })();
 
     const getAfterMovedFilePath = (params: { beforeMovedFilePath: string }) => {
-        const beforeMovedFilePath = beforeMovedFilePaths.find(
-            beforeMovedFilePath => path.relative(beforeMovedFilePath, params.beforeMovedFilePath) === ""
-        );
+        const beforeMovedFilePath = (() => {
+            if (params.beforeMovedFilePath.includes("*")) {
+                const resolvedPaths = resolvePathsWithWildcards({ "pathWithWildcards": [params.beforeMovedFilePath] });
+
+                const isMatching =
+                    beforeMovedFilePaths.find(
+                        beforeMovedFilePath =>
+                            resolvedPaths.find(resolvedPath => path.relative(beforeMovedFilePath, resolvedPath) === "") !== undefined
+                    ) !== undefined;
+
+                if (!isMatching) {
+                    return undefined;
+                }
+
+                return path.relative(".", params.beforeMovedFilePath);
+            }
+
+            const beforeMovedFilePath = beforeMovedFilePaths.find(
+                beforeMovedFilePath => path.relative(beforeMovedFilePath, params.beforeMovedFilePath) === ""
+            );
+
+            if (beforeMovedFilePath === undefined) {
+                return undefined;
+            }
+
+            return beforeMovedFilePath;
+        })();
 
         if (beforeMovedFilePath === undefined) {
             //NOTE: In case the path would be absolute.
@@ -70,6 +94,9 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
             .split(path.sep)
             .filter((...[, index]) => index !== 0)
             .join(path.sep);
+
+        //console.log({ "params.beforeMovedFilePath": params.beforeMovedFilePath, beforeMovedFilePath, afterMovedFilePath});
+
         return afterMovedFilePath;
     };
 
@@ -92,6 +119,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     })
                 )
             );
+            /*
             console.log(
                 [
                     `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
@@ -99,6 +127,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     `-> ${JSON.stringify({ sources })}`
                 ].join(" ")
             );
+            */
 
             walk: {
                 if (isDryRun) {
@@ -171,7 +200,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                                   Object.keys(packageJsonParsed.bin)
                                       .map(binName => [binName, packageJsonParsed.bin[binName]] as const)
                                       .forEach(
-                                          ([binName, beforeMovedBinFilePath]) =>
+                                          async ([binName, beforeMovedBinFilePath]) =>
                                               (out[binName] = getAfterMovedFilePath({
                                                   "beforeMovedFilePath": beforeMovedBinFilePath
                                               }))

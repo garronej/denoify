@@ -95,13 +95,11 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
             .filter((...[, index]) => index !== 0)
             .join(path.sep);
 
-        //console.log({ "params.beforeMovedFilePath": params.beforeMovedFilePath, beforeMovedFilePath, afterMovedFilePath});
-
         return afterMovedFilePath;
     };
 
     beforeMovedFilePaths
-        .filter(beforeMovedFilePath => /\.c?js\.map$/.test(beforeMovedFilePath))
+        .filter(beforeMovedFilePath => /\.[cm]?js\.map$/.test(beforeMovedFilePath))
         .forEach(beforeMovedSourceMapFilePath => {
             const afterMovedSourceMapFilePath = getAfterMovedFilePath({
                 "beforeMovedFilePath": beforeMovedSourceMapFilePath
@@ -119,7 +117,6 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     })
                 )
             );
-            /*
             console.log(
                 [
                     `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
@@ -127,7 +124,6 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     `-> ${JSON.stringify({ sources })}`
                 ].join(" ")
             );
-            */
 
             walk: {
                 if (isDryRun) {

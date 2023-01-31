@@ -15,8 +15,6 @@ import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
 async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     const { isDryRun } = params;
 
-    const { moveContentUpOneLevel } = moveContentUpOneLevelFactory({ isDryRun });
-
     process.chdir(params.pathToTargetModule);
 
     if (fs.existsSync(".npmignore")) {
@@ -49,10 +47,24 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     const moveSourceFiles = "types" in packageJsonParsed ? !packageJsonParsed["types"].match(/\.d\.ts$/i) : false;
     //console.log(moveSourceFiles ? "Putting .ts files alongside .js files" : "Leaving .ts file in the src/ directory");
 
-    const beforeMovedFilePaths = await (async () => {
-        const moveAndReplace = (dirPath: string) =>
-            moveContentUpOneLevel({ dirPath }).then(({ beforeMovedFilePaths }) => beforeMovedFilePaths.map(filePath => path.join(dirPath, filePath)));
-        return [...(await moveAndReplace(tsconfigOutDir)), ...(moveSourceFiles ? await moveAndReplace(srcDirPath) : [])];
+    const { beforeMovedFilePaths, moveFiles } = await (async () => {
+        const getBeforeMovedFilePaths = async (isDryRun: boolean, log: typeof console.log | undefined) => {
+            const { moveContentUpOneLevel } = moveContentUpOneLevelFactory({ isDryRun, log });
+
+            const moveAndGetBeforePath = (dirPath: string) =>
+                moveContentUpOneLevel({ dirPath }).then(({ beforeMovedFilePaths }) =>
+                    beforeMovedFilePaths.map(filePath => path.join(dirPath, filePath))
+                );
+
+            return [...(await moveAndGetBeforePath(tsconfigOutDir)), ...(moveSourceFiles ? await moveAndGetBeforePath(srcDirPath) : [])];
+        };
+
+        return {
+            "beforeMovedFilePaths": await getBeforeMovedFilePaths(true, undefined),
+            "moveFiles": async () => {
+                await getBeforeMovedFilePaths(isDryRun, (...args) => console.log(...[isDryRun ? "(dry) " : "", ...args]));
+            }
+        };
     })();
 
     const getAfterMovedFilePath = (params: { beforeMovedFilePath: string }) => {
@@ -98,52 +110,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
         return afterMovedFilePath;
     };
 
-    beforeMovedFilePaths
-        .filter(beforeMovedFilePath => /\.[cm]?js\.map$/.test(beforeMovedFilePath))
-        .forEach(beforeMovedSourceMapFilePath => {
-            const afterMovedSourceMapFilePath = getAfterMovedFilePath({
-                "beforeMovedFilePath": beforeMovedSourceMapFilePath
-            });
-
-            const sourceMapParsed: { sources: string[] } = JSON.parse(
-                fs.readFileSync(isDryRun ? beforeMovedSourceMapFilePath : afterMovedSourceMapFilePath).toString("utf8")
-            );
-
-            const sources = sourceMapParsed.sources.map(filePath =>
-                path.relative(
-                    path.dirname(afterMovedSourceMapFilePath),
-                    getAfterMovedFilePath({
-                        "beforeMovedFilePath": path.join(path.dirname(beforeMovedSourceMapFilePath), filePath)
-                    })
-                )
-            );
-            console.log(
-                [
-                    `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
-                    JSON.stringify({ "sources": sourceMapParsed.sources }),
-                    `-> ${JSON.stringify({ sources })}`
-                ].join(" ")
-            );
-
-            walk: {
-                if (isDryRun) {
-                    break walk;
-                }
-
-                fs.writeFileSync(
-                    afterMovedSourceMapFilePath,
-                    Buffer.from(
-                        JSON.stringify({
-                            ...sourceMapParsed,
-                            sources
-                        }),
-                        "utf8"
-                    )
-                );
-            }
-        });
-
-    walk: {
+    update_package_json: {
         const newPackageJsonRaw =
             JSON.stringify(
                 {
@@ -224,11 +191,58 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
         console.log(`${isDryRun ? "(dry)" : ""} package.json:\n${newPackageJsonRaw}`);
 
         if (isDryRun) {
-            break walk;
+            break update_package_json;
         }
 
         fs.writeFileSync("package.json", Buffer.from(newPackageJsonRaw, "utf8"));
     }
+
+    await moveFiles();
+
+    beforeMovedFilePaths
+        .filter(beforeMovedFilePath => /\.[cm]?js\.map$/.test(beforeMovedFilePath))
+        .forEach(beforeMovedSourceMapFilePath => {
+            const afterMovedSourceMapFilePath = getAfterMovedFilePath({
+                "beforeMovedFilePath": beforeMovedSourceMapFilePath
+            });
+
+            const sourceMapParsed: { sources: string[] } = JSON.parse(
+                fs.readFileSync(isDryRun ? beforeMovedSourceMapFilePath : afterMovedSourceMapFilePath).toString("utf8")
+            );
+
+            const sources = sourceMapParsed.sources.map(filePath =>
+                path.relative(
+                    path.dirname(afterMovedSourceMapFilePath),
+                    getAfterMovedFilePath({
+                        "beforeMovedFilePath": path.join(path.dirname(beforeMovedSourceMapFilePath), filePath)
+                    })
+                )
+            );
+            console.log(
+                [
+                    `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
+                    JSON.stringify({ "sources": sourceMapParsed.sources }),
+                    `-> ${JSON.stringify({ sources })}`
+                ].join(" ")
+            );
+
+            walk: {
+                if (isDryRun) {
+                    break walk;
+                }
+
+                fs.writeFileSync(
+                    afterMovedSourceMapFilePath,
+                    Buffer.from(
+                        JSON.stringify({
+                            ...sourceMapParsed,
+                            sources
+                        }),
+                        "utf8"
+                    )
+                );
+            }
+        });
 }
 
 if (require.main === module) {

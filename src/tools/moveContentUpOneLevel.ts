@@ -3,8 +3,8 @@ import { execFactory } from "./exec";
 import * as st from "scripting-tools";
 import { crawl } from "./crawl";
 
-export function moveContentUpOneLevelFactory(params: { isDryRun: boolean }) {
-    const { isDryRun } = params;
+export function moveContentUpOneLevelFactory(params: { isDryRun: boolean; log?: typeof console.log | undefined }) {
+    const { isDryRun, log } = params;
 
     const { exec } = execFactory({ isDryRun });
 
@@ -18,13 +18,7 @@ export function moveContentUpOneLevelFactory(params: { isDryRun: boolean }) {
         const beforeMovedFilePaths = crawl(dirPath);
 
         for (const beforeMovedFilePath of beforeMovedFilePaths) {
-            console.log(
-                [
-                    `${isDryRun ? "(dry) " : ""}Moving`,
-                    path.join(dirPath, beforeMovedFilePath),
-                    `to ${path.join(upDirPath, beforeMovedFilePath)}`
-                ].join(" ")
-            );
+            log?.([`Moving`, path.join(dirPath, beforeMovedFilePath), `to ${path.join(upDirPath, beforeMovedFilePath)}`].join(" "));
 
             walk: {
                 if (isDryRun) {
@@ -35,7 +29,15 @@ export function moveContentUpOneLevelFactory(params: { isDryRun: boolean }) {
             }
         }
 
-        await exec(`rm -r ${dirPath}`);
+        walk: {
+            if (isDryRun) {
+                break walk;
+            }
+
+            log?.(`rm -r ${dirPath}`);
+
+            await exec(`rm -r ${dirPath}`);
+        }
 
         return { beforeMovedFilePaths };
     }

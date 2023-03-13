@@ -35,7 +35,7 @@
 >     be embedded in others Deno modules if you aren't releasing a Deno specific distribution.
 > -   To ensure your module is retro compatible with Deno versions that do not feature NPM support.
 > -   If your module belong in the 10% of NPM modules that doesn't work out of the box. Denoify can help you
->     providing Deno implementation for specific file of your module (xxx.deno.ts).
+>     providing Deno implementation for specific files of your module (xxx.deno.ts).
 > -   Denoify enables to produce a very predictable distribution of your module for Deno with the node builtins ports pinned to
 >     a specific version. If you don't use Denoify and users import your module like `import abc from "npm:your-module@1.2.3`
 >     Deno will pull the last version of https://deno.land/std/node. An update there could theoretically end up breaking your module

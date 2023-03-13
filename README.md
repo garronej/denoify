@@ -57,11 +57,6 @@ A build tool that takes as input a TypeScript codebase that was meant to target 
 
 This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their modules and do so without introducing breaking changes.
 
-# Motivations
-
--   Although it is quite easy to port a module to Deno no one wants to maintain two codebase.
--   Wouldn't it be great to have a tool able to bring Deno support to NPM modules?
-
 # Example of modules using Denoify
 
 Some modules that have been made cross-runtime using Denoify:

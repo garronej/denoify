@@ -63,10 +63,6 @@ Some modules that have been made cross-runtime using Denoify:
 -   [eta](https://deno.land/x/eta@v1.3.0)
 -   [graphql-helix](https://github.com/contrawork/graphql-helix)
 -   [tsafe](https://github.com/garronej/tsafe)
--   [@sniptt/guards](https://github.com/sniptt-official/guards)
--   [ok-computer](https://github.com/richardscarrott/ok-computer)
--   [run-exclusive](https://github.com/garronej/run-exclusive)
--   [Yolk](https://github.com/nestdotland/yolk)
 -   [...and many more great modules](https://github.com/garronej/denoify/network/dependents?dependent_type=PACKAGE)
 
 # Limitations

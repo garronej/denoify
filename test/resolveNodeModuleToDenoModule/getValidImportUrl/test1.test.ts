@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { getValidImportUrlFactory } from "../../../src/lib/resolveNodeModuleToDenoModule";
 import { ModuleAddress } from "../../../src/lib/types/ModuleAddress";
 import { getLatestTag } from "../../../src/tools/githubTags";
-import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
+import { assert } from "tsafe/assert";
 
 describe("test 1", () => {
     it.each(["", "github: "])("should get valid url for ts-md5 with prefix: '%s'", prefix => {
@@ -36,9 +36,9 @@ describe("test 1", () => {
                 "version": "99.99.99"
             });
 
-            expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+            assert(getValidImportUrlFactoryResult.couldConnect);
 
-            const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+            const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
             expect(typeof versionFallbackWarning).toBe("string");
 
@@ -76,9 +76,9 @@ describe("test 1", () => {
             "version": "1.2.7"
         });
 
-        expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+        assert(getValidImportUrlFactoryResult.couldConnect);
 
-        const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+        const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
         expect(versionFallbackWarning).toBeUndefined();
 

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { getValidImportUrlFactory } from "../src/lib/resolveNodeModuleToDenoModule";
 import { ModuleAddress } from "../src/lib/types/ModuleAddress";
-import { parseGetValidImportUrlResultAsCouldConnect } from "./resolveNodeModuleToDenoModule/getValidImportUrl/shared";
+import { assert } from "tsafe/assert";
 
 describe("get config file and parse its content", () => {
     it("should get the url of my_dummy_npm_and_deno_module_test_config_file without specifying out", async () => {
@@ -20,9 +20,9 @@ describe("get config file and parse its content", () => {
             "version": "1.0.0"
         });
 
-        expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+        assert(getValidImportUrlFactoryResult.couldConnect);
 
-        const { getValidImportUrl, versionFallbackWarning } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+        const { getValidImportUrl, versionFallbackWarning } = getValidImportUrlFactoryResult;
 
         expect(versionFallbackWarning).toBeUndefined();
         expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(
@@ -49,9 +49,9 @@ describe("get config file and parse its content", () => {
             "version": "1.0.0"
         });
 
-        expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+        assert(getValidImportUrlFactoryResult.couldConnect);
 
-        const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+        const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
         expect(versionFallbackWarning).toBeUndefined();
         expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(
@@ -78,9 +78,9 @@ describe("get config file and parse its content", () => {
             "version": "1.0.0"
         });
 
-        expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+        assert(getValidImportUrlFactoryResult.couldConnect);
 
-        const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+        const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
         expect(versionFallbackWarning).toBeUndefined();
         expect(await getValidImportUrl({ "target": "DEFAULT EXPORT" })).toBe(

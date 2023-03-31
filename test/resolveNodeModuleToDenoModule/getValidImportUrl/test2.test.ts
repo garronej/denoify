@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { getThirdPartyDenoModuleInfos } from "../../../src/lib/getThirdPartyDenoModuleInfos";
 import { getValidImportUrlFactory } from "../../../src/lib/resolveNodeModuleToDenoModule";
 import { ModuleAddress } from "../../../src/lib/types/ModuleAddress";
-import { parseGetValidImportUrlResultAsCouldConnect } from "./shared";
+import { assert } from "tsafe/assert";
 
 describe("test 2", () => {
     it("should fallback to available latest version and get the valid url file path for evt when the latest version specified is not available", async () => {
@@ -19,9 +19,9 @@ describe("test 2", () => {
             "version": "99.99.99"
         });
 
-        expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+        assert(getValidImportUrlFactoryResult.couldConnect);
 
-        const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+        const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
         expect(typeof versionFallbackWarning).toBe("string");
 
@@ -53,9 +53,9 @@ describe("test 2", () => {
             "version": "2.4.1"
         });
 
-        expect(getValidImportUrlFactoryResult.couldConnect).toBe(true);
+        assert(getValidImportUrlFactoryResult.couldConnect);
 
-        const { versionFallbackWarning, getValidImportUrl } = parseGetValidImportUrlResultAsCouldConnect(getValidImportUrlFactoryResult);
+        const { versionFallbackWarning, getValidImportUrl } = getValidImportUrlFactoryResult;
 
         expect(versionFallbackWarning).toBeUndefined();
 

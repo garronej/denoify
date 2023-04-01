@@ -6,7 +6,10 @@ import { assert } from "tsafe/assert";
 describe("parse denoify config params", () => {
     const configDummy = {
         out: "dist/index.ts",
-        index: "./src/index.ts"
+        index: "./src/index.ts",
+        ports: {
+            awesome_module: "https://deno.land/xxx/xxx_module/mod.ts"
+        }
     };
 
     it("should return undefined when there is no file to parse", () => {
@@ -40,6 +43,7 @@ describe("parse denoify config params", () => {
         assert(json !== undefined);
         expect(json.out).toBe(configDummy.out);
         expect(json.index).toBe(configDummy.index);
+        expect(json.ports).toEqual(configDummy.ports);
     });
 
     it("should parse each JavaScript config and return the value of each key-value pairs", async () => {
@@ -63,5 +67,6 @@ describe("parse denoify config params", () => {
         assert(js !== undefined);
         expect(js.out).toBe(configDummy.out);
         expect(js.index).toBe(configDummy.index);
+        expect(js.ports).toEqual(configDummy.ports);
     });
 });

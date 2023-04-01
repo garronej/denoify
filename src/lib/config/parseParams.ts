@@ -66,7 +66,7 @@ export function parseAsDenoifyParams(denoifyParams: any): DenoifyParams | undefi
                           )
               ),
         "ports":
-            denoifyParams.ports !== undefined || denoifyParams.ports !== null
+            denoifyParams.ports === undefined || denoifyParams.ports === null
                 ? undefined
                 : Object.entries(denoifyParams.ports).reduce(
                       (prev, [portName, value]) => ({

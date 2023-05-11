@@ -52,7 +52,7 @@ _(It's defined_ [_here_](https://github.com/garronej/denoify/blob/main/src/lib/c
 
 By default Denoify will generate the deno distribution in `deno_dist` or `deno_lib` depending on whay you have in your `tsconfig.json.`
 
-If you want the for example your dist to be generated in a deno dir instead you would use: &#x20;
+If you want for example your dist to be generated in a deno dir instead you would use: &#x20;
 
 ```json
 //.denoifyrc.json
@@ -63,7 +63,7 @@ If you want the for example your dist to be generated in a deno dir instead you 
 
 ### `index`
 
-Usually the index of your module is specified in the [main field of your package.json](https://github.com/garronej/evt/blob/e5d91ba991e0d2413d70ea0ae6e4d1fc838b2d1d/package.json#L9). If for some reason Denoify dosen't manage to locate this file you can tell explcitely what file should be made the `mod.ts` file: &#x20;
+Usually the index of your module is specified in the [main field of your package.json](https://github.com/garronej/evt/blob/e5d91ba991e0d2413d70ea0ae6e4d1fc838b2d1d/package.json#L9). If for some reason Denoify doesn't manage to locate this file you can tell explcitely what file should be made the `mod.ts` file: &#x20;
 
 ```json
 //.denoifyrc.json
@@ -80,13 +80,13 @@ More info [here](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module#s
 
 ### `replacer`
 
-It les you point to a custom function that will intercept how Denoify replace the imports statement of external module. &#x20;
+It let you point to a custom function that will intercept how Denoify replace the imports statement of external module. &#x20;
 
 It's usefull if you know the existence of a port for a specific library.  For example Denoify support React out of the box thanks to a [builtin replacer we have for it](https://github.com/garronej/denoify/blob/main/src/bin/replacer/react-dom.ts).  &#x20;
 
 Using a replacer is very powerfull but very tricky as well, you should avoid it if you can. &#x20;
 
-[Here](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/1415f364f877a166bd21a916d3f6005fd32e9413/README.md?plain=1#L147-L165) you have a concreate usage example ins the demo repo.
+[Here](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/1415f364f877a166bd21a916d3f6005fd32e9413/README.md?plain=1#L147-L165) you have a concrete usage example ins the demo repo.
 
 ### `ports`
 
@@ -104,7 +104,7 @@ with:
 import { load } from "npm:js-yaml@4.1.0";
 ```
 
-This will work with version of Deno new enough to have NPM support but you probably want to avoir shipping with a dependency on NPM.   &#x20;
+This will work with version of Deno new enough to have NPM support but you probably want to have shipping with a dependency on NPM.   &#x20;
 
 More info [here](https://github.com/garronej/my\_dummy\_npm\_and\_deno\_module/blob/1415f364f877a166bd21a916d3f6005fd32e9413/README.md?plain=1#L123-L145).
 
@@ -135,7 +135,7 @@ Now what if there is no existing port? &#x20;
 
 #### You Denoify the dependency yourself in a fork
 
-Don't do that unless you have tried everything else. It's usually much easyer to just ust a .deno.ts file. &#x20;
+Don't do that unless you have tried everything else. It's usually much easier to just use a .deno.ts file. &#x20;
 
 With:&#x20;
 

@@ -63,6 +63,7 @@ Some modules that have been made cross-runtime using Denoify:
 -   [eta](https://deno.land/x/eta@v1.3.0)
 -   [graphql-helix](https://github.com/contrawork/graphql-helix)
 -   [tsafe](https://github.com/garronej/tsafe)
+-   [Automerge](https://github.com/automerge/automerge)
 -   [...and many more great modules](https://github.com/garronej/denoify/network/dependents?dependent_type=PACKAGE)
 
 # Limitations

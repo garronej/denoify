@@ -700,14 +700,14 @@ esprima@^4.0.0, esprima@^4.0.1:
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
 
-evt@2.4.18:
-  version "2.4.18"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.18.tgz#931012610dcd3bc7c0877d61018a704e9e5511db"
-  integrity sha512-kMYW3DPrUWvFsOUf3cN1NMdg0MEFYLMLqC7hPSasNs8TOZCOBsDgazr6nXda2iUur/2L6BtRu0oCl2++oGYZxA==
+evt@2.4.21:
+  version "2.4.21"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.21.tgz#9c642c50f1f1c3fa6c018cb6b5a57165cefbe270"
+  integrity sha512-GeR04mLiX9PYqVhGtW6jTPD28p+GTnCF4wsCKWofBLx6cHr6vwqQLa6NA5xZUKBQl5fJxesEwxvx4nyryNYdQw==
   dependencies:
-    minimal-polyfills "^2.2.2"
-    run-exclusive "^2.2.18"
-    tsafe "^1.6.0"
+    minimal-polyfills "^2.2.3"
+    run-exclusive "^2.2.19"
+    tsafe "^1.6.3"
 
 execa@^5.1.1:
   version "5.1.1"
@@ -1047,10 +1047,10 @@ mimic-fn@^2.1.0:
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
   integrity sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==
 
-minimal-polyfills@^2.2.1, minimal-polyfills@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/minimal-polyfills/-/minimal-polyfills-2.2.2.tgz#6b06a004acce420eb91cf94698f5e6e7f2518378"
-  integrity sha512-eEOUq/LH/DbLWihrxUP050Wi7H/N/I2dQT98Ep6SqOpmIbk4sXOI4wqalve66QoZa+6oljbZWU6I6T4dehQGmw==
+minimal-polyfills@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/minimal-polyfills/-/minimal-polyfills-2.2.3.tgz#22af58de16807b325f29b83ca38ffb83e75ec3f4"
+  integrity sha512-oxdmJ9cL+xV72h0xYxp4tP2d5/fTBpP45H8DIOn9pASuF8a3IYTf+25fMGDYGiWW+MFsuog6KD6nfmhZJQ+uUw==
 
 minimatch@^3.1.1:
   version "3.1.2"
@@ -1262,12 +1262,12 @@ rollup@~2.78.0:
   optionalDependencies:
     fsevents "~2.3.2"
 
-run-exclusive@^2.2.18:
-  version "2.2.18"
-  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.18.tgz#ec930edc3a7044750dc827df9372bde8f610f586"
-  integrity sha512-TXr1Gkl1iEAOCCpBTRm/2m0+1KGjORcWpZZ+VGGTe7dYX8E4y8/fMvrHk0zf+kclec2R//tpvdBxgG0bDgaJfw==
+run-exclusive@^2.2.19:
+  version "2.2.19"
+  resolved "https://registry.yarnpkg.com/run-exclusive/-/run-exclusive-2.2.19.tgz#37a2fb6e3671f8ae0d63521ebd1865fc796cf307"
+  integrity sha512-K3mdoAi7tjJ/qT7Flj90L7QyPozwUaAG+CVhkdDje4HLKXUYC3N/Jzkau3flHVDLQVhiHBtcimVodMjN9egYbA==
   dependencies:
-    minimal-polyfills "^2.2.1"
+    minimal-polyfills "^2.2.3"
 
 rxjs@^7.5.1:
   version "7.5.6"
@@ -1465,10 +1465,10 @@ ts-node@^10.9.1:
     v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
 
-tsafe@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.6.0.tgz#48a9bd0a4c43df43d289bdfc1d89f0d7fffbd612"
-  integrity sha512-wlUeRBnyN3EN2chXznpLm7vBEvJLEOziDU+MN6NRlD99AkwmXgtChNQhp+V97VyRa3Bp05IaL4Cocsc7JlyEUg==
+tsafe@^1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.6.3.tgz#93a77510f542d9043c6f3ab9ed46267729431a59"
+  integrity sha512-55Tbbxn6XAx1NX7X+fNfIsKsM6XxcbFbUMZ47fjXlef1g9jV8w+mZi3rse0+9Dj5nQefyWLeYT4cAwyiakWszQ==
 
 tslib@^2.1.0:
   version "2.4.0"

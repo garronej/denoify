@@ -15,11 +15,12 @@
         "postbuild": "yarn grant-exec-perms",
         "pretest": "yarn build",
         "test": "vitest",
-        "test-precheck": "script/check-test.sh",
+        "test-precheck": "scripts/check-test.sh",
         "prettier": "prettier '**/*.{ts,tsx,json,md}'",
         "format": "yarn prettier --write",
         "format:check": "yarn prettier --list-different",
-        "link_in_test_app": "node dist/bin/link_in_test_app.js"
+        "link-in-app": "ts-node --skipProject scripts/link-in-app.ts",
+        "link-in-test-app": "yarn link-in-app my_dummy_npm_and_deno_module/"
     },
     "bin": {
         "denoify": "dist/bin/denoify.js",
@@ -69,7 +70,7 @@
     "devDependencies": {
         "@types/glob": "^7.1.1",
         "@types/js-yaml": "^3.12.3",
-        "@types/node": "^10.0.0",
+        "@types/node": "^20.2.3",
         "@types/node-fetch": "^2.5.6",
         "@types/url-join": "^4.0.0",
         "husky": "^4.3.8",
@@ -77,6 +78,7 @@
         "lint-staged": "^11.0.0",
         "prettier": "^2.3.0",
         "typescript": "^4.7.3",
+        "ts-node": "^10.9.1",
         "vitest": "^0.24.0"
     }
 }

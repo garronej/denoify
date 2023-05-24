@@ -7,6 +7,10 @@ import { getIsDryRun } from "./lib/getIsDryRun";
 import * as fs from "fs";
 import * as commentJson from "comment-json";
 import { resolvePathsWithWildcards } from "../tools/resolvePathsWithWildcards";
+import { assert } from "tsafe/assert";
+import { is } from "tsafe/is";
+import { removeDuplicates } from "evt/tools/reducers/removeDuplicates";
+import { same } from "evt/tools/inDepth/same";
 
 /**
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
@@ -62,29 +66,13 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
         return {
             "beforeMovedFilePaths": await getBeforeMovedFilePaths(true, undefined),
             "moveFiles": async () => {
-                await getBeforeMovedFilePaths(isDryRun, (...args) => console.log(...[isDryRun ? "(dry) " : "", ...args]));
+                await getBeforeMovedFilePaths(isDryRun, undefined);
             }
         };
     })();
 
     const getAfterMovedFilePath = (params: { beforeMovedFilePath: string }) => {
         const beforeMovedFilePath = (() => {
-            if (params.beforeMovedFilePath.includes("*")) {
-                const resolvedPaths = resolvePathsWithWildcards({ "pathWithWildcards": [params.beforeMovedFilePath] });
-
-                const isMatching =
-                    beforeMovedFilePaths.find(
-                        beforeMovedFilePath =>
-                            resolvedPaths.find(resolvedPath => path.relative(beforeMovedFilePath, resolvedPath) === "") !== undefined
-                    ) !== undefined;
-
-                if (!isMatching) {
-                    return undefined;
-                }
-
-                return path.relative(".", params.beforeMovedFilePath);
-            }
-
             const beforeMovedFilePath = beforeMovedFilePaths.find(
                 beforeMovedFilePath => path.relative(beforeMovedFilePath, params.beforeMovedFilePath) === ""
             );
@@ -98,14 +86,16 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
 
         if (beforeMovedFilePath === undefined) {
             //NOTE: In case the path would be absolute.
-            return path.relative(".", params.beforeMovedFilePath);
+            return "./" + path.relative(".", params.beforeMovedFilePath);
         }
 
-        const afterMovedFilePath = beforeMovedFilePath
-            .replace(/^\.\//, "")
-            .split(path.sep)
-            .filter((...[, index]) => index !== 0)
-            .join(path.sep);
+        const afterMovedFilePath =
+            "./" +
+            beforeMovedFilePath
+                .replace(/^\.\//, "")
+                .split(path.sep)
+                .filter((...[, index]) => index !== 0)
+                .join(path.sep);
 
         return afterMovedFilePath;
     };
@@ -139,19 +129,57 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     ...("exports" in packageJsonParsed
                         ? {
                               "exports": Object.fromEntries(
-                                  Object.entries(packageJsonParsed["exports"]).map(([path, pathOrObj]) => [
-                                      path,
-                                      (() => {
-                                          const fRec = <T extends string | Record<string, unknown>>(pathOrObj: T): T =>
-                                              typeof pathOrObj === "string"
-                                                  ? `./${getAfterMovedFilePath({ "beforeMovedFilePath": pathOrObj })}`
-                                                  : (Object.fromEntries(
-                                                        Object.entries(pathOrObj).map(([type, pathOrObj]) => [type, fRec(pathOrObj as any)])
-                                                    ) as any);
+                                  Object.entries(packageJsonParsed["exports"])
+                                      .map(([exportPath, exportPathResolutionOptions]): [string, RecObj][] => {
+                                          console.log({ exportPath, exportPathResolutionOptions });
 
-                                          return fRec(pathOrObj as any);
-                                      })()
-                                  ])
+                                          assert(is<RecObj>(exportPathResolutionOptions));
+
+                                          if (!exportPath.includes("*")) {
+                                              let json = JSON.stringify(exportPathResolutionOptions);
+
+                                              for (const path of collectStrings(exportPathResolutionOptions)) {
+                                                  json = replaceAllOccurrences({
+                                                      "str": json,
+                                                      "searchValue": path,
+                                                      "replaceValue": getAfterMovedFilePath({ "beforeMovedFilePath": path })
+                                                  });
+                                              }
+
+                                              return [[exportPath, JSON.parse(json)]];
+                                          } else {
+                                              let result: {
+                                                  wildcardMatch: string;
+                                                  exportPathResolutionOption: RecObj;
+                                              }[];
+
+                                              try {
+                                                  result = resolveExportsResolutionOptionsWithWildcard({
+                                                      "exportPathResolutionOptionsWithWildcards": exportPathResolutionOptions,
+                                                      "resolvePathWithExportsWildcard": ({ pathWithExportsWildcard }) =>
+                                                          resolvePathsWithWildcards({
+                                                              "pathWithWildcards": [
+                                                                  (() => {
+                                                                      assert(pathWithExportsWildcard.split("*").length === 2);
+
+                                                                      return pathWithExportsWildcard.replace("*", "**/*");
+                                                                  })()
+                                                              ]
+                                                          }),
+                                                      getAfterMovedFilePath
+                                                  });
+                                              } catch (error) {
+                                                  console.log(String(error));
+                                                  return [];
+                                              }
+
+                                              return result.map(({ wildcardMatch, exportPathResolutionOption }) => [
+                                                  exportPath.replace("*", wildcardMatch),
+                                                  exportPathResolutionOption
+                                              ]);
+                                          }
+                                      })
+                                      .flat()
                               )
                           }
                         : {}),
@@ -218,6 +246,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     })
                 )
             );
+            /*
             console.log(
                 [
                     `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
@@ -225,6 +254,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     `-> ${JSON.stringify({ sources })}`
                 ].join(" ")
             );
+            */
 
             walk: {
                 if (isDryRun) {
@@ -243,6 +273,155 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                 );
             }
         });
+}
+
+type RecObj = string | Record<string, unknown /*RecObj*/>;
+
+function collectStrings(objRec: RecObj): string[] {
+    if (typeof objRec === "string") {
+        return [objRec];
+    }
+
+    return Object.values(objRec)
+        .map(value => {
+            assert(is<RecObj>(value));
+            return collectStrings(value);
+        })
+        .flat()
+        .reduce(...removeDuplicates<string>());
+}
+
+const replaceAllOccurrences = (params: { str: string; searchValue: string; replaceValue: string }) => {
+    const { str, searchValue, replaceValue } = params;
+    return str.split(searchValue).join(replaceValue);
+};
+
+function resolveExportsResolutionOptionsWithWildcard(params: {
+    exportPathResolutionOptionsWithWildcards: RecObj;
+    resolvePathWithExportsWildcard: (params: { pathWithExportsWildcard: string }) => string[];
+    getAfterMovedFilePath: (params: { beforeMovedFilePath: string }) => string;
+}): {
+    wildcardMatch: string;
+    exportPathResolutionOption: RecObj;
+}[] {
+    /*
+    {
+        "require": "./dist/*.js",
+        "import": "./dist/esm/*.mjs"
+    }
+
+    ---->  collectStrings --->
+
+    ["./dist/*.js", "./dist/esm/*.mjs"]
+
+    "./dist/*.js" --> resolvePathWithExportWildcard ---> [ "./dist/a.js", "./dist/b.js" ]
+    "./dist/esm/*.js" --> resolvePathWithExportsWildcard ---> [ "./dist/esm/a.js", "./dist/esm/b.js" ]
+
+    "./dist/*.js" , [ "./dist/a.js", "./dist/b.js" ] --> getWildcardMatches --> [ "a", "b" ]
+    "./dist/esm/*.js" , [ "./dist/esm/a.js", "./dist/esm/b.js" ] --> getWildcardMatches --> [ "b", "a" ]
+
+    assert(sameSet(["a", "b"], ["b", "a"]));
+
+    loop over the wildcard matches, first a
+
+    '{ "require": "./dist/*.js", "import": "./dist/esm/*.mjs" }', "*", "a"
+    --> replaceAllOccurrences --> '{ "require": "./dist/a.js", "import": "./dist/esm/a.mjs" }'
+
+    "./dist/a.js" --> getAfterMovedFilePath --> "./a.js"
+    "./dist/b.js" --> getAfterMovedFilePath --> "./b.js"
+    "./dist/esm/a.js" --> getAfterMovedFilePath --> "./esm/a.js"
+    "./dist/esm/b.js" --> getAfterMovedFilePath --> "./esm/b.js"
+    
+
+    '{ "require": "./dist/a.js", "import": "./dist/esm/a.mjs" }', "./dist/a.js", "./a.js"
+    --> replaceAllOccurrences --> '{ "require": "./a.js", "import": ".dist/esm/a.mjs" }'
+
+    '{ "require": "./dist/a.js", "import": "./dist/esm/a.mjs" }', "./dist/b.js", "./b.js"
+    --> replaceAllOccurrences --> '{ "require": "./a.js", "import": ".dist/esm/a.mjs" }' (unchanged)
+
+    '{ "require": "./dist/a.js", "import": "./dist/esm/a.mjs" }', "./dist/esm/a.js", "./esm/a.js"
+    --> replaceAllOccurrences --> '{ "require": "./a.js", "import": "./esm/a.mjs" }'
+
+    '{ "require": "./dist/a.js", "import": "./dist/esm/a.mjs" }', "./dist/esm/b.js", "./esm/b.js"
+    --> replaceAllOccurrences --> '{ "require": "./a.js", "import": "./esm/a.mjs" }' (unchanged)
+
+    One entry of the return { "wildcardMatch": "a", "exportPathResolutionOption": JSON.parse('{ "require": "./a.js", "import": "./esm/a.mjs" }') }
+
+    end loop
+
+    */
+
+    const getWildcardMatches = (params: { pathWithExportWildcard: string; paths: string[] }): string[] => {
+        const { pathWithExportWildcard, paths } = params;
+
+        const [prefix, suffix] = pathWithExportWildcard.split("*");
+
+        return paths.map(path => path.replace(prefix, "").replace(suffix, ""));
+    };
+
+    const { exportPathResolutionOptionsWithWildcards, resolvePathWithExportsWildcard, getAfterMovedFilePath } = params;
+
+    console.log({ exportPathResolutionOptionsWithWildcards });
+
+    const pathWithExportsWildcards = collectStrings(exportPathResolutionOptionsWithWildcards);
+
+    console.log({ pathWithExportsWildcards });
+
+    const pathsByPathWithExportsWildcard: Record<string, string[]> = Object.fromEntries(
+        pathWithExportsWildcards.map(pathWithExportsWildcard => [
+            pathWithExportsWildcard,
+            resolvePathWithExportsWildcard({ pathWithExportsWildcard }).map(path => `./${path}`)
+        ])
+    );
+
+    console.log({ pathsByPathWithExportsWildcard });
+
+    let wildcardMatches: string[] | undefined = undefined;
+
+    for (const pathWithExportWildcard of pathWithExportsWildcards) {
+        const wildcardMatches_i = getWildcardMatches({
+            pathWithExportWildcard,
+            "paths": pathsByPathWithExportsWildcard[pathWithExportWildcard]
+        });
+
+        if (wildcardMatches === undefined) {
+            wildcardMatches = wildcardMatches_i;
+            continue;
+        }
+
+        assert(same(wildcardMatches, wildcardMatches_i, { "takeIntoAccountArraysOrdering": false }));
+    }
+
+    assert(wildcardMatches !== undefined);
+
+    console.log(wildcardMatches);
+
+    return wildcardMatches.map(wildcardMatch => {
+        let json = JSON.stringify(exportPathResolutionOptionsWithWildcards);
+
+        json = replaceAllOccurrences({
+            "str": json,
+            "searchValue": "*",
+            "replaceValue": wildcardMatch
+        });
+
+        for (const path of Object.values(pathsByPathWithExportsWildcard).flat()) {
+            console.log("before", json);
+
+            json = replaceAllOccurrences({
+                "str": json,
+                "searchValue": path,
+                "replaceValue": getAfterMovedFilePath({ "beforeMovedFilePath": path })
+            });
+
+            console.log("after", json);
+        }
+
+        return {
+            wildcardMatch,
+            "exportPathResolutionOption": JSON.parse(json)
+        };
+    });
 }
 
 if (require.main === module) {

@@ -86,7 +86,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
 
         if (beforeMovedFilePath === undefined) {
             //NOTE: In case the path would be absolute.
-            return path.relative(".", params.beforeMovedFilePath);
+            return "./" + path.relative(".", params.beforeMovedFilePath);
         }
 
         const afterMovedFilePath =
@@ -146,7 +146,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                                                   });
                                               }
 
-                                              return [path, JSON.parse(json)];
+                                              return [[exportPath, JSON.parse(json)]];
                                           } else {
                                               let result: {
                                                   wildcardMatch: string;

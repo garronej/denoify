@@ -11,6 +11,7 @@ import { assert } from "tsafe/assert";
 import { is } from "tsafe/is";
 import { removeDuplicates } from "evt/tools/reducers/removeDuplicates";
 import { same } from "evt/tools/inDepth/same";
+import { isInsideOrIsDir } from "../tools/isInsideOrIsDir";
 
 /**
  * To disable dry run mode  DRY_RUN=1 env variable must be set.
@@ -49,7 +50,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     }
 
     const moveSourceFiles = "types" in packageJsonParsed ? !packageJsonParsed["types"].match(/\.d\.ts$/i) : false;
-    //console.log(moveSourceFiles ? "Putting .ts files alongside .js files" : "Leaving .ts file in the src/ directory");
+    console.log(moveSourceFiles ? "Putting .ts files alongside .js files" : "Leaving .ts file in the src/ directory");
 
     const { beforeMovedFilePaths, moveFiles } = await (async () => {
         const getBeforeMovedFilePaths = async (isDryRun: boolean, log: typeof console.log | undefined) => {
@@ -72,26 +73,24 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     })();
 
     const getAfterMovedFilePath = (params: { beforeMovedFilePath: string }) => {
-        const beforeMovedFilePath = (() => {
-            const beforeMovedFilePath = beforeMovedFilePaths.find(
-                beforeMovedFilePath => path.relative(beforeMovedFilePath, params.beforeMovedFilePath) === ""
-            );
+        const { beforeMovedFilePath } = params;
 
-            if (beforeMovedFilePath === undefined) {
-                return undefined;
+        const beforeMovedFilePathFromList = beforeMovedFilePaths.find(
+            beforeMovedFilePathFromList => path.relative(beforeMovedFilePathFromList, beforeMovedFilePath) === ""
+        );
+
+        if (beforeMovedFilePathFromList === undefined) {
+            if (!isInsideOrIsDir({ "dirPath": tsconfigOutDir, "fileOrDirPath": beforeMovedFilePath })) {
+                //NOTE: In case the path would be absolute.
+                return "./" + path.relative(".", beforeMovedFilePath);
             }
 
-            return beforeMovedFilePath;
-        })();
-
-        if (beforeMovedFilePath === undefined) {
-            //NOTE: In case the path would be absolute.
-            return "./" + path.relative(".", params.beforeMovedFilePath);
+            throw new Error(`${beforeMovedFilePath} is inside ${tsconfigOutDir} but it has't been moved`);
         }
 
         const afterMovedFilePath =
             "./" +
-            beforeMovedFilePath
+            beforeMovedFilePathFromList
                 .replace(/^\.\//, "")
                 .split(path.sep)
                 .filter((...[, index]) => index !== 0)
@@ -131,8 +130,6 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                               "exports": Object.fromEntries(
                                   Object.entries(packageJsonParsed["exports"])
                                       .map(([exportPath, exportPathResolutionOptions]): [string, RecObj][] => {
-                                          console.log({ exportPath, exportPathResolutionOptions });
-
                                           assert(is<RecObj>(exportPathResolutionOptions));
 
                                           if (!exportPath.includes("*")) {
@@ -246,7 +243,6 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     })
                 )
             );
-            /*
             console.log(
                 [
                     `${isDryRun ? "(dry) " : ""}Editing ${path.basename(beforeMovedSourceMapFilePath)}:`,
@@ -254,7 +250,6 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                     `-> ${JSON.stringify({ sources })}`
                 ].join(" ")
             );
-            */
 
             walk: {
                 if (isDryRun) {
@@ -361,11 +356,7 @@ function resolveExportsResolutionOptionsWithWildcard(params: {
 
     const { exportPathResolutionOptionsWithWildcards, resolvePathWithExportsWildcard, getAfterMovedFilePath } = params;
 
-    console.log({ exportPathResolutionOptionsWithWildcards });
-
     const pathWithExportsWildcards = collectStrings(exportPathResolutionOptionsWithWildcards);
-
-    console.log({ pathWithExportsWildcards });
 
     const pathsByPathWithExportsWildcard: Record<string, string[]> = Object.fromEntries(
         pathWithExportsWildcards.map(pathWithExportsWildcard => [
@@ -373,8 +364,6 @@ function resolveExportsResolutionOptionsWithWildcard(params: {
             resolvePathWithExportsWildcard({ pathWithExportsWildcard }).map(path => `./${path}`)
         ])
     );
-
-    console.log({ pathsByPathWithExportsWildcard });
 
     let wildcardMatches: string[] | undefined = undefined;
 
@@ -394,8 +383,6 @@ function resolveExportsResolutionOptionsWithWildcard(params: {
 
     assert(wildcardMatches !== undefined);
 
-    console.log(wildcardMatches);
-
     return wildcardMatches.map(wildcardMatch => {
         let json = JSON.stringify(exportPathResolutionOptionsWithWildcards);
 
@@ -406,15 +393,11 @@ function resolveExportsResolutionOptionsWithWildcard(params: {
         });
 
         for (const path of Object.values(pathsByPathWithExportsWildcard).flat()) {
-            console.log("before", json);
-
             json = replaceAllOccurrences({
                 "str": json,
                 "searchValue": path,
                 "replaceValue": getAfterMovedFilePath({ "beforeMovedFilePath": path })
             });
-
-            console.log("after", json);
         }
 
         return {

@@ -700,14 +700,14 @@ esprima@^4.0.0, esprima@^4.0.1:
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
 
-evt@2.4.21:
-  version "2.4.21"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.21.tgz#9c642c50f1f1c3fa6c018cb6b5a57165cefbe270"
-  integrity sha512-GeR04mLiX9PYqVhGtW6jTPD28p+GTnCF4wsCKWofBLx6cHr6vwqQLa6NA5xZUKBQl5fJxesEwxvx4nyryNYdQw==
+evt@2.4.22:
+  version "2.4.22"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.4.22.tgz#1a87471bca6e71909b66a9f8da86929bd34c8736"
+  integrity sha512-lxC4XLMhKXD2jj1p5O6AZ3tTFTIOt2qhD2NjX5phXPTfK/oIZhWUsZsqsdtrifxUOXf7PZ9TZF4PtylK/S5QGw==
   dependencies:
     minimal-polyfills "^2.2.3"
     run-exclusive "^2.2.19"
-    tsafe "^1.6.3"
+    tsafe "^1.6.4"
 
 execa@^5.1.1:
   version "5.1.1"
@@ -1465,10 +1465,10 @@ ts-node@^10.9.1:
     v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
 
-tsafe@^1.6.3:
-  version "1.6.3"
-  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.6.3.tgz#93a77510f542d9043c6f3ab9ed46267729431a59"
-  integrity sha512-55Tbbxn6XAx1NX7X+fNfIsKsM6XxcbFbUMZ47fjXlef1g9jV8w+mZi3rse0+9Dj5nQefyWLeYT4cAwyiakWszQ==
+tsafe@^1.6.4:
+  version "1.6.4"
+  resolved "https://registry.yarnpkg.com/tsafe/-/tsafe-1.6.4.tgz#048a114761714538c72f16abd25bb247d4e3780e"
+  integrity sha512-l4Z54QFGHO8GF0gBpb3yPGHjkIkIirl8rwW+lMBmtEMzOJeRs8BdjkDEx6nU8Ak9PQVp/KNDtECxTja8MMIDoA==
 
 tslib@^2.1.0:
   version "2.4.0"

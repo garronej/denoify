@@ -2,7 +2,15 @@ import * as fs from "fs";
 import { cosmiconfig } from "cosmiconfig";
 import config from ".";
 import { ConfigFileType } from "./fileAndContent";
-import parse from "parse-dont-validate";
+
+const guardAsOptionalString = (string: unknown) => (typeof string === "string" ? string : undefined);
+
+const guardAsString = (param: { string: unknown; errorMessage: string }) => {
+    if (typeof param.string === "string") {
+        return param.string;
+    }
+    throw new Error(param.errorMessage);
+};
 
 export type DenoifyParams = {
     replacer?: string;
@@ -35,51 +43,52 @@ export function parseAsDenoifyParams(denoifyParams: any): DenoifyParams | undefi
 
     const { includes } = denoifyParams;
     return {
-        "replacer": parse(denoifyParams.replacer).asString().elseGet(undefined),
-        "out": parse(denoifyParams.out).asString().elseGet(undefined),
-        "index": parse(denoifyParams.index).asString().elseGet(undefined),
+        "replacer": guardAsOptionalString(denoifyParams.replacer),
+        "out": guardAsOptionalString(denoifyParams.out),
+        "index": guardAsOptionalString(denoifyParams.index),
         "includes": !Array.isArray(includes)
             ? undefined
-            : includes.map(
-                  elem =>
-                      parse(elem).asString().elseGet(undefined) ??
-                      parse(elem)
-                          .asMutableObject(elem => ({
-                              "destDir": parse(elem.destDir).asString().elseGet(undefined),
-                              "destBasename": parse(elem.destBasename).asString().elseGet(undefined),
-                              "src": parse(elem.src)
-                                  .asString()
-                                  .elseThrow(
-                                      generateErrorMessage({
-                                          "type": "string",
-                                          "param": elem.src,
-                                          "name": "src in includes array"
-                                      })
-                                  )
-                          }))
-                          .elseThrow(
-                              generateErrorMessage({
-                                  "param": includes,
-                                  "name": "elem in includes",
-                                  "type": "object with type: { destDir: string?, destBasename: string?, src: string }"
-                              })
-                          )
-              ),
+            : includes.map(element => {
+                  const result = guardAsOptionalString(element);
+                  if (result !== undefined) {
+                      return result;
+                  }
+                  if (typeof element !== "object") {
+                      throw new Error(
+                          generateErrorMessage({
+                              "param": includes,
+                              "name": "element in includes",
+                              "type": "object with type: { destDir: string?, destBasename: string?, src: string }"
+                          })
+                      );
+                  }
+                  return {
+                      "destDir": guardAsOptionalString(element.destDir),
+                      "destBasename": guardAsOptionalString(element.destBasename),
+                      "src": guardAsString({
+                          string: element.src,
+                          errorMessage: generateErrorMessage({
+                              "type": "string",
+                              "param": element.src,
+                              "name": "src in includes array"
+                          })
+                      })
+                  };
+              }),
         "ports":
             denoifyParams.ports === undefined || denoifyParams.ports === null
                 ? undefined
                 : Object.entries(denoifyParams.ports).reduce(
-                      (prev, [portName, value]) => ({
+                      (prev, [portName, string]) => ({
                           ...prev,
-                          [portName]: parse(value)
-                              .asString()
-                              .elseThrow(
-                                  generateErrorMessage({
-                                      "param": value,
-                                      "type": "string",
-                                      "name": "value of ports object"
-                                  })
-                              )
+                          [portName]: guardAsString({
+                              string,
+                              errorMessage: generateErrorMessage({
+                                  "param": string,
+                                  "type": "string",
+                                  "name": "value of ports object"
+                              })
+                          })
                       }),
                       {}
                   )

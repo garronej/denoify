@@ -22,22 +22,8 @@
   <a href="https://github.com/garronej/my_dummy_npm_and_deno_module">Demo repo</a>
 </p>
 
-> 🗣️ If your project has **no dependencies** and **is not using any Node builtins** (fs, https, process etc...), you will soon be able to do
-> without Denoify by using TypeScript compiler option `moduleResolution: bundler` and `allowImportingTsExtensions: true`.  
-> See [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719) for more infos.
 
-> 🗣️ [Deno now supports NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
-> For NPM module authors this means that you jus need to tell your users to import your module like:  
-> `import express from "npm:your-module@5";`.  
-> Knowing that why would you want to use Denoify?
->
-> -   To publish your module on [deno.land/x](https://deno.land/x). You have very few chances to see your module
->     be embedded in others Deno modules if you aren't releasing a Deno specific distribution.
-> -   To ensure your module is retro compatible with Deno versions that do not feature NPM support.
-> -   If your module belong in the 10% of NPM modules that doesn't work out of the box. Denoify can help you
->     providing Deno implementation for specific files of your module (xxx.deno.ts).
 
-<br>
 
 # What it is
 
@@ -45,13 +31,27 @@ A build tool that takes as input a TypeScript codebase that was meant to target 
 
 ![what_denoify_does](https://user-images.githubusercontent.com/6702424/85449626-41b10c80-b598-11ea-91cc-6805facab1dd.png)
 
-> **NOTE:** Denoify won't run on Deno, it is a Node module.
-
 > **NOTE:** Denoify is capable of **recursively** resolving **dependencies**!  
 > It works out of the box with dependencies that uses denoify
 > and there are many option for dealing with dependencies that won't transpile automatically. [See specific documentation](https://github.com/garronej/my_dummy_npm_and_deno_module)
 
-This tool is mainly for NPM module maintainer, to enable them to bring first-class citizen Deno support to their modules and do so without introducing breaking changes.
+This tool is mainly for NPM module publisher, to enable them to bring first-class citizen Deno support to their modules and do so without introducing breaking changes.
+
+## Deno's Support for NPM Modules: What It Means and the Continued Relevance of Denoify
+
+[Deno now supports NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
+This development significantly benefits NPM module authors as it simplifies the process of integrating their modules into Deno.  
+You simply instruct your users to import your module using the format: `import express from "npm:your-module@5";`. 
+
+However, even with this development, there are still compelling reasons to consider using Denoify for your module:
+
+1. **Publishing on [deno.land/x](https://deno.land/x):** If you aspire to have your module incorporated into other Deno modules, it is crucial to release a Deno-specific distribution. Without it, your chances of significant inclusion are considerably diminished.
+
+2. **Ensuring Retro Compatibility:** Denoify ensures your module remains compatible with earlier Deno versions lacking NPM support. This retro-compatibility broadens your module's user base and applicability.
+
+3. **Tailoring Module Adaptations:** Not all NPM modules (approximately 10%) will work seamlessly with Deno out of the box. In these cases, Denoify can aid in creating Deno-specific implementations for particular files within your module (`xxx.deno.ts`). 
+
+Therefore, despite Deno's new NPM support, Denoify continues to offer value in ensuring wider compatibility, adaptability, and visibility for your module.  
 
 # Example of modules using Denoify
 
@@ -68,28 +68,29 @@ Some modules that have been made cross-runtime using Denoify:
 
 # Limitations
 
-Coming up next is a detailed guide on how to set up denoify with your project and how
-to publish on [deno.land/x](https://deno.land/x) but before anything
-here are the current limitations you need to be aware of.
-
--   If your module is vanilla JS it needs to be ported to TypeScript first. (1)
+-   If your module is vanilla JS it needs to be ported to TypeScript first[^0].
 -   `require()` is not supported.
 -   You can't `fs.readFile()` files that are part of the module ( files inside a `res/`
-    directory for example ). (2)
+    directory for example ). [^1]
 
-(1) _Don't be afraid, renaming your source with `.ts` and dropping some `any` here
+
+[^0]: _Don't be afraid, renaming your source with `.ts` and dropping some `any` here
 and there will do the trick.
-You will be able to pull it off even if you aren't familiar with typescript. [Ref](https://github.com/garronej/my_dummy_npm_and_deno_module#enable-strict-mode-and-fixes-errors-if-any)_
-
-(2) _In Deno the files that forms your module won’t be pre-fetched and
+You will be able to pull it off even if you aren't familiar with typescript. [Ref](https://github.com/garronej/my_dummy_npm_and_deno_module#enable-strict-mode-and-fixes-errors-if-any)_  
+[^1]: _In Deno the files that forms your module won’t be pre-fetched and
 placed in `node_module` like in node so you won’t be able to access files that are not
 on the disk._
 
-<p align="center">  
-    <br />
-    <br />
-    <a href="https://docs.denoify.land/">🚀 Get started 🚀</a>
-</p>
+# Get started
+
+[🚀 **Quick start** 🚀](https://docs.denoify.land/)
+
+
+# Doing without Denoify
+
+If your project doesn't have any dependencies and isn't utilizing Node built-ins (e.g., fs, https, process), you have an alternative to Denoify. You can make use of the TypeScript compiler options `moduleResolution: bundler` and `allowImportingTsExtensions: true`. For more information, see [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719).
+
+Please note that this technique requires the addition of `.ts` extension to your source file imports. This could lead to potential compatibility issues with certain tools, and require an adjustment period. 
 
 # What's new
 

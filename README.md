@@ -22,9 +22,6 @@
   <a href="https://github.com/garronej/my_dummy_npm_and_deno_module">Demo repo</a>
 </p>
 
-
-
-
 # What it is
 
 A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.
@@ -41,7 +38,7 @@ This tool is mainly for NPM module publisher, to enable them to bring first-clas
 
 [Deno now supports NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
 This development significantly benefits NPM module authors as it simplifies the process of integrating their modules into Deno.  
-You simply instruct your users to import your module using the format: `import express from "npm:your-module@5";`. 
+You simply instruct your users to import your module using the format: `import express from "npm:your-module@5";`.
 
 However, even with this development, there are still compelling reasons to consider using Denoify for your module:
 
@@ -49,9 +46,9 @@ However, even with this development, there are still compelling reasons to consi
 
 2. **Ensuring Retro Compatibility:** Denoify ensures your module remains compatible with earlier Deno versions lacking NPM support. This retro-compatibility broadens your module's user base and applicability.
 
-3. **Tailoring Module Adaptations:** Not all NPM modules (approximately 10%) will work seamlessly with Deno out of the box. In these cases, Denoify can aid in creating Deno-specific implementations for particular files within your module (`xxx.deno.ts`). 
+3. **Tailoring Module Adaptations:** Not all NPM modules (approximately 10%) will work seamlessly with Deno out of the box. In these cases, Denoify can aid in creating Deno-specific implementations for particular files within your module (`xxx.deno.ts`).
 
-Therefore, despite Deno's new NPM support, Denoify continues to offer value in ensuring wider compatibility, adaptability, and visibility for your module.  
+Therefore, despite Deno's new NPM support, Denoify continues to offer value in ensuring wider compatibility, adaptability, and visibility for your module.
 
 # Example of modules using Denoify
 
@@ -73,24 +70,25 @@ Some modules that have been made cross-runtime using Denoify:
 -   You can't `fs.readFile()` files that are part of the module ( files inside a `res/`
     directory for example ). [^1]
 
+[^0]:
+    _Don't be afraid, renaming your source with `.ts` and dropping some `any` here
+    and there will do the trick.
+    You will be able to pull it off even if you aren't familiar with typescript. [Ref](https://github.com/garronej/my_dummy_npm_and_deno_module#enable-strict-mode-and-fixes-errors-if-any)_
 
-[^0]: _Don't be afraid, renaming your source with `.ts` and dropping some `any` here
-and there will do the trick.
-You will be able to pull it off even if you aren't familiar with typescript. [Ref](https://github.com/garronej/my_dummy_npm_and_deno_module#enable-strict-mode-and-fixes-errors-if-any)_  
-[^1]: _In Deno the files that forms your module won’t be pre-fetched and
-placed in `node_module` like in node so you won’t be able to access files that are not
-on the disk._
+[^1]:
+    _In Deno the files that forms your module won’t be pre-fetched and
+    placed in `node_module` like in node so you won’t be able to access files that are not
+    on the disk._
 
 # Get started
 
 [🚀 **Quick start** 🚀](https://docs.denoify.land/)
 
-
 # Doing without Denoify
 
 If your project doesn't have any dependencies and isn't utilizing Node built-ins (e.g., fs, https, process), you have an alternative to Denoify. You can make use of the TypeScript compiler options `moduleResolution: bundler` and `allowImportingTsExtensions: true`. For more information, see [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719).
 
-Please note that this technique requires the addition of `.ts` extension to your source file imports. This could lead to potential compatibility issues with certain tools, and require an adjustment period. 
+Please note that this technique requires the addition of `.ts` extension to your source file imports. This could lead to potential compatibility issues with certain tools, and require an adjustment period.
 
 # What's new
 

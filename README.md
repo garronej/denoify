@@ -22,7 +22,7 @@
   <a href="https://github.com/garronej/my_dummy_npm_and_deno_module">Demo repo</a>
 </p>
 
-> 🗣️ If your project has **no dependencies** and **is not using any Node builtins** (fs, https, process ect...), you will soon be able to do
+> 🗣️ If your project has **no dependencies** and **is not using any Node builtins** (fs, https, process etc...), you will soon be able to do
 > without Denoify by using TypeScript compiler option `moduleResolution: bundler` and `allowImportingTsExtensions: true`.  
 > See [this comment](https://github.com/gvergnaud/ts-pattern/pull/108#issuecomment-1356829719) for more infos.
 
@@ -64,7 +64,7 @@ Some modules that have been made cross-runtime using Denoify:
 -   [graphql-helix](https://github.com/contrawork/graphql-helix)
 -   [tsafe](https://github.com/garronej/tsafe)
 -   [Automerge](https://github.com/automerge/automerge)
--   [...and many more great modules](https://github.com/garronej/denoify/network/dependents?dependent_type=PACKAGE)
+-   [...and many others](https://github.com/garronej/denoify/network/dependents?dependent_type=PACKAGE)
 
 # Limitations
 

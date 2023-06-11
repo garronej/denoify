@@ -46,7 +46,7 @@ However, even with this development, there are still compelling reasons to consi
 
 2. **Ensuring Retro Compatibility:** Denoify ensures your module remains compatible with earlier Deno versions lacking NPM support. This retro-compatibility broadens your module's user base and applicability.
 
-3. **Tailoring Module Adaptations:** Not all NPM modules (approximately 10%) will work seamlessly with Deno out of the box. In these cases, Denoify can aid in creating Deno-specific implementations for particular files within your module (`xxx.deno.ts`).
+3. **Tailoring Module Adaptations:** Not all NPM modules (approximately 10%) will work seamlessly with Deno out of the box. In these cases, Denoify can aid in creating Deno-specific implementations for particular files within your module ([`xxx.deno.ts`](https://docs.denoify.land/.deno.ts-files)).
 
 Therefore, despite Deno's new NPM support, Denoify continues to offer value in ensuring wider compatibility, adaptability, and visibility for your module.
 

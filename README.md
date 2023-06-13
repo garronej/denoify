@@ -92,6 +92,10 @@ Please note that this technique requires the addition of `.ts` extension to your
 
 # What's new
 
+**NEW IN v1.6.0**
+
+-   Support for Deno environnement variable (`Deno.env('XYZ')`). Thank you to @dancrumb for this feature. [See issue](https://github.com/garronej/denoify/issues/105)
+
 **NEW IN v1.3.1**
 
 -   Denoify now has [a proper documentation website](https://docs.denoify.land)!

@@ -1,6 +1,30 @@
 import { replaceAsync } from "../tools/replaceAsync";
 import type { denoifyImportExportStatementFactory } from "./denoifyImportExportStatement";
 import * as crypto from "crypto";
+import builtins from "./builtins/index";
+
+/**
+ * Remove any lines containing and following // @denoify-line-ignore
+ */
+const IGNORE_LINE_COMMENT = /^\/\/\s+@denoify-line-ignore/;
+function dealWithDenoifyLineIgnoreSpecialComment(sourceCode: string): string {
+    let previousLineHadIgnoreComment = false;
+    return sourceCode
+        .split("\n")
+        .filter(line => {
+            const thisLineHasIgnoreComment = IGNORE_LINE_COMMENT.test(line);
+            const skipThisLine = thisLineHasIgnoreComment || previousLineHadIgnoreComment;
+
+            if (previousLineHadIgnoreComment) {
+                previousLineHadIgnoreComment = false;
+            }
+            if (thisLineHasIgnoreComment) {
+                previousLineHadIgnoreComment = thisLineHasIgnoreComment;
+            }
+            return !skipThisLine;
+        })
+        .join("\n");
+}
 
 export function denoifySingleFileFactory(params: {} & ReturnType<typeof denoifyImportExportStatementFactory>) {
     const { denoifyImportExportStatement } = params;
@@ -9,96 +33,17 @@ export function denoifySingleFileFactory(params: {} & ReturnType<typeof denoifyI
     async function denoifySingleFile(params: { dirPath: string; sourceCode: string }): Promise<string> {
         const { dirPath, sourceCode } = params;
 
-        let modifiedSourceCode = sourceCode;
+        // Handle ignore comments
+        let modifiedSourceCode = dealWithDenoifyLineIgnoreSpecialComment(sourceCode);
 
-        modifiedSourceCode = (function dealWithDenoifyLineIgnoreSpecialComment(sourceCode: string): string {
-            let split = sourceCode.split("\n");
-
-            split = split.map((line, i) => (i === split.length - 1 ? line : `${line}\n`));
-
-            const outSplit = [];
-
-            for (let i = 0; i < split.length; i++) {
-                const line = split[i];
-
-                if (!line.startsWith("// @denoify-line-ignore")) {
-                    outSplit.push(line);
-                    continue;
-                }
-
-                i++;
+        // Add support for Node builtins
+        for (const builtin of builtins) {
+            if (builtin.test(modifiedSourceCode)) {
+                modifiedSourceCode = [...builtin.modification, modifiedSourceCode].join("\n");
             }
-
-            return outSplit.join("");
-        })(modifiedSourceCode);
-
-        if (usesBuiltIn("__filename", sourceCode)) {
-            modifiedSourceCode = [
-                `const __filename = (() => {`,
-                `    const { url: urlStr } = import.meta;`,
-                `    const url = new URL(urlStr);`,
-                `    const __filename = (url.protocol === "file:" ? url.pathname : urlStr);`,
-                ``,
-                `    const isWindows = (() => {`,
-                ``,
-                `        let NATIVE_OS: typeof Deno.build.os = "linux";`,
-                `        // eslint-disable-next-line @typescript-eslint/no-explicit-any`,
-                `        const navigator = (globalThis as any).navigator;`,
-                `        if (globalThis.Deno != null) {`,
-                `            NATIVE_OS = Deno.build.os;`,
-                `        } else if (navigator?.appVersion?.includes?.("Win") ?? false) {`,
-                `            NATIVE_OS = "windows";`,
-                `        }`,
-                ``,
-                `        return NATIVE_OS == "windows";`,
-                ``,
-                `    })();`,
-                ``,
-                `    return isWindows ?`,
-                `        __filename.split("/").join("\\\\").substring(1) :`,
-                `        __filename;`,
-                `})();`,
-                ``,
-                modifiedSourceCode
-            ].join("\n");
         }
 
-        if (usesBuiltIn("__dirname", sourceCode)) {
-            modifiedSourceCode = [
-                `const __dirname = (() => {`,
-                `    const { url: urlStr } = import.meta;`,
-                `    const url = new URL(urlStr);`,
-                `    const __filename = (url.protocol === "file:" ? url.pathname : urlStr)`,
-                `        .replace(/[/][^/]*$/, '');`,
-                ``,
-                `    const isWindows = (() => {`,
-                ``,
-                `        let NATIVE_OS: typeof Deno.build.os = "linux";`,
-                `        // eslint-disable-next-line @typescript-eslint/no-explicit-any`,
-                `        const navigator = (globalThis as any).navigator;`,
-                `        if (globalThis.Deno != null) {`,
-                `            NATIVE_OS = Deno.build.os;`,
-                `        } else if (navigator?.appVersion?.includes?.("Win") ?? false) {`,
-                `            NATIVE_OS = "windows";`,
-                `        }`,
-                ``,
-                `        return NATIVE_OS == "windows";`,
-                ``,
-                `    })();`,
-                ``,
-                `    return isWindows ?`,
-                `        __filename.split("/").join("\\\\").substring(1) :`,
-                `        __filename;`,
-                `})();`,
-                ``,
-                modifiedSourceCode
-            ].join("\n");
-        }
-
-        if (usesBuiltIn("Buffer", sourceCode)) {
-            modifiedSourceCode = [`import { Buffer } from "buffer";`, modifiedSourceCode].join("\n");
-        }
-
+        // Cleanup import/export statements
         const denoifiedImportExportStatementByHash = new Map<string, string>();
 
         for (const quoteSymbol of [`"`, `'`]) {
@@ -130,6 +75,16 @@ export function denoifySingleFileFactory(params: {} & ReturnType<typeof denoifyI
             }
         }
 
+        // Handle environment variable access
+        modifiedSourceCode = modifiedSourceCode.replaceAll(
+            /=\s+process.env(?:\.(?<varDot>\w+)|\[(?<q>['"])(?<varBracket>\w+)\k<q>\])/g,
+            `= Deno.env.get('$<varDot>$<varBracket>')`
+        );
+        modifiedSourceCode = modifiedSourceCode.replaceAll(
+            /process.env(?:\.(?<varDot>\w+)|\[(?<q>['"])(?<varBracket>\w+)\k<q>\])\s+=\s+(?<val>[^;]+)/g,
+            `Deno.env.set('$<varDot>$<varBracket>', $<val>)`
+        );
+
         for (const [hash, denoifiedImportExportStatement] of denoifiedImportExportStatementByHash) {
             modifiedSourceCode = modifiedSourceCode.replace(new RegExp(hash, "g"), denoifiedImportExportStatement);
         }
@@ -138,30 +93,4 @@ export function denoifySingleFileFactory(params: {} & ReturnType<typeof denoifyI
     }
 
     return { denoifySingleFile };
-}
-
-/*
-TODO: This is really at proof of concept stage.
-
-In the current implementation if any of those keyword appear in the source
-regardless of the context (including comments) the polyfills will be included.
-
-For now this implementation will do the trick, priority goes to polyfilling the
-node's builtins but this need to be improved later on.
-
-*/
-function usesBuiltIn(builtIn: "__filename" | "__dirname" | "Buffer", sourceCode: string): boolean {
-    switch (builtIn) {
-        case "Buffer": {
-            //We should return false for example
-            //if we have an import from the browserify polyfill
-            //e.g.: import { Buffer } from "buffer";
-            if (!!sourceCode.match(/import\s*{[^}]*Buffer[^}]*}\s*from\s*["'][^"']+["']/)) {
-                return false;
-            }
-        }
-        case "__dirname":
-        case "__filename":
-            return new RegExp(`(?:^|[\\s\\(\\);=><{}\\[\\]\\/:?,])${builtIn}(?:$|[^a-zA-Z0-9$_-])`).test(sourceCode);
-    }
 }

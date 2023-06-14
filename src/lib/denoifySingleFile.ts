@@ -75,16 +75,6 @@ export function denoifySingleFileFactory(params: {} & ReturnType<typeof denoifyI
             }
         }
 
-        // Handle environment variable access
-        modifiedSourceCode = modifiedSourceCode.replaceAll(
-            /=\s+process.env(?:\.(?<varDot>\w+)|\[(?<q>['"])(?<varBracket>\w+)\k<q>\])/g,
-            `= Deno.env.get('$<varDot>$<varBracket>')`
-        );
-        modifiedSourceCode = modifiedSourceCode.replaceAll(
-            /process.env(?:\.(?<varDot>\w+)|\[(?<q>['"])(?<varBracket>\w+)\k<q>\])\s+=\s+(?<val>[^;]+)/g,
-            `Deno.env.set('$<varDot>$<varBracket>', $<val>)`
-        );
-
         for (const [hash, denoifiedImportExportStatement] of denoifiedImportExportStatementByHash) {
             modifiedSourceCode = modifiedSourceCode.replace(new RegExp(hash, "g"), denoifiedImportExportStatement);
         }

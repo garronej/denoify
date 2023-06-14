@@ -209,7 +209,7 @@ Buffer.from("hello");
         expect(modifiedSourceCode).toBe(expected);
     });
 
-    it("should denoify the source code by adding relevant import statement", async () => {
+    it("should denoify the source code by adding relevant import statement (Buffer.from)", async () => {
         const sourceCode = `
 Buffer.from("hello");
 `;
@@ -248,7 +248,7 @@ Buffer.from("hello");
 
         expect(modifiedSourceCode).toBe(expected);
     });
-    it("should denoify the source code by adding relevant import statement", async () => {
+    it("should denoify the source code by adding relevant import statement (Buffer)", async () => {
         const sourceCode = `
 Buffer`;
 
@@ -324,56 +324,23 @@ Buffer_name
 
         expect(modifiedSourceCode).toBe(expected);
     });
-    it("should access environment variables correctly", async () => {
-        const sourceCode = `const foo = process.env.FOO\nconst bar = process.env['BAR'];`;
 
-        const expected = `const foo = Deno.env.get('FOO')\nconst bar = Deno.env.get('BAR');`;
+    it("should import node:process if process is used", async () => {
+        const sourceCode = `const foo = process.env.FOO;\nconst bar = process.env['BAR'];`;
+
+        const expected = `import process from "node:process";
+const foo = process.env.FOO;
+const bar = process.env['BAR'];`;
 
         const { denoifySingleFile } = denoifySingleFileFactory({
-            "denoifyImportExportStatement": () => {
-                tsafeAssert(false);
+            "denoifyImportExportStatement": async ({ importExportStatement }) => {
+                return importExportStatement;
             }
         });
 
         const modifiedSourceCode = await denoifySingleFile({
             sourceCode,
-            "dirPath": ""
-        });
-
-        expect(modifiedSourceCode).toBe(expected);
-    });
-    it("should set environment variables correctly", async () => {
-        const sourceCode = `process.env.FOO = 'foo';\nprocess.env['BAR'] = 22;`;
-
-        const expected = `Deno.env.set('FOO', 'foo');\nDeno.env.set('BAR', 22);`;
-
-        const { denoifySingleFile } = denoifySingleFileFactory({
-            "denoifyImportExportStatement": () => {
-                tsafeAssert(false);
-            }
-        });
-
-        const modifiedSourceCode = await denoifySingleFile({
-            sourceCode,
-            "dirPath": ""
-        });
-
-        expect(modifiedSourceCode).toBe(expected);
-    });
-    it("should update environment variables correctly", async () => {
-        const sourceCode = `process.env.FOO = process.env['BAR']+1;\nprocess.env['BAR'] = process.env.FOO + 'bar';`;
-
-        const expected = `Deno.env.set('FOO', Deno.env.get('BAR')+1);\nDeno.env.set('BAR', Deno.env.get('FOO') + 'bar');`;
-
-        const { denoifySingleFile } = denoifySingleFileFactory({
-            "denoifyImportExportStatement": () => {
-                tsafeAssert(false);
-            }
-        });
-
-        const modifiedSourceCode = await denoifySingleFile({
-            sourceCode,
-            "dirPath": ""
+            "dirPath": "whatever"
         });
 
         expect(modifiedSourceCode).toBe(expected);

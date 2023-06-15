@@ -1,6 +1,6 @@
-import * as __dirname from "./__dirname";
-import * as __filename from "./__filename";
-import * as buffer from "./buffer";
+import * as __dirnameBuiltin from "./__dirname";
+import * as __filenameBuiltin from "./__filename";
+import * as bufferBuiltin from "./buffer";
 
 /**
  * This is how we handle Node builtins
@@ -10,6 +10,6 @@ import * as buffer from "./buffer";
  * - modification: string[] the lines of code to prepend to the source code
  */
 
-const builtins = [__filename, __dirname, buffer];
+const builtins = [__filenameBuiltin, __dirnameBuiltin, bufferBuiltin];
 
 export default builtins;

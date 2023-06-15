@@ -3,7 +3,6 @@ import * as __filenameBuiltin from "./__filename";
 import * as bufferBuiltin from "./buffer";
 import * as processBuiltin from "./process";
 
-
 /**
  * This is how we handle Node builtins
  *

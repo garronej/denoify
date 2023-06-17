@@ -1,45 +1,47 @@
-export const knownPorts = {
+import { Dependencies } from "./resolveNodeModuleToDenoModule";
+
+export const knownPorts: { builtins: Dependencies; third_party: Dependencies } = {
     "builtins": {
-        "events": "https://deno.land/std/node/events.ts",
-        "fs": "https://deno.land/std/node/fs.ts",
-        "os": "https://deno.land/std/node/os.ts", //Partial
-        "path": "https://deno.land/std/node/path.ts",
-        "process": "https://deno.land/std/node/process.ts", //Partial
-        "querystring": "https://deno.land/std/node/querystring.ts",
-        "timers": "https://deno.land/std/node/timers.ts",
-        "util": "https://deno.land/std/node/util.ts", //Partial
-        "global": "https://deno.land/std/node/global.ts",
-        "buffer": "https://deno.land/std/node/buffer.ts", //Partial
-        "url": "https://deno.land/std/node/url.ts",
-        "assert": "https://deno.land/std/node/assert.ts",
-        "crypto": "https://deno.land/std/node/crypto.ts", //Very partial
-        "stream": "https://deno.land/std/node/stream.ts",
-        "child_process": "https://deno.land/std/node/child_process.ts",
-        "console": "https://deno.land/std/node/console.ts",
-        "cluster": "https://deno.land/std/node/cluster.ts",
-        "dgram": "https://deno.land/std/node/dgram.ts",
-        "dns": "https://deno.land/std/node/dns.ts",
-        "http": "https://deno.land/std/node/http.ts",
-        "http2": "https://deno.land/std/node/http2.ts",
-        "https": "https://deno.land/std/node/https.ts",
-        "inspector": "https://deno.land/std/node/inspector.ts",
-        "module": "https://deno.land/std/node/module.ts",
-        "net": "https://deno.land/std/node/net.ts",
-        "perf_hooks": "https://deno.land/std/node/perf_hooks.ts",
-        "readline": "https://deno.land/std/node/readline.ts",
-        "repl": "https://deno.land/std/node/repl.ts",
-        "string_decoder": "https://deno.land/std/node/string_decoder.ts",
-        "sys": "https://deno.land/std/node/sys.ts",
-        "tls": "https://deno.land/std/node/tls.ts",
-        "tty": "https://deno.land/std/node/tty.ts",
-        "v8": "https://deno.land/std/node/v8.ts",
-        "vm": "https://deno.land/std/node/vm.ts",
-        "wasi": "https://deno.land/std/node/wasi.ts",
-        "worker_threads": "https://deno.land/std/node/worker_threads.ts",
-        "zlib": "https://deno.land/std/node/zlib.ts"
+        "events": "node:events",
+        "fs": "node:fs",
+        "os": "node:os", //Partial
+        "path": "node:path",
+        "process": "node:process",
+        "querystring": "node:querystring",
+        "timers": "node:timers",
+        "util": "node:util", //Partial
+        "global": "node:global",
+        "buffer": "node:buffer", //Partial
+        "url": "node:url",
+        "assert": "node:assert",
+        "crypto": "node:crypto", //Very partial
+        "stream": "node:stream",
+        "child_process": "node:child_process",
+        "console": "node:console",
+        "cluster": "node:cluster",
+        "dgram": "node:dgram",
+        "dns": "node:dns",
+        "http": "node:http",
+        "http2": "node:http2",
+        "https": "node:https",
+        "inspector": "node:inspector",
+        "module": "node:module",
+        "net": "node:net",
+        "perf_hooks": "node:perf_hooks",
+        "readline": "node:readline",
+        "repl": "node:repl",
+        "string_decoder": "node:string_decoder",
+        "sys": "node:sys",
+        "tls": "node:tls",
+        "tty": "node:tty",
+        "v8": "node:v8",
+        "vm": "node:vm",
+        "wasi": "node:wasi",
+        "worker_threads": "node:worker_threads",
+        "zlib": "node:zlib"
         /*
         Important: built in missing: http, https...
-        Follow evolution of support here: https://deno.land/std/node/README.md
+        Follow evolution of support here: node:README
         __filename and __dirname supported.
         */
     },

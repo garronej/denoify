@@ -2,12 +2,13 @@
 
 import { join as pathJoin, normalize as pathNormalize, dirname as pathDirname, basename as pathBasename } from "path";
 import { getIsDryRun } from "./lib/getIsDryRun";
-import * as fs from "fs";
+import * as fs from "fs/promises";
 import * as commentJson from "comment-json";
 import { removeFromGitignore } from "../tools/removeFromGitignore";
 import { toPosix } from "../tools/toPosix";
 import { parseAsDenoifyConfig } from "../lib/config/parseParams";
 import getFileTypeAndContent from "../lib/config/fileAndContent";
+import { getLocalFileContents } from "../tools/getFileContents";
 
 const { getDenoifyOutDir } = (() => {
     async function getExplicitDenoifyOutDir(params: { moduleDirPath: string }) {
@@ -15,13 +16,7 @@ const { getDenoifyOutDir } = (() => {
 
         const denoifyOut = parseAsDenoifyConfig({
             "configFileType": await getFileTypeAndContent({
-                "getConfigFileRawContent": fileBasename => {
-                    const filePath = pathJoin(moduleDirPath, fileBasename);
-                    if (!fs.existsSync(filePath)) {
-                        return Promise.resolve(undefined);
-                    }
-                    return Promise.resolve(fs.readFileSync(filePath).toString("utf8"));
-                }
+                "getConfigFileRawContent": fileBasename => getLocalFileContents(pathJoin(moduleDirPath, fileBasename))
             })
         })?.out;
 
@@ -32,10 +27,13 @@ const { getDenoifyOutDir } = (() => {
         return pathNormalize(toPosix(denoifyOut));
     }
 
-    function getTsconfigOutDir(params: { moduleDirPath: string }): string | undefined {
+    async function getTsconfigOutDir(params: { moduleDirPath: string }): Promise<string | undefined> {
         const { moduleDirPath } = params;
 
-        const tsconfigJson = fs.readFileSync(pathJoin(moduleDirPath, "tsconfig.json")).toString("utf8");
+        const tsconfigJson = await getLocalFileContents(pathJoin(moduleDirPath, "tsconfig.json"));
+        if (tsconfigJson === undefined) {
+            return undefined;
+        }
 
         const outDir: string | undefined = commentJson.parse(tsconfigJson)["compilerOptions"]?.["outDir"];
 
@@ -49,23 +47,15 @@ const { getDenoifyOutDir } = (() => {
     async function getDenoifyOutDir(params: { moduleDirPath: string }) {
         const { moduleDirPath } = params;
 
-        explicitely_specified: {
-            const denoifyOutDir = await getExplicitDenoifyOutDir({ moduleDirPath });
+        const denoifyOutDir = await getExplicitDenoifyOutDir({ moduleDirPath });
 
-            if (denoifyOutDir === undefined) {
-                break explicitely_specified;
-            }
-
+        if (denoifyOutDir !== undefined) {
             return denoifyOutDir;
         }
 
-        default_based_on_tsconfig_outDir: {
-            const tsconfigOutDir = getTsconfigOutDir({ moduleDirPath });
+        const tsconfigOutDir = await getTsconfigOutDir({ moduleDirPath });
 
-            if (tsconfigOutDir === undefined) {
-                break default_based_on_tsconfig_outDir;
-            }
-
+        if (tsconfigOutDir !== undefined) {
             return pathJoin(
                 pathDirname(tsconfigOutDir), // .
                 `deno_${pathBasename(tsconfigOutDir)}` //deno_dist
@@ -91,7 +81,9 @@ export async function run(params: { moduleDirPath: string; isDryRun: boolean }) 
         throw new Error("Wrong assertion encountered");
     }
 
-    if (!fs.existsSync(denoifyOutDir)) {
+    try {
+        await fs.access(denoifyOutDir);
+    } catch (e) {
         console.log("exit 1");
         return;
     }
@@ -112,7 +104,7 @@ export async function run(params: { moduleDirPath: string; isDryRun: boolean }) 
         return;
     }
 
-    fs.writeFileSync(".gitignore", Buffer.from(fixedGitignoreRaw, "utf8"));
+    await fs.writeFile(".gitignore", Buffer.from(fixedGitignoreRaw, "utf8"));
 }
 
 if (require.main === module) {

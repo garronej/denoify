@@ -1,4 +1,4 @@
-export type ModuleAddress = ModuleAddress.GitHubRepo | ModuleAddress.GitHubRawUrl | ModuleAddress.DenoLandUrl;
+export type ModuleAddress = ModuleAddress.GitHubRepo | ModuleAddress.GitHubRawUrl | ModuleAddress.DenoLandUrl | ModuleAddress.NodeBuiltin;
 
 export namespace ModuleAddress {
     /** e.g: "github:userOrOrg/repositoryName#branch" */
@@ -124,8 +124,27 @@ export namespace ModuleAddress {
         }
     }
 
+    /** e.g: 'node:process' */
+    export type NodeBuiltin = {
+        type: "NODE BUILTIN";
+        name: string;
+    };
+    export namespace NodeBuiltin {
+        export function parse(raw: string): NodeBuiltin {
+            const [, name] = raw.split(":");
+            return {
+                type: "NODE BUILTIN",
+                name
+            };
+        }
+
+        export function match(raw: string): boolean {
+            return /^node:[a-z0-9]+$/.test(raw);
+        }
+    }
+
     export function parse(raw: string): ModuleAddress {
-        for (const ns of [GitHubRepo, GitHubRawUrl, DenoLandUrl]) {
+        for (const ns of [GitHubRepo, GitHubRawUrl, DenoLandUrl, NodeBuiltin]) {
             if (!ns.match(raw)) {
                 continue;
             }

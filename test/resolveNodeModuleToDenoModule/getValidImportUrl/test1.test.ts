@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getValidImportUrlFactory } from "../../../src/lib/resolveNodeModuleToDenoModule";
+import { getValidImportUrlFactory } from "../../../src/lib/resolveNodeModuleToDenoModule/getValidImportUrlFactory";
 import { ModuleAddress } from "../../../src/lib/types/ModuleAddress";
 import { getLatestTag } from "../../../src/tools/githubTags";
 import { assert } from "tsafe/assert";

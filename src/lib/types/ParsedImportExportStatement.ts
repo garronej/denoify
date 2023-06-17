@@ -19,7 +19,7 @@ export namespace ParsedImportExportStatement {
         export type Dependency = {
             type: "DEPENDENCY";
             nodeModuleName: string;
-            specificImportPath: string | undefined;
+            specificImportPath?: string;
         };
 
         export type Url = {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { getThirdPartyDenoModuleInfos } from "../../../src/lib/getThirdPartyDenoModuleInfos";
-import { getValidImportUrlFactory } from "../../../src/lib/resolveNodeModuleToDenoModule";
+import { getValidImportUrlFactory } from "../../../src/lib/resolveNodeModuleToDenoModule/getValidImportUrlFactory";
 import { ModuleAddress } from "../../../src/lib/types/ModuleAddress";
 import { assert } from "tsafe/assert";
 

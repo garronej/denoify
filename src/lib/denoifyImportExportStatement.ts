@@ -114,6 +114,10 @@ export function denoifyImportExportStatementFactory(
 
         const nodeToDenoModuleResolutionResult = await resolveNodeModuleToDenoModule({ nodeModuleName });
 
+        if (nodeToDenoModuleResolutionResult.result === "KNOWN BUILTIN") {
+            return stringify(ParsedImportExportStatement.ParsedArgument.stringify(parsedImportExportStatement.parsedArgument));
+        }
+
         if (nodeToDenoModuleResolutionResult.result === "UNKNOWN BUILTIN") {
             return stringify(`node:${ParsedImportExportStatement.ParsedArgument.stringify(parsedImportExportStatement.parsedArgument)}`);
         }

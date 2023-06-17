@@ -2,6 +2,8 @@ import { describe, it, expect, assert } from "vitest";
 import { denoifySingleFileFactory } from "../src/lib/denoifySingleFile";
 import { ParsedImportExportStatement } from "../src/lib/types/ParsedImportExportStatement";
 import { assert as tsafeAssert } from "tsafe/assert";
+import { denoifyImportExportStatementFactory } from "../src/lib/denoifyImportExportStatement";
+import { resolveNodeModuleToDenoModuleFactory } from "../src/lib/resolveNodeModuleToDenoModule";
 
 describe("denoify single file", () => {
     it("should denoify source code of a file", async () => {
@@ -175,7 +177,7 @@ Buffer.from("hello");
 `;
 
         const expected = `
-import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
+import { Buffer } from "node:buffer";
 
 Buffer.from("hello");
 `;
@@ -193,8 +195,8 @@ Buffer.from("hello");
                     ParsedImportExportStatement.stringify({
                         ...parsedImportExportStatement,
                         "parsedArgument": {
-                            "type": "URL",
-                            "url": "https://deno.land/std/xxx/buffer.ts"
+                            "type": "DEPENDENCY",
+                            "nodeModuleName": "node:buffer"
                         }
                     })
                 );
@@ -215,7 +217,7 @@ Buffer.from("hello");
 `;
 
         const expected = `
-import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
+import { Buffer } from "node:buffer";
 
 Buffer.from("hello");
 `.replace(/^\n/, "");
@@ -233,8 +235,8 @@ Buffer.from("hello");
                     ParsedImportExportStatement.stringify({
                         ...parsedImportExportStatement,
                         "parsedArgument": {
-                            "type": "URL",
-                            "url": "https://deno.land/std/xxx/buffer.ts"
+                            "type": "DEPENDENCY",
+                            "nodeModuleName": "node:buffer"
                         }
                     })
                 );
@@ -253,7 +255,7 @@ Buffer.from("hello");
 Buffer`;
 
         const expected = `
-import { Buffer } from "https://deno.land/std/xxx/buffer.ts";
+import { Buffer } from "node:buffer";
 
 Buffer`.replace(/^\n/, "");
 
@@ -270,8 +272,8 @@ Buffer`.replace(/^\n/, "");
                     ParsedImportExportStatement.stringify({
                         ...parsedImportExportStatement,
                         "parsedArgument": {
-                            "type": "URL",
-                            "url": "https://deno.land/std/xxx/buffer.ts"
+                            "type": "DEPENDENCY",
+                            "nodeModuleName": "node:buffer"
                         }
                     })
                 );
@@ -332,11 +334,26 @@ Buffer_name
 const foo = process.env.FOO;
 const bar = process.env['BAR'];`;
 
-        const { denoifySingleFile } = denoifySingleFileFactory({
-            "denoifyImportExportStatement": async ({ importExportStatement }) => {
-                return importExportStatement;
-            }
-        });
+        const { denoifySingleFile } = denoifySingleFileFactory(
+            (() => {
+                const getInstalledVersionPackageJson = async () => ({ version: "" });
+
+                const { denoifyImportExportStatement } = denoifyImportExportStatementFactory(
+                    (() => {
+                        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({ getInstalledVersionPackageJson });
+
+                        return {
+                            "getDestDirPath": ({ dirPath }) => dirPath,
+                            resolveNodeModuleToDenoModule,
+                            "userProvidedReplacerPath": undefined,
+                            getInstalledVersionPackageJson
+                        };
+                    })()
+                );
+
+                return { denoifyImportExportStatement };
+            })()
+        );
 
         const modifiedSourceCode = await denoifySingleFile({
             sourceCode,

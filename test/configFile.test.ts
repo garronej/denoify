@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { getValidImportUrlFactory } from "../src/lib/resolveNodeModuleToDenoModule";
 import { ModuleAddress } from "../src/lib/types/ModuleAddress";
+import { getValidImportUrlFactory } from "../src/lib/resolveNodeModuleToDenoModule/getValidImportUrlFactory";
 import { assert } from "tsafe/assert";
 
 describe("get config file and parse its content", () => {

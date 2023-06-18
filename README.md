@@ -2,6 +2,8 @@
 
 The best way to get started with Denoify is to start hacking around with the demo repo, you can come back later on to this doc for more details about the available options.
 
+{% embed url="https://github.com/garronej/my_dummy_npm_and_deno_module" %}
+
 ```bash
 git clone https://github.com/garronej/my_dummy_npm_and_deno_module
 cd my_dummy_npm_and_deno_module

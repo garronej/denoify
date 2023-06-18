@@ -1,4 +1,5 @@
 import * as fs from "fs/promises";
+import fetch from "node-fetch";
 
 export const getLocalFileContents = async (filePath: string) => {
     try {

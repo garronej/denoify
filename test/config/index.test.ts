@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import getFileTypeAndContent from "../../src/lib/config/fileAndContent";
+import { getFileTypeAndContent } from "../../src/lib/config/fileAndContent";
 import { parseAsDenoifyConfig } from "../../src/lib/config/parseParams";
 import { assert } from "tsafe/assert";
 

@@ -7,7 +7,7 @@ import * as commentJson from "comment-json";
 import { removeFromGitignore } from "../tools/removeFromGitignore";
 import { toPosix } from "../tools/toPosix";
 import { parseAsDenoifyConfig } from "../lib/config/parseParams";
-import getFileTypeAndContent from "../lib/config/fileAndContent";
+import { getFileTypeAndContent } from "../lib/config/fileAndContent";
 
 const { getDenoifyOutDir } = (() => {
     async function getExplicitDenoifyOutDir(params: { moduleDirPath: string }) {

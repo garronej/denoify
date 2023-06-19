@@ -23,7 +23,13 @@ function tryParseAsJson(content: string) {
  *
  * All this does is determines whether the file is supported (by filename) and whether it is valid JSON
  */
-function parseConfig({ configFileBasename, configFileRawContent }: { configFileBasename?: string; configFileRawContent?: string }): ConfigFileType {
+function parseConfig({
+    configFileBasename,
+    configFileRawContent
+}: {
+    configFileBasename: string | undefined;
+    configFileRawContent: string | undefined;
+}): ConfigFileType {
     if (
         configFileBasename === undefined ||
         configFileRawContent === undefined ||

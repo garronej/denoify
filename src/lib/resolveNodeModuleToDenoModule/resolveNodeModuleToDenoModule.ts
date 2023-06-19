@@ -249,7 +249,7 @@ export const { getValidImportUrlFactory } = (() => {
     );
 
     type UrlBuilderParams = {
-        candidateBranch: string; //e.g: deno_latest
+        candidateBranchOrTag: string; //e.g: deno_latest
         pathToFile: string; //e.g: tools/typeSafety/assert.ts
     };
 
@@ -263,7 +263,7 @@ export const { getValidImportUrlFactory } = (() => {
         const buildUrl = ((): ((params: UrlBuilderParams) => string) => {
             switch (moduleAddress.type) {
                 case "GITHUB REPO":
-                    return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
+                    return ({ candidateBranchOrTag: candidateBranch, pathToFile }: UrlBuilderParams) =>
                         urlJoin(
                             "https://raw.githubusercontent.com",
                             moduleAddress.userOrOrg,
@@ -272,10 +272,10 @@ export const { getValidImportUrlFactory } = (() => {
                             toPosix(pathToFile)
                         );
                 case "DENO.LAND URL":
-                    return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
+                    return ({ candidateBranchOrTag: candidateBranch, pathToFile }: UrlBuilderParams) =>
                         urlJoin([moduleAddress.baseUrlWithoutBranch.replace(/\/$/, ""), `@${candidateBranch}`].join(""), toPosix(pathToFile));
                 case "GITHUB-RAW URL":
-                    return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
+                    return ({ candidateBranchOrTag: candidateBranch, pathToFile }: UrlBuilderParams) =>
                         urlJoin(moduleAddress.baseUrlWithoutBranch.replace(/\/$/, ""), candidateBranch, toPosix(pathToFile));
             }
         })();
@@ -363,7 +363,7 @@ export const { getValidImportUrlFactory } = (() => {
 
         const { buildUrl } = buildUrlFactory({ moduleAddress });
 
-        const tsconfigJson = await fetch(buildUrl({ candidateBranch: gitTag, pathToFile: "tsconfig.json" })).then(
+        const tsconfigJson = await fetch(buildUrl({ candidateBranchOrTag: gitTag, pathToFile: "tsconfig.json" })).then(
             res => (`${res.status}`.startsWith("2") ? res.text() : undefined),
             () => undefined
         );
@@ -389,7 +389,7 @@ export const { getValidImportUrlFactory } = (() => {
             const denoifyOut = parseAsDenoifyConfig({
                 "configFileType": await getFileTypeAndContent({
                     "getConfigFileRawContent": async pathToFile =>
-                        await fetch(buildUrl({ candidateBranch: gitTag, pathToFile })).then(
+                        await fetch(buildUrl({ candidateBranchOrTag: gitTag, pathToFile })).then(
                             res => (`${res.status}`.startsWith("2") ? res.text() : undefined),
                             () => undefined
                         )
@@ -453,7 +453,7 @@ export const { getValidImportUrlFactory } = (() => {
             switch (moduleAddress.type) {
                 case "DENO.LAND URL":
                 case "GITHUB-RAW URL": {
-                    indexUrl = buildUrl({ candidateBranch, pathToFile: moduleAddress.pathToIndex });
+                    indexUrl = buildUrl({ candidateBranchOrTag: candidateBranch, pathToFile: moduleAddress.pathToIndex });
 
                     if (!(await is404(indexUrl))) {
                         break;
@@ -468,7 +468,7 @@ export const { getValidImportUrlFactory } = (() => {
                         continue;
                     }
 
-                    indexUrl = buildUrl({ candidateBranch, pathToFile: path.join(denoifyOutDir, "mod.ts") });
+                    indexUrl = buildUrl({ candidateBranchOrTag: candidateBranch, pathToFile: path.join(denoifyOutDir, "mod.ts") });
 
                     if (await is404(indexUrl)) {
                         continue;
@@ -545,7 +545,7 @@ export const { getValidImportUrlFactory } = (() => {
                         }
                     })();
 
-                    return buildUrl({ candidateBranch: branchForVersion, pathToFile });
+                    return buildUrl({ candidateBranchOrTag: branchForVersion, pathToFile });
                 })();
 
                 walk: {

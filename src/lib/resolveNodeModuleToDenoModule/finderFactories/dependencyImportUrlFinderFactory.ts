@@ -13,18 +13,18 @@ import { Dependencies, Result } from "../resolveNodeModuleToDenoModule";
  * Otherwise a "UNKNOWN BUILTIN" result is returned
  *
  */
-export const dependencyImportUrlFinderFactory = (params: {
+export function dependencyImportUrlFinderFactory(params: {
     userProvidedPorts: Dependencies;
     dependencies: Dependencies;
     devDependencies: Dependencies;
-}) => {
+}) {
     const denoPorts = getDenoPorts(params.userProvidedPorts);
     const packageDependencies: Dependencies = {
         ...params.dependencies,
         ...params.devDependencies
     };
 
-    return async (nodeModuleName: string): Promise<Result | null> => {
+    async function findDependencyImportUrl(nodeModuleName: string): Promise<Result | null> {
         if (nodeModuleName in packageDependencies) {
             return null;
         }
@@ -48,5 +48,7 @@ export const dependencyImportUrlFinderFactory = (params: {
             "result": "SUCCESS",
             getValidImportUrl
         };
-    };
-};
+    }
+
+    return { findDependencyImportUrl };
+}

@@ -32,16 +32,19 @@ export type Result =
 export type Dependencies = { [nodeModuleName: string]: string };
 
 export type FactoryParams = {
-    userProvidedPorts?: Dependencies;
-    dependencies?: Dependencies;
-    devDependencies?: Dependencies;
+    userProvidedPorts: Dependencies;
+    dependencies: Dependencies;
+    devDependencies: Dependencies;
     log?: typeof console.log;
-};
+} & ReturnType<typeof getInstalledVersionPackageJsonFactory>;
 
-export function resolveNodeModuleToDenoModuleFactory(
-    { getInstalledVersionPackageJson }: ReturnType<typeof getInstalledVersionPackageJsonFactory>,
-    { userProvidedPorts = {}, dependencies = {}, devDependencies = {}, log = console.log }: FactoryParams = {}
-) {
+export function resolveNodeModuleToDenoModuleFactory({
+    getInstalledVersionPackageJson,
+    userProvidedPorts,
+    dependencies,
+    devDependencies,
+    log = console.log
+}: FactoryParams) {
     const allDependencies: Dependencies = {
         ...dependencies,
         ...devDependencies
@@ -52,16 +55,16 @@ export function resolveNodeModuleToDenoModuleFactory(
             nodeModuleName //js-yaml
         } = params;
 
-        const findDependencyImportUrl = dependencyImportUrlFinderFactory({
+        const { findDependencyImportUrl } = dependencyImportUrlFinderFactory({
             userProvidedPorts,
             dependencies,
             devDependencies
         });
-        const findDenoPortImport = denoPortImportFinderFactory({
+        const { findDenoPortImport } = denoPortImportFinderFactory({
             userProvidedPorts,
             log
         });
-        const findGithubHostedModuleUrl = githubHostedModuleUrlFinderFactory({
+        const { findGithubHostedModuleUrl } = githubHostedModuleUrlFinderFactory({
             userProvidedPorts,
             log
         });
@@ -111,12 +114,12 @@ export function resolveNodeModuleToDenoModuleFactory(
             }
         }
 
-        const denoPortModule = await findDenoPortImport(nodeModuleName, version);
+        const denoPortModule = await findDenoPortImport({ nodeModuleName, version });
         if (denoPortModule !== null) {
             return denoPortModule;
         }
 
-        const githubHostedModule = await findGithubHostedModuleUrl(nodeModuleName, version, gitHubRepo);
+        const githubHostedModule = await findGithubHostedModuleUrl({ nodeModuleName, version, gitHubRepo });
         if (githubHostedModule !== null) {
             return githubHostedModule;
         }

@@ -1,6 +1,7 @@
 import * as fs from "fs";
 
 /** Save results of anterior calls */
+// eslint-disable-next-line max-params -- it's simplest to allow the passing of a function to catch and then some optional parameters
 export function addCache<T extends (...args: any[]) => Promise<any>>(f: T, params?: { filePathForPersistanceAcrossRun: string }): T {
     const previousResults: Record<string, [ReturnType<T>]> =
         params === undefined || !fs.existsSync(params.filePathForPersistanceAcrossRun)

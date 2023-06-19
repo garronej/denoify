@@ -1,7 +1,8 @@
 import * as st from "scripting-tools";
 import { addCache } from "../tools/addCache";
 import { join as pathJoin, basename as pathBasename, dirname as pathDirname } from "path";
-import * as fs from "fs";
+// eslint-disable-next-line no-restricted-imports -- we were reinventing the wheel
+import { readFile } from "fs/promises";
 import { assert } from "tsafe";
 
 export function getInstalledVersionPackageJsonFactory(params: { projectPath: string }) {
@@ -37,18 +38,9 @@ export function getInstalledVersionPackageJsonFactory(params: { projectPath: str
             // node_modules/js-yaml
             const targetModulePath = getTargetModulePath({ nodeModuleName });
 
-            return JSON.parse(
-                await new Promise<string>((resolve, reject) =>
-                    fs.readFile(pathJoin(targetModulePath, "package.json"), (err, buff) => {
-                        if (err) {
-                            reject(err);
-                            return;
-                        }
-
-                        resolve(buff.toString("utf8"));
-                    })
-                )
-            );
+            return readFile(pathJoin(targetModulePath, "package.json"))
+                .then(buff => buff.toString("utf8"))
+                .then(JSON.parse);
         }
     );
 

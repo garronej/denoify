@@ -58,15 +58,13 @@ export async function denoify(params: {
 
             const { denoifyImportExportStatement } = denoifyImportExportStatementFactory(
                 (() => {
-                    const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory(
-                        { getInstalledVersionPackageJson },
-                        {
-                            "userProvidedPorts": denoifyParams?.ports ?? {},
-                            "dependencies": packageJsonParsed["dependencies"] ?? {},
-                            "devDependencies": packageJsonParsed["devDependencies"] ?? {},
-                            "log": console.log
-                        }
-                    );
+                    const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+                        getInstalledVersionPackageJson,
+                        "userProvidedPorts": denoifyParams?.ports ?? {},
+                        "dependencies": packageJsonParsed["dependencies"] ?? {},
+                        "devDependencies": packageJsonParsed["devDependencies"] ?? {},
+                        "log": console.log
+                    });
 
                     return id<Parameters<typeof denoifyImportExportStatementFactory>[0]>({
                         "getDestDirPath": ({ dirPath }) => path.join(denoDistPath, path.relative(srcDirPath, dirPath)),

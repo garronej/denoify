@@ -5,6 +5,7 @@ import { crawl } from "./crawl";
 /** Copy file or directory. Works on windows.
  * Non exsisting directories are created recursively
  */
+// eslint-disable-next-line max-params -- this is the most natural signature for this function
 export const fsCopy = (src: string, dest: string) => {
     if (!fs.lstatSync(src).isDirectory()) {
         fs.mkdirSync(path.dirname(dest), { "recursive": true });

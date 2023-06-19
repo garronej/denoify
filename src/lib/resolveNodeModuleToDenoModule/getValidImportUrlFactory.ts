@@ -8,10 +8,11 @@ import { exclude } from "tsafe/exclude";
 import { addCache } from "../../tools/addCache";
 import { getLatestTag } from "../../tools/githubTags";
 import { is404 } from "../../tools/is404";
+("");
 import { isInsideOrIsDir } from "../../tools/isInsideOrIsDir";
 import { toPosix } from "../../tools/toPosix";
 import { urlJoin } from "../../tools/urlJoin";
-import getFileTypeAndContent from "../config/fileAndContent";
+import { getFileTypeAndContent } from "../config/fileAndContent";
 import { parseAsDenoifyConfig } from "../config/parseParams";
 import { getCurrentStdVersion } from "../getCurrentStdVersion";
 import { getThirdPartyDenoModuleInfos } from "../getThirdPartyDenoModuleInfos";
@@ -41,18 +42,20 @@ type Params = {
       }
 );
 
+type UrlBuilderParams = { candidateBranch: string; pathToFile: string };
+
 /**
  * Perform no check, just synchronously assemble the url
  * from a ModuleAddress, a branch and a path to file.
  * */
-function buildUrlFactory(params: { moduleAddress: ModuleAddress }) {
+export function buildUrlFactory(params: { moduleAddress: ModuleAddress }) {
     const { moduleAddress } = params;
 
     switch (moduleAddress.type) {
         case "NODE BUILTIN":
             return () => `node:moduleAddress.name`;
         case "GITHUB REPO":
-            return (candidateBranch: string, pathToFile: string) =>
+            return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
                 urlJoin(
                     "https://raw.githubusercontent.com",
                     moduleAddress.userOrOrg,
@@ -61,10 +64,10 @@ function buildUrlFactory(params: { moduleAddress: ModuleAddress }) {
                     toPosix(pathToFile)
                 );
         case "DENO.LAND URL":
-            return (candidateBranch: string, pathToFile: string) =>
+            return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
                 urlJoin([moduleAddress.baseUrlWithoutBranch.replace(/\/$/, ""), `@${candidateBranch}`].join(""), toPosix(pathToFile));
         case "GITHUB-RAW URL":
-            return (candidateBranch: string, pathToFile: string) =>
+            return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
                 urlJoin(moduleAddress.baseUrlWithoutBranch.replace(/\/$/, ""), candidateBranch, toPosix(pathToFile));
     }
 }
@@ -157,9 +160,7 @@ async function* candidateBranches(params: Params): AsyncGenerator<[string, false
 const getTsconfigOutDir = addCache(async (params: { moduleAddress: ModuleAddress.GitHubRepo; gitTag: string }): Promise<string | undefined> => {
     const { moduleAddress, gitTag } = params;
 
-    const buildUrl = buildUrlFactory({ moduleAddress });
-
-    const tsconfigJson = await getRemoteFileContents(buildUrl(gitTag, "tsconfig.json"));
+    const tsconfigJson = await getRemoteFileContents({ committish: gitTag, filename: "tsconfig.json", moduleAddress });
 
     if (tsconfigJson === undefined) {
         return undefined;
@@ -176,11 +177,10 @@ const getTsconfigOutDir = addCache(async (params: { moduleAddress: ModuleAddress
 
 const getExplicitDenoifyOutDir = addCache(async (params: { gitTag: string; moduleAddress: ModuleAddress.GitHubRepo }) => {
     const { gitTag, moduleAddress } = params;
-    const buildUrl = buildUrlFactory({ moduleAddress });
 
     const denoifyOut = parseAsDenoifyConfig({
         "configFileType": await getFileTypeAndContent({
-            "getConfigFileRawContent": file => getRemoteFileContents(buildUrl(gitTag, file))
+            "getConfigFileRawContent": (file: string) => getRemoteFileContents({ committish: gitTag, filename: file, moduleAddress })
         })
     })?.out;
 
@@ -232,13 +232,15 @@ async function resolveVersion(params: Params) {
                 continue;
             case "DENO.LAND URL":
             case "GITHUB-RAW URL": {
-                indexUrl = buildUrl(candidateBranch, moduleAddress.pathToIndex);
+                indexUrl = buildUrl({ candidateBranch, pathToFile: moduleAddress.pathToIndex });
 
                 if (!(await is404(indexUrl))) {
                     break;
                 }
 
                 continue;
+                {
+                }
             }
             case "GITHUB REPO": {
                 const denoifyOutDir = await getDenoifyOutDir({ moduleAddress, "gitTag": candidateBranch });
@@ -247,7 +249,7 @@ async function resolveVersion(params: Params) {
                     continue;
                 }
 
-                indexUrl = buildUrl(candidateBranch, path.join(denoifyOutDir, "mod.ts"));
+                indexUrl = buildUrl({ candidateBranch, pathToFile: path.join(denoifyOutDir, "mod.ts") });
 
                 if (await is404(indexUrl)) {
                     continue;
@@ -325,7 +327,7 @@ export const getValidImportUrlFactory = addCache(async (params: Params): Promise
                     }
                 })();
 
-                return buildUrl(branchForVersion, pathToFile);
+                return buildUrl({ candidateBranch: branchForVersion, pathToFile });
             })();
 
             walk: {

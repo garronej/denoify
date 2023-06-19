@@ -5,12 +5,20 @@ import { Dependencies, Result } from "../resolveNodeModuleToDenoModule";
 /**
  * Creates a function that provides a URL generator for GitHub hosted modules
  */
-export const githubHostedModuleUrlFinderFactory = (params: { userProvidedPorts: Dependencies; log: typeof console.log }) => {
+export function githubHostedModuleUrlFinderFactory(params: { userProvidedPorts: Dependencies; log: typeof console.log }) {
     const { log, userProvidedPorts } = params;
 
     const isInUserProvidedPort = (nodeModuleName: string) => nodeModuleName in userProvidedPorts;
 
-    return async (nodeModuleName: string, version: string, gitHubRepo?: ModuleAddress): Promise<Result | null> => {
+    async function findGithubHostedModuleUrl({
+        nodeModuleName,
+        version,
+        gitHubRepo
+    }: {
+        nodeModuleName: string;
+        version: string;
+        gitHubRepo?: ModuleAddress;
+    }): Promise<Result | null> {
         if (gitHubRepo === undefined) {
             return null;
         }
@@ -39,5 +47,7 @@ export const githubHostedModuleUrlFinderFactory = (params: { userProvidedPorts: 
             result: "SUCCESS",
             getValidImportUrl
         };
-    };
-};
+    }
+
+    return { findGithubHostedModuleUrl };
+}

@@ -58,11 +58,12 @@ function parseConfig({ configFileBasename, configFileRawContent }: { configFileB
  *
  * @param param0.getConfigFileRawContent - a function that, given a path to a configuration file, returns the raw contents of that file as a string
  */
-export default function getFileTypeAndContent({
+export function getFileTypeAndContent({
     getConfigFileRawContent
 }: {
     getConfigFileRawContent: (configFileBasename: string) => Promise<string | undefined>;
 }): Promise<ConfigFileType> {
+    // eslint-disable-next-line max-params -- we're bound by the required signature of a reduce function
     return config.supportedConfigFile.reduce<Promise<ConfigFileType>>(async (configFileType, configFileBasename) => {
         if ((await configFileType).type !== "absent") {
             return configFileType;

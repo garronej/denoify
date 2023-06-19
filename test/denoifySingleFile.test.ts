@@ -340,7 +340,12 @@ const bar = process.env['BAR'];`;
 
                 const { denoifyImportExportStatement } = denoifyImportExportStatementFactory(
                     (() => {
-                        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({ getInstalledVersionPackageJson });
+                        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+                            getInstalledVersionPackageJson,
+                            userProvidedPorts: {},
+                            dependencies: {},
+                            devDependencies: {}
+                        });
 
                         return {
                             "getDestDirPath": ({ dirPath }) => dirPath,

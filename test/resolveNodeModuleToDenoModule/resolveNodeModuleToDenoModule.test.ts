@@ -25,15 +25,15 @@ describe("resolve node module to deno-module", () => {
             "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_1")
         });
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory(
-            { getInstalledVersionPackageJson },
-            {
-                "dependencies": {
-                    "js-yaml": "~3.13.0"
-                },
-                "log": (...args: any[]) => (std_out += args.join(" "))
-            }
-        );
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
+            userProvidedPorts: {},
+            devDependencies: {},
+            "dependencies": {
+                "js-yaml": "~3.13.0"
+            },
+            "log": (...args: any[]) => (std_out += args.join(" "))
+        });
 
         const nodeToDenoModuleResolutionResult = await resolveNodeModuleToDenoModule({ "nodeModuleName": "js-yaml" });
 
@@ -52,15 +52,15 @@ describe("resolve node module to deno-module", () => {
             "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_2")
         }); //NOTE: The version in package.json does not exist as a repo TAG.
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory(
-            { getInstalledVersionPackageJson },
-            {
-                "dependencies": {
-                    "js-yaml": "...irrelevant..."
-                },
-                "log": (...args: any[]) => (std_out += args.join(" "))
-            }
-        );
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
+            userProvidedPorts: {},
+            devDependencies: {},
+            "dependencies": {
+                "js-yaml": "...irrelevant..."
+            },
+            "log": (...args: any[]) => (std_out += args.join(" "))
+        });
 
         const nodeToDenoModuleResolutionResult = await resolveNodeModuleToDenoModule({ "nodeModuleName": "js-yaml" });
 
@@ -85,13 +85,13 @@ describe("resolve node module to deno-module", () => {
             "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_3")
         });
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory(
-            { getInstalledVersionPackageJson },
-            {
-                "dependencies": { "ts-md5": "1.2.7" },
-                "log": (...args: any[]) => (std_out += args.join(" "))
-            }
-        );
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
+            userProvidedPorts: {},
+            devDependencies: {},
+            "dependencies": { "ts-md5": "1.2.7" },
+            "log": (...args: any[]) => (std_out += args.join(" "))
+        });
 
         const nodeToDenoModuleResolutionResult = await resolveNodeModuleToDenoModule({ "nodeModuleName": "ts-md5" });
 
@@ -115,14 +115,14 @@ describe("resolve node module to deno-module", () => {
             projectPath
         });
 
-        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory(
-            { getInstalledVersionPackageJson },
-            {
-                //NOTE: We put 0.0.0 to show that it is not took into account only after the installed version.
-                "dependencies": { "ts-md5": "garronej/ts-md5#0.0.0" },
-                "log": (...args: any[]) => (std_out += args.join(" "))
-            }
-        );
+        const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
+            getInstalledVersionPackageJson,
+            userProvidedPorts: {},
+            devDependencies: {},
+            //NOTE: We put 0.0.0 to show that it is not took into account only after the installed version.
+            "dependencies": { "ts-md5": "garronej/ts-md5#0.0.0" },
+            "log": (...args: any[]) => (std_out += args.join(" "))
+        });
 
         const nodeToDenoModuleResolutionResult = await resolveNodeModuleToDenoModule({ "nodeModuleName": "ts-md5" });
 

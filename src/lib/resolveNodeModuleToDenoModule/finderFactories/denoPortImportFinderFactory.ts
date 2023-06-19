@@ -6,11 +6,11 @@ import { Dependencies, Result } from "../resolveNodeModuleToDenoModule";
 /**
  * This factory creates a function that tries to generate a valid URL to a Deno port
  */
-export const denoPortImportFinderFactory = (params: { userProvidedPorts: Dependencies; log: typeof console.log }) => {
+export function denoPortImportFinderFactory(params: { userProvidedPorts: Dependencies; log: typeof console.log }) {
     const denoPorts = getDenoPorts(params.userProvidedPorts);
     const { log } = params;
 
-    return async (nodeModuleName: string, version: string): Promise<Result | null> => {
+    async function findDenoPortImport({ nodeModuleName, version }: { nodeModuleName: string; version: string }): Promise<Result | null> {
         if (!(nodeModuleName in denoPorts)) {
             return null;
         }
@@ -36,5 +36,7 @@ export const denoPortImportFinderFactory = (params: { userProvidedPorts: Depende
             "result": "SUCCESS",
             getValidImportUrl
         };
-    };
-};
+    }
+
+    return { findDenoPortImport };
+}

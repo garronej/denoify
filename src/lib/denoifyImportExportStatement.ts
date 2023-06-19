@@ -1,7 +1,7 @@
 import * as path from "path";
 import { assert, is } from "tsafe";
 import * as fs from "fs";
-import type { resolveNodeModuleToDenoModuleFactory } from "./resolveNodeModuleToDenoModule";
+import { resolveNodeModuleToDenoModuleFactory } from "./resolveNodeModuleToDenoModule";
 import type { getInstalledVersionPackageJsonFactory } from "./getInstalledVersionPackageJson";
 import { ParsedImportExportStatement } from "./types/ParsedImportExportStatement";
 import { consumeExecutableReplacerFactory } from "./replacer";

@@ -1,4 +1,13 @@
-export const knownPorts = {
+export type Dependencies = {
+    [moduleName: string]: string; // module location;
+};
+
+type KnownPorts = {
+    builtins: Dependencies;
+    third_party: Dependencies;
+};
+
+export const knownPorts: KnownPorts = {
     "builtins": {
         "events": "https://deno.land/std/node/events.ts",
         "fs": "https://deno.land/std/node/fs.ts",

@@ -13,10 +13,10 @@ import { toPosix } from "../../tools/toPosix";
 import { id } from "tsafe";
 import { getLatestTag } from "../../tools/githubTags";
 import { isInsideOrIsDir } from "../../tools/isInsideOrIsDir";
-import { knownPorts } from "./knownPorts";
+import { Dependencies, knownPorts } from "./knownPorts";
 import { assert } from "tsafe/assert";
 import { exclude } from "tsafe/exclude";
-import getFileTypeAndContent from "../config/fileAndContent";
+import { getFileTypeAndContent } from "../config/fileAndContent";
 import { parseAsDenoifyConfig } from "../config/parseParams";
 
 type GetValidImportUrl = (
@@ -41,16 +41,16 @@ type Result =
 
 export function resolveNodeModuleToDenoModuleFactory(
     params: {
-        userProvidedPorts: { [nodeModuleName: string]: string };
-        dependencies: { [nodeModuleName: string]: string };
-        devDependencies: { [nodeModuleName: string]: string };
+        userProvidedPorts: Dependencies;
+        dependencies: Dependencies;
+        devDependencies: Dependencies;
         log: typeof console.log;
     } & ReturnType<typeof getInstalledVersionPackageJsonFactory>
 ) {
     const { log, getInstalledVersionPackageJson } = params;
 
     const { denoPorts } = (() => {
-        const denoPorts: { [nodeModuleName: string]: string } = {};
+        const denoPorts: Dependencies = {};
 
         [knownPorts.third_party, knownPorts.builtins, params.userProvidedPorts].forEach(record =>
             Object.keys(record).forEach(nodeModuleName => (denoPorts[nodeModuleName] = record[nodeModuleName]))
@@ -248,6 +248,11 @@ export const { getValidImportUrlFactory } = (() => {
           }
     );
 
+    type UrlBuilderParams = {
+        candidateBranch: string; //e.g: deno_latest
+        pathToFile: string; //e.g: tools/typeSafety/assert.ts
+    };
+
     /**
      * Perform no check, just synchronously assemble the url
      * from a ModuleAddress, a branch and a path to file.
@@ -255,13 +260,10 @@ export const { getValidImportUrlFactory } = (() => {
     function buildUrlFactory(params: { moduleAddress: ModuleAddress }) {
         const { moduleAddress } = params;
 
-        const buildUrl = ((): ((
-            candidateBranch: string, //e.g: deno_latest
-            pathToFile: string //e.g: tools/typeSafety/assert.ts
-        ) => string) => {
+        const buildUrl = ((): ((params: UrlBuilderParams) => string) => {
             switch (moduleAddress.type) {
                 case "GITHUB REPO":
-                    return (candidateBranch, pathToFile) =>
+                    return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
                         urlJoin(
                             "https://raw.githubusercontent.com",
                             moduleAddress.userOrOrg,
@@ -270,10 +272,10 @@ export const { getValidImportUrlFactory } = (() => {
                             toPosix(pathToFile)
                         );
                 case "DENO.LAND URL":
-                    return (candidateBranch, pathToFile) =>
+                    return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
                         urlJoin([moduleAddress.baseUrlWithoutBranch.replace(/\/$/, ""), `@${candidateBranch}`].join(""), toPosix(pathToFile));
                 case "GITHUB-RAW URL":
-                    return (candidateBranch, pathToFile) =>
+                    return ({ candidateBranch, pathToFile }: UrlBuilderParams) =>
                         urlJoin(moduleAddress.baseUrlWithoutBranch.replace(/\/$/, ""), candidateBranch, toPosix(pathToFile));
             }
         })();
@@ -361,7 +363,7 @@ export const { getValidImportUrlFactory } = (() => {
 
         const { buildUrl } = buildUrlFactory({ moduleAddress });
 
-        const tsconfigJson = await fetch(buildUrl(gitTag, "tsconfig.json")).then(
+        const tsconfigJson = await fetch(buildUrl({ candidateBranch: gitTag, pathToFile: "tsconfig.json" })).then(
             res => (`${res.status}`.startsWith("2") ? res.text() : undefined),
             () => undefined
         );
@@ -386,8 +388,8 @@ export const { getValidImportUrlFactory } = (() => {
 
             const denoifyOut = parseAsDenoifyConfig({
                 "configFileType": await getFileTypeAndContent({
-                    "getConfigFileRawContent": async file =>
-                        await fetch(buildUrl(gitTag, file)).then(
+                    "getConfigFileRawContent": async pathToFile =>
+                        await fetch(buildUrl({ candidateBranch: gitTag, pathToFile })).then(
                             res => (`${res.status}`.startsWith("2") ? res.text() : undefined),
                             () => undefined
                         )
@@ -451,7 +453,7 @@ export const { getValidImportUrlFactory } = (() => {
             switch (moduleAddress.type) {
                 case "DENO.LAND URL":
                 case "GITHUB-RAW URL": {
-                    indexUrl = buildUrl(candidateBranch, moduleAddress.pathToIndex);
+                    indexUrl = buildUrl({ candidateBranch, pathToFile: moduleAddress.pathToIndex });
 
                     if (!(await is404(indexUrl))) {
                         break;
@@ -466,7 +468,7 @@ export const { getValidImportUrlFactory } = (() => {
                         continue;
                     }
 
-                    indexUrl = buildUrl(candidateBranch, path.join(denoifyOutDir, "mod.ts"));
+                    indexUrl = buildUrl({ candidateBranch, pathToFile: path.join(denoifyOutDir, "mod.ts") });
 
                     if (await is404(indexUrl)) {
                         continue;
@@ -543,7 +545,7 @@ export const { getValidImportUrlFactory } = (() => {
                         }
                     })();
 
-                    return buildUrl(branchForVersion, pathToFile);
+                    return buildUrl({ candidateBranch: branchForVersion, pathToFile });
                 })();
 
                 walk: {

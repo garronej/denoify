@@ -53,7 +53,7 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
     console.log(moveSourceFiles ? "Putting .ts files alongside .js files" : "Leaving .ts file in the src/ directory");
 
     const { beforeMovedFilePaths, moveFiles } = await (async () => {
-        const getBeforeMovedFilePaths = async (isDryRun: boolean, log: typeof console.log | undefined) => {
+        const getBeforeMovedFilePaths = async ({ isDryRun, log }: { isDryRun: boolean; log: typeof console.log | undefined }) => {
             const { moveContentUpOneLevel } = moveContentUpOneLevelFactory({ isDryRun, log });
 
             const moveAndGetBeforePath = (dirPath: string) =>
@@ -65,9 +65,9 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
         };
 
         return {
-            "beforeMovedFilePaths": await getBeforeMovedFilePaths(true, undefined),
+            "beforeMovedFilePaths": await getBeforeMovedFilePaths({ isDryRun: true, log: undefined }),
             "moveFiles": async () => {
-                await getBeforeMovedFilePaths(isDryRun, undefined);
+                await getBeforeMovedFilePaths({ isDryRun, log: undefined });
             }
         };
     })();

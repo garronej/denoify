@@ -18,13 +18,12 @@ function tryParseAsJson(content: string) {
     }
 }
 
-function parseConfig({
-    configFileBasename,
-    configFileRawContent
-}: {
-    configFileBasename: string | undefined;
-    configFileRawContent: string | undefined;
-}): ConfigFileType {
+/**
+ * Identifies the source and type of a configuration file.
+ *
+ * All this does is determines whether the file is supported (by filename) and whether it is valid JSON
+ */
+function parseConfig({ configFileBasename, configFileRawContent }: { configFileBasename?: string; configFileRawContent?: string }): ConfigFileType {
     if (
         configFileBasename === undefined ||
         configFileRawContent === undefined ||
@@ -53,12 +52,19 @@ function parseConfig({
     };
 }
 
-export default function getFileTypeAndContent({
+/**
+ * Determines the file type (js or json) and content of a file, given a method to retrieve that files contents. This allows us to access content that is
+ * local or remote
+ *
+ * @param param0.getConfigFileRawContent - a function that, given a path to a configuration file, returns the raw contents of that file as a string
+ */
+export function getFileTypeAndContent({
     getConfigFileRawContent
 }: {
     getConfigFileRawContent: (configFileBasename: string) => Promise<string | undefined>;
-}) {
-    return config.supportedConfigFile.reduce(async (configFileType, configFileBasename) => {
+}): Promise<ConfigFileType> {
+    // eslint-disable-next-line max-params -- we're bound by the required signature of a reduce function
+    return config.supportedConfigFile.reduce<Promise<ConfigFileType>>(async (configFileType, configFileBasename) => {
         if ((await configFileType).type !== "absent") {
             return configFileType;
         }
@@ -70,5 +76,5 @@ export default function getFileTypeAndContent({
             configFileBasename,
             configFileRawContent
         });
-    }, Promise.resolve({ type: "absent" }) as Promise<ConfigFileType>);
+    }, Promise.resolve({ type: "absent" } satisfies ConfigFileType));
 }

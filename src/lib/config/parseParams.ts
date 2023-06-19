@@ -79,6 +79,7 @@ export function parseAsDenoifyParams(denoifyParams: any): DenoifyParams | undefi
             denoifyParams.ports === undefined || denoifyParams.ports === null
                 ? undefined
                 : Object.entries(denoifyParams.ports).reduce(
+                      // eslint-disable-next-line max-params -- Reducers have a predefined signature
                       (prev, [portName, string]) => ({
                           ...prev,
                           [portName]: guardAsString({

@@ -30,6 +30,7 @@ export namespace Version {
      * v1  >  v2  => 1
      *
      */
+    // eslint-disable-next-line max-params -- this is a much more natural signature for this function
     export function compare(v1: Version, v2: Version): -1 | 0 | 1 {
         const sign = (n: number): -1 | 0 | 1 => (n === 0 ? 0 : n < 0 ? -1 : 1);
 

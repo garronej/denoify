@@ -18,5 +18,6 @@ export const getCurrentStdVersion = addCache(async () => {
         stdBranch.push(match[1]);
     }
 
+    // eslint-disable-next-line max-params -- we're following the required signature of Array.prototype.sort, so we ignore this rule
     return Version.stringify(stdBranch.map(Version.parse).sort((vX, vY) => Version.compare(vY, vX))[0]);
 });

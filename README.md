@@ -38,7 +38,7 @@ This tool is mainly for NPM module publisher, to enable them to bring first-clas
 
 [Deno now supports NPM modules](https://deno.com/blog/changes#compatibility-with-node-and-npm).  
 This development significantly benefits NPM module authors as it simplifies the process of integrating their modules into Deno.  
-You simply instruct your users to import your module using the format: `import express from "npm:your-module@5";`.
+You simply instruct your users to import your module using the format: `import {...} from "npm:your-module@5";`.
 
 However, even with this development, there are still compelling reasons to consider using Denoify for your module:
 

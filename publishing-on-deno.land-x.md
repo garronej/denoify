@@ -28,4 +28,4 @@ You can copy paste to your project the [CI setup](https://github.com/garronej/ts
 
 If you want more infos about this workflow you can follow [this PR](https://github.com/gvergnaud/ts-pattern/pull/108) where I set it up on the `ts-pattern` repo.
 
-Do not hesitate [to open a discursion](https://github.com/garronej/denoify/discussions) if you need support issues.
+Do not hesitate [to open a discussion](https://github.com/garronej/denoify/discussions) if you need support issues.

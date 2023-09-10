@@ -775,10 +775,10 @@ esutils@^2.0.3:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-evt@2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/evt/-/evt-2.5.1.tgz#349ed446f182220b5f7a5a2d00bbc59040588de5"
-  integrity sha512-fvtIhBjNjtQGsXK6MKybIYObTT7BgdEKCf8QXbuLhxj4fGq/nhfu0ab+9LTXTuuKfm4A0Kl2Zsjy6lGezZCxvg==
+evt@2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/evt/-/evt-2.5.2.tgz#fe2c86657de488fd873195daae35323b96daefb2"
+  integrity sha512-N8+A+VJRMPDIOz7KDctin7JSMPIvS1edLSDSgH51OGN6MGlAdthZ6pSztRBe1dxvNb0CvlzLKu9kRK2zYiWukw==
   dependencies:
     minimal-polyfills "^2.2.3"
     run-exclusive "^2.2.19"

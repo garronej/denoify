@@ -595,7 +595,7 @@ export const { getValidImportUrlFactory } = (() => {
                     ].filter(exclude(undefined))) {
                         const denoLandXUrl = buildDenoLandXUrl(pathToFile);
 
-                        const fetchResponse = await fetch(denoLandXUrl, { "timeout": 4000 });
+                        const fetchResponse = await fetch(denoLandXUrl, { "timeout": 8000 });
 
                         if (fetchResponse.status === 404 || fetchResponse.status === 400) {
                             continue;

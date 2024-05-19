@@ -200,11 +200,9 @@ async function run(params: { pathToTargetModule: string; isDryRun: boolean }) {
                         : {}),
                     ...(!!packageJsonFilesResolved
                         ? {
-                              "files": packageJsonFilesResolved.map(beforeMovedFilesFilePath =>
-                                  getAfterMovedFilePath({
-                                      "beforeMovedFilePath": beforeMovedFilesFilePath
-                                  })
-                              )
+                              "files": packageJsonFilesResolved
+                                  .map(beforeMovedFilesFilePath => getAfterMovedFilePath({ "beforeMovedFilePath": beforeMovedFilesFilePath }))
+                                  .map(filePath => filePath.replace(/^\.\//, ""))
                           }
                         : {}),
                     "scripts": undefined

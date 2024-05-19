@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { crawl } from "./crawl";
 import * as path from "path";
 
-export function resolvePathsWithWildcards(params: { pathWithWildcards: string[] }): string[] {
+function resolvePathsWithWildcards_noPriority(params: { pathWithWildcards: string[] }): string[] {
     const { pathWithWildcards } = params;
 
     const { globProxy } = globProxyFactory({ "cwdAndRoot": "." });
@@ -14,7 +14,7 @@ export function resolvePathsWithWildcards(params: { pathWithWildcards: string[] 
         pathWithWildcards
             .map(pathWithWildcard => globProxy({ pathWithWildcard }))
             .reduce(...flat)
-            //Next op is to get the apropriate case in the outputs
+            //Next op is to get the appropriate case in the outputs
             //Ex if we have README.md as input but readme.md is the
             //file that is actually there we want readme.md as output.
             .map(fileOrDirPath =>
@@ -34,4 +34,18 @@ export function resolvePathsWithWildcards(params: { pathWithWildcards: string[] 
     const filesToExclude = resolvePaths(pathWithWildcards.filter(p => p.startsWith("!")).map(p => p.replace(/^\!/, "")));
 
     return Array.from(new Set(filesToInclude.filter(p => !filesToExclude.includes(p))));
+}
+
+export function resolvePathsWithWildcards(params: { pathWithWildcards: string[] }): string[] {
+    const { pathWithWildcards } = params;
+
+    const resolvedPaths: string[] = [];
+
+    for (const pathWithWildcard of pathWithWildcards) {
+        const resolvedPaths_i = resolvePathsWithWildcards_noPriority({ pathWithWildcards: [...resolvedPaths, pathWithWildcard] });
+
+        resolvedPaths.push(...resolvedPaths_i);
+    }
+
+    return resolvedPaths;
 }

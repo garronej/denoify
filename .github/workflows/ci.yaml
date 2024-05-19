@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ !github.event.created && github.repository != 'garronej/ts-ci' }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
     - uses: bahmutov/npm-install@v1
     - name: If this step fails run 'yarn format' then commit again.
       run: yarn format:check
@@ -27,8 +27,8 @@ jobs:
         os: [ ubuntu-latest ]
     name: Test with Node v${{ matrix.node }} on ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node }}
     - uses: bahmutov/npm-install@v1
@@ -73,7 +73,7 @@ jobs:
     needs: 
       - check_if_version_upgraded
     steps:
-    - uses: softprops/action-gh-release@v1
+    - uses: softprops/action-gh-release@v2
       with:
         name: Release v${{ needs.check_if_version_upgraded.outputs.to_version }}
         tag_name: v${{ needs.check_if_version_upgraded.outputs.to_version }}
@@ -90,15 +90,15 @@ jobs:
       - create_github_release
       - check_if_version_upgraded
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
-    - uses: actions/setup-node@v3
+    - uses: actions/setup-node@v4
       with:
         registry-url: https://registry.npmjs.org/
     - uses: bahmutov/npm-install@v1
     - run: yarn build
-    - run: npx -y -p denoify@1.3.0 enable_short_npm_import_path
+    - run: npx -y -p denoify@1.6.9 enable_short_npm_import_path
       env:
         DRY_RUN: "0"
     - uses: garronej/ts-ci@v2.1.0

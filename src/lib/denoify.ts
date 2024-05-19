@@ -147,11 +147,9 @@ export async function denoify(params: {
 
         const [strIncludes, objIncludes] = arrPartition(includes, (include): include is string => typeof include === "string");
 
-        (
-            await resolvePathsWithWildcards({
-                "pathWithWildcards": strIncludes
-            })
-        ).forEach(resolvedPath => fsCopy(resolvedPath, path.join(denoDistPath, resolvedPath)));
+        resolvePathsWithWildcards({ "pathWithWildcards": strIncludes }).forEach(resolvedPath =>
+            fsCopy(resolvedPath, path.join(denoDistPath, resolvedPath))
+        );
 
         objIncludes.forEach(({ src, destDir, destBasename }) =>
             fsCopy(src, path.join(denoDistPath, path.join(destDir ?? path.dirname(src), destBasename ?? path.basename(src))))

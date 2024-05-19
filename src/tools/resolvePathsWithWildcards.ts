@@ -39,12 +39,12 @@ function resolvePathsWithWildcards_noPriority(params: { pathWithWildcards: strin
 export function resolvePathsWithWildcards(params: { pathWithWildcards: string[] }): string[] {
     const { pathWithWildcards } = params;
 
-    const resolvedPaths: string[] = [];
+    let resolvedPaths: string[] = [];
 
     for (const pathWithWildcard of pathWithWildcards) {
-        const resolvedPaths_i = resolvePathsWithWildcards_noPriority({ pathWithWildcards: [...resolvedPaths, pathWithWildcard] });
+        const resolvedPaths_i = resolvePathsWithWildcards_noPriority({ "pathWithWildcards": [...resolvedPaths, pathWithWildcard] });
 
-        resolvedPaths.push(...resolvedPaths_i);
+        resolvedPaths = resolvedPaths_i;
     }
 
     return resolvedPaths;

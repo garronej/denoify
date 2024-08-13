@@ -22,6 +22,10 @@
   <a href="https://github.com/garronej/my_dummy_npm_and_deno_module">Demo repo</a>
 </p>
 
+> Aug 2024 Update: At this point in time it's probably wiser to use [JSR](https://jsr.io/).  
+> JSR is an initiative from the Deno team that provide a solution to a superset of the problems Denoify solves.  
+> [Hono](https://hono.dev/) that was using Denoify has been migrated to JSR.  
+
 # What it is
 
 A build tool that takes as input a TypeScript codebase that was meant to target node and/or the web and spits out a modified version of the source files ready to be deployed as a Deno module.

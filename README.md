@@ -58,7 +58,7 @@ Therefore, despite Deno's new NPM support, Denoify continues to offer value in e
 
 Some modules that have been made cross-runtime using Denoify:
 
--   [hono](https://github.com/honojs/hono)
+-   ~[hono](https://github.com/honojs/hono)~ (Migrated to JSR)
 -   [EVT](https://evt.land)
 -   [Nano JSX](https://github.com/nanojsx/nano)
 -   [eta](https://deno.land/x/eta@v1.3.0)

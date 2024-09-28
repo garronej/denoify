@@ -36,6 +36,9 @@ export function denoifySingleFileFactory(params: {} & ReturnType<typeof denoifyI
         // Handle ignore comments
         let modifiedSourceCode = dealWithDenoifyLineIgnoreSpecialComment(sourceCode);
 
+        // Handle process.env
+        modifiedSourceCode = modifiedSourceCode.replaceAll("process.env", "Deno.env.toObject()")
+
         // Add support for Node builtins
         for (const builtin of builtins) {
             if (builtin.test(modifiedSourceCode)) {

@@ -24,7 +24,7 @@
 
 > Aug 2024 Update: At this point in time it's probably wiser to use [JSR](https://jsr.io/).  
 > JSR is an initiative from the Deno team that provide a solution to a superset of the problems Denoify solves.  
-> [Hono](https://hono.dev/) that was using Denoify has been migrated to JSR.  
+> [Hono](https://hono.dev/) that was using Denoify has been migrated to JSR.
 
 # What it is
 

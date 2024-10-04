@@ -16,7 +16,6 @@ const packageJsonFilePath = pathJoin(getThisCodebaseRootDirPath(), "package.json
 const parsedPackageJson: { bin: Record<string, string> } = JSON.parse(fs.readFileSync(packageJsonFilePath).toString("utf8"));
 
 const distDirPath = pathJoin(getThisCodebaseRootDirPath(), "dist");
-const srcDirPath = pathJoin(getThisCodebaseRootDirPath(), "src");
 
 const entrypointFilePaths = Object.values(parsedPackageJson.bin).map(fileRelativePath =>
     getAbsoluteAndInOsFormatPath({
@@ -24,6 +23,8 @@ const entrypointFilePaths = Object.values(parsedPackageJson.bin).map(fileRelativ
         "cwd": pathDirname(packageJsonFilePath)
     })
 );
+
+console.log(entrypointFilePaths);
 
 const getOriginalFilePath = (entrypointFilePath: string) => entrypointFilePath.replace(/js$/, "original.js");
 

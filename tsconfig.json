@@ -4,7 +4,7 @@
         "target": "ES2021",
         "declaration": true,
         "outDir": "./dist",
-        "sourceMap": true,
+        "sourceMap": false,
         "newLine": "LF",
         "noUnusedLocals": true,
         "noUnusedParameters": true,
@@ -12,5 +12,5 @@
         "skipLibCheck": true
     },
     "include": ["src"],
-    "exclude": ["test", "node_modules", "res/**/*", "dist/**/*"]
+    "exclude": ["test", "node_modules", "dist/**/*"]
 }

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { cosmiconfig } from "cosmiconfig";
 import config from ".";
-import { ConfigFileType } from "./fileAndContent";
+import type { ConfigFileType } from "./fileAndContent";
 
 const guardAsOptionalString = (string: unknown) => (typeof string === "string" ? string : undefined);
 

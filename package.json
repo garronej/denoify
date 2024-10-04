@@ -3,8 +3,9 @@
     "version": "1.6.14",
     "homepage": "https://denoify.land",
     "description": "For NPM module authors that would like to support Deno but do not want to write and maintain a port.",
-    "main": "dist/lib/index.js",
-    "types": "dist/lib/index.d.ts",
+    "exports": {
+        "./lib/config/parseParams": "./dist/*.js"
+    },
     "repository": {
         "type": "git",
         "url": "git://github.com/garronej/denoify"
@@ -42,7 +43,10 @@
     ],
     "files": [
         "src/",
-        "dist/"
+        "dist/bin/main.js",
+        "dist/bin/enable_short_npm_import_path.js",
+        "dist/bin/remove_deno_dist_from_gitignore.js",
+        "dist/**/*.d.ts"
     ],
     "devDependencies": {
         "@types/glob": "^7.1.1",

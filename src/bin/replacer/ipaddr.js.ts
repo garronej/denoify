@@ -1,4 +1,4 @@
-import type { Replacer } from "../../lib";
+import type { Replacer } from "../..";
 
 const moduleName = "ipaddr.js";
 

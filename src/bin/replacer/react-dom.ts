@@ -1,4 +1,4 @@
-import type { Replacer } from "../../lib";
+import type { Replacer } from "../..";
 import { ParsedImportExportStatement } from "../../lib/types/ParsedImportExportStatement";
 
 const moduleName = "react-dom";

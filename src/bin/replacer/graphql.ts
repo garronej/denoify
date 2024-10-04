@@ -1,5 +1,5 @@
-import type { Replacer } from "../../lib";
-import { ParsedImportExportStatement } from "../../lib";
+import type { Replacer } from "../..";
+import { ParsedImportExportStatement } from "../..";
 
 const moduleName = "graphql";
 

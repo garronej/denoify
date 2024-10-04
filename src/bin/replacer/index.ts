@@ -1,4 +1,4 @@
-import { makeThisModuleAnExecutableReplacer } from "../../lib";
+import { makeThisModuleAnExecutableReplacer } from "../../lib/replacer";
 
 makeThisModuleAnExecutableReplacer(async params => {
     for (const { replacer } of await Promise.all([

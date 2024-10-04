@@ -6,6 +6,7 @@ import { same } from "evt/tools/inDepth/same";
 import { getThisCodebaseRootDirPath } from "./tools/getThisCodebaseRootDirPath";
 import { getAbsoluteAndInOsFormatPath } from "./tools/getAbsoluteAndInOsFormatPath";
 import { run } from "./shared/run";
+import { transformCodebase } from "./tools/transformCodebase";
 
 console.log(chalk.cyan("Building Denoify..."));
 
@@ -17,14 +18,16 @@ const parsedPackageJson: { bin: Record<string, string> } = JSON.parse(fs.readFil
 
 const distDirPath = pathJoin(getThisCodebaseRootDirPath(), "dist");
 
-const entrypointFilePaths = Object.values(parsedPackageJson.bin).map(fileRelativePath =>
+const entrypointFilePaths = [
+    ...Object.values(parsedPackageJson.bin),
+    pathJoin(distDirPath, "index.js"),
+    pathJoin(distDirPath, "bin", "replacer", "index.js")
+].map(fileRelativePath =>
     getAbsoluteAndInOsFormatPath({
         "pathIsh": fileRelativePath,
         "cwd": pathDirname(packageJsonFilePath)
     })
 );
-
-console.log(entrypointFilePaths);
 
 const getOriginalFilePath = (entrypointFilePath: string) => entrypointFilePath.replace(/js$/, "original.js");
 
@@ -57,5 +60,25 @@ for (const entrypointFilePath of entrypointFilePaths) {
 
     fs.chmodSync(entrypointFilePath, fs.statSync(entrypointFilePath).mode | fs.constants.S_IXUSR | fs.constants.S_IXGRP | fs.constants.S_IXOTH);
 }
+
+transformCodebase({
+    "srcDirPath": distDirPath,
+    "destDirPath": distDirPath,
+    "transformSourceCode": ({ filePath, sourceCode }) => {
+        if (entrypointFilePaths.includes(filePath)) {
+            return { "modifiedSourceCode": sourceCode };
+        }
+
+        if (entrypointFilePaths.map(getOriginalFilePath).includes(filePath)) {
+            return { "modifiedSourceCode": sourceCode };
+        }
+
+        if (filePath.endsWith(".d.ts")) {
+            return { "modifiedSourceCode": sourceCode };
+        }
+
+        return undefined;
+    }
+});
 
 console.log(chalk.green(`✓ built in ${((Date.now() - startTime) / 1000).toFixed(2)}s`));

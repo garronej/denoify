@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { cosmiconfig } from "cosmiconfig";
 import config from ".";
 import type { ConfigFileType } from "./fileAndContent";
+import { join as pathJoin, dirname as pathDirname } from "path";
 
 const guardAsOptionalString = (string: unknown) => (typeof string === "string" ? string : undefined);
 
@@ -104,17 +105,25 @@ export function parseAsDenoifyConfig({ configFileType }: { configFileType: Confi
             return parseAsDenoifyParams(configFileType.configFileBasename !== config.packageJson ? parsed : parsed.denoify);
         }
         case "js": {
-            const denoifyCacheDirPath = "node_modules/.cache/denoify/cacheDirPath";
-            if (!fs.existsSync(denoifyCacheDirPath)) {
-                fs.mkdirSync(denoifyCacheDirPath, {
-                    "recursive": true
-                });
+            const cacheFilePath = pathJoin(process.cwd(), "node_modules", ".cache", "denoify", "cacheDirPath", "config.js");
+
+            {
+                const dirPath = pathDirname(cacheFilePath);
+
+                if (!fs.existsSync(dirPath)) {
+                    fs.mkdirSync(dirPath, {
+                        "recursive": true
+                    });
+                }
             }
-            const path = `${process.cwd()}/${denoifyCacheDirPath}/config.js`;
-            fs.writeFileSync(path, configFileType.configFileRawContent);
+            fs.writeFileSync(cacheFilePath, configFileType.configFileRawContent);
             // cosmiconfig internally uses import-fresh to parse JS config
             // import-fresh only support commonjs export, so we can use require
-            return parseAsDenoifyParams(require(path));
+            const denoifyParams = parseAsDenoifyParams(require(cacheFilePath));
+
+            fs.rmSync(cacheFilePath, { "force": true });
+
+            return denoifyParams;
         }
     }
 }

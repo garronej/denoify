@@ -98,6 +98,10 @@ transformCodebase({
             return { "modifiedSourceCode": sourceCode };
         }
 
+        if (filePath.endsWith("parseParams.js")) {
+            return { "modifiedSourceCode": sourceCode };
+        }
+
         return undefined;
     }
 });

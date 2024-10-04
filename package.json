@@ -7,7 +7,7 @@
     "types": "dist/index.d.ts",
     "exports": {
         ".": "./dist/index.js",
-        "./lib/config/parseParams": "./dist/*.js"
+        "./lib/config/parseParams": "./dist/lib/config/parseParams.js"
     },
     "repository": {
         "type": "git",

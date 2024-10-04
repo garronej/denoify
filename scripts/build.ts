@@ -14,17 +14,23 @@ const startTime = Date.now();
 
 const distDirPath = pathJoin(getThisCodebaseRootDirPath(), "dist");
 
-transformCodebase({
-    "srcDirPath": distDirPath,
-    "destDirPath": distDirPath,
-    "transformSourceCode": ({ filePath, sourceCode }) => {
-        if (filePath === "package.json") {
-            return { "modifiedSourceCode": sourceCode };
-        }
-
-        return undefined;
+clean: {
+    if (!fs.existsSync(distDirPath)) {
+        break clean;
     }
-});
+
+    transformCodebase({
+        "srcDirPath": distDirPath,
+        "destDirPath": distDirPath,
+        "transformSourceCode": ({ filePath, sourceCode }) => {
+            if (filePath === "package.json") {
+                return { "modifiedSourceCode": sourceCode };
+            }
+
+            return undefined;
+        }
+    });
+}
 
 const packageJsonFilePath = pathJoin(getThisCodebaseRootDirPath(), "package.json");
 

@@ -5,7 +5,7 @@ import { getInstalledVersionPackageJsonFactory } from "../src/lib/getInstalledVe
 describe("get the version of npm package installed from package.json", () => {
     it("should return the version of package installed", async () => {
         const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
-            "projectPath": path.join(__dirname, "..", "res", "test_resolve_1")
+            "projectPath": path.join(__dirname, "res", "test_resolve_1")
         });
 
         expect(await getInstalledVersionPackageJson({ "nodeModuleName": "js-yaml" })).toStrictEqual({

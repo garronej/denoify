@@ -21,7 +21,7 @@ describe("resolve node module to deno-module", () => {
         let std_out = "";
 
         const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_1")
+            "projectPath": path.join(__dirname, "..", "res", "test_resolve_1")
         });
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
@@ -48,7 +48,7 @@ describe("resolve node module to deno-module", () => {
         let std_out = "";
 
         const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_2")
+            "projectPath": path.join(__dirname, "..", "res", "test_resolve_2")
         }); //NOTE: The version in package.json does not exist as a repo TAG.
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
@@ -81,7 +81,7 @@ describe("resolve node module to deno-module", () => {
         let std_out = "";
 
         const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
-            "projectPath": path.join(__dirname, "..", "..", "res", "test_resolve_3")
+            "projectPath": path.join(__dirname, "..", "res", "test_resolve_3")
         });
 
         const { resolveNodeModuleToDenoModule } = resolveNodeModuleToDenoModuleFactory({
@@ -108,7 +108,7 @@ describe("resolve node module to deno-module", () => {
     it("should resolve valid ts-md5 package to deno module", async () => {
         let std_out = "";
 
-        const projectPath = path.join(__dirname, "..", "..", "res", "test_resolve_5");
+        const projectPath = path.join(__dirname, "..", "res", "test_resolve_5");
 
         const { getInstalledVersionPackageJson } = getInstalledVersionPackageJsonFactory({
             projectPath

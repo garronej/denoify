@@ -3,3 +3,4 @@ node_modules/
 /docs/
 /res/
 /.yarn_home/
+/test/res/

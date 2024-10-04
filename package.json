@@ -10,20 +10,16 @@
         "url": "git://github.com/garronej/denoify"
     },
     "scripts": {
-        "grant-exec-perms": "chmod +x ./dist/bin/*.js",
-        "build": "tsc",
-        "postbuild": "yarn grant-exec-perms",
+        "build": "tsx scripts/build.ts",
         "pretest": "yarn build",
         "test": "vitest",
-        "test-precheck": "scripts/check-test.sh",
         "prettier": "prettier '**/*.{ts,tsx,json,md}'",
         "format": "yarn prettier --write",
         "format:check": "yarn prettier --list-different",
-        "link-in-app": "ts-node --skipProject scripts/link-in-app.ts",
-        "link-in-test-app": "yarn link-in-app my_dummy_npm_and_deno_module/"
+        "link-in-demo-app": "tsx scripts/link-in-starter.ts"
     },
     "bin": {
-        "denoify": "dist/bin/denoify.js",
+        "denoify": "dist/bin/main.js",
         "enable_short_npm_import_path": "dist/bin/enable_short_npm_import_path.js",
         "remove_deno_dist_from_gitignore": "dist/bin/remove_deno_dist_from_gitignore.js"
     },
@@ -39,23 +35,6 @@
     },
     "author": "u/garronej",
     "license": "MIT",
-    "dependencies": {
-        "@octokit/rest": "^18.0.0",
-        "@types/comment-json": "^1.1.1",
-        "commander": "^4.1.1",
-        "comment-json": "^3.0.2",
-        "cosmiconfig": "^7.0.1",
-        "evt": "2.5.7",
-        "get-github-default-branch-name": "^1.0.0",
-        "gitignore-parser": "0.0.2",
-        "glob": "^7.1.6",
-        "minimal-polyfills": "^2.2.3",
-        "node-fetch": "^2.6.7",
-        "path-depth": "^1.0.0",
-        "scripting-tools": "^0.19.14",
-        "tsafe": "^1.7.4",
-        "url-join": "^4.0.1"
-    },
     "keywords": [
         "deno",
         "transpile",
@@ -76,8 +55,26 @@
         "js-yaml": "^3.13.1",
         "lint-staged": "^11.0.0",
         "prettier": "^2.3.0",
-        "ts-node": "^10.9.1",
         "typescript": "^4.7.3",
-        "vitest": "^0.32.0"
+        "vitest": "^0.32.0",
+        "@vercel/ncc": "^0.38.2",
+        "@octokit/rest": "^18.0.0",
+        "@types/comment-json": "^1.1.1",
+        "commander": "^4.1.1",
+        "comment-json": "^3.0.2",
+        "cosmiconfig": "^7.0.1",
+        "evt": "2.5.7",
+        "get-github-default-branch-name": "^1.0.0",
+        "gitignore-parser": "0.0.2",
+        "glob": "^7.1.6",
+        "minimal-polyfills": "^2.2.3",
+        "node-fetch": "^2.6.7",
+        "path-depth": "^1.0.0",
+        "scripting-tools": "^0.19.14",
+        "tsafe": "^1.7.4",
+        "url-join": "^4.0.1",
+        "chalk": "^5.3.0",
+        "tsx": "^4.19.1",
+        "chokidar": "^4.0.1"
     }
 }

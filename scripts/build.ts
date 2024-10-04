@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { join as pathJoin, dirname as pathDirname, relative as pathRelative } from "path";
+import { join as pathJoin, dirname as pathDirname, basename as pathBasename } from "path";
 import { assert } from "tsafe/assert";
 import chalk from "chalk";
 import { same } from "evt/tools/inDepth/same";
@@ -12,11 +12,23 @@ console.log(chalk.cyan("Building Denoify..."));
 
 const startTime = Date.now();
 
+const distDirPath = pathJoin(getThisCodebaseRootDirPath(), "dist");
+
+transformCodebase({
+    "srcDirPath": distDirPath,
+    "destDirPath": distDirPath,
+    "transformSourceCode": ({ filePath, sourceCode }) => {
+        if (filePath === "package.json") {
+            return { "modifiedSourceCode": sourceCode };
+        }
+
+        return undefined;
+    }
+});
+
 const packageJsonFilePath = pathJoin(getThisCodebaseRootDirPath(), "package.json");
 
 const parsedPackageJson: { bin: Record<string, string> } = JSON.parse(fs.readFileSync(packageJsonFilePath).toString("utf8"));
-
-const distDirPath = pathJoin(getThisCodebaseRootDirPath(), "dist");
 
 const entrypointFilePaths = [
     ...Object.values(parsedPackageJson.bin),
@@ -29,32 +41,41 @@ const entrypointFilePaths = [
     })
 );
 
-const getOriginalFilePath = (entrypointFilePath: string) => entrypointFilePath.replace(/js$/, "original.js");
-
-for (const entrypointFilePath of entrypointFilePaths) {
-    const entrypointFilePath_original = getOriginalFilePath(entrypointFilePath);
-
-    if (fs.existsSync(entrypointFilePath_original)) {
-        fs.renameSync(entrypointFilePath_original, entrypointFilePath);
-    }
-}
-
 run("npx tsc");
 
-for (const entrypointFilePath of entrypointFilePaths) {
-    if (!fs.readFileSync(entrypointFilePath).toString("utf8").includes("__nccwpck_require__")) {
-        fs.cpSync(entrypointFilePath, getOriginalFilePath(entrypointFilePath));
-    }
-}
+const nccGeneratedFilePaths: string[] = [];
 
 for (const entrypointFilePath of entrypointFilePaths) {
     const nccOutDirPath = pathJoin(distDirPath, "ncc_out");
 
     run(`npx ncc build ${entrypointFilePath} -o ${nccOutDirPath}`);
 
-    assert(same(fs.readdirSync(nccOutDirPath), ["index.js"]));
+    fs.readdirSync(nccOutDirPath).forEach(basename => {
+        const destFilePath = basename === "index.js" ? entrypointFilePath : pathJoin(pathDirname(entrypointFilePath), basename);
+        const srcFilePath = pathJoin(nccOutDirPath, basename);
 
-    fs.cpSync(pathJoin(nccOutDirPath, "index.js"), entrypointFilePath);
+        check_can_be_overwritten: {
+            if (basename === "index.js") {
+                break check_can_be_overwritten;
+            }
+
+            if (!fs.existsSync(destFilePath)) {
+                break check_can_be_overwritten;
+            }
+
+            const currentContent = fs.readFileSync(destFilePath);
+            const candidateContent = fs.readFileSync(srcFilePath);
+
+            if (Buffer.compare(currentContent, candidateContent) === 0) {
+                break check_can_be_overwritten;
+            }
+
+            throw new Error(`File ${destFilePath} already exists and is different from the one that would be written`);
+        }
+
+        fs.cpSync(srcFilePath, destFilePath);
+        nccGeneratedFilePaths.push(destFilePath);
+    });
 
     fs.rmSync(nccOutDirPath, { recursive: true });
 
@@ -65,11 +86,7 @@ transformCodebase({
     "srcDirPath": distDirPath,
     "destDirPath": distDirPath,
     "transformSourceCode": ({ filePath, sourceCode }) => {
-        if (entrypointFilePaths.includes(filePath)) {
-            return { "modifiedSourceCode": sourceCode };
-        }
-
-        if (entrypointFilePaths.map(getOriginalFilePath).includes(filePath)) {
+        if (nccGeneratedFilePaths.includes(filePath)) {
             return { "modifiedSourceCode": sourceCode };
         }
 

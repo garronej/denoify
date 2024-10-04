@@ -127,6 +127,6 @@ testAppPaths.forEach(testAppPath =>
     })
 );
 
-testAppPaths.forEach(testAppPath => execSync("yarn postinstall", { cwd: testAppPath }));
+//testAppPaths.forEach(testAppPath => execSync("yarn postinstall", { cwd: testAppPath }));
 
 export {};

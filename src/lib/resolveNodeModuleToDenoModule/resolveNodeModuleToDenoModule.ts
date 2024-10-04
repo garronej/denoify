@@ -18,6 +18,7 @@ import { assert } from "tsafe/assert";
 import { exclude } from "tsafe/exclude";
 import getFileTypeAndContent from "../config/fileAndContent";
 import { parseAsDenoifyConfig } from "../config/parseParams";
+import { fetchWithTimeout } from "../../tools/fetchWithTimeout";
 
 type GetValidImportUrl = (
     params:
@@ -595,7 +596,7 @@ export const { getValidImportUrlFactory } = (() => {
                     ].filter(exclude(undefined))) {
                         const denoLandXUrl = buildDenoLandXUrl(pathToFile);
 
-                        const fetchResponse = await fetch(denoLandXUrl, { "timeout": 8000 });
+                        const fetchResponse = await fetchWithTimeout(denoLandXUrl, { "timeout": 8000 });
 
                         if (fetchResponse.status === 404 || fetchResponse.status === 400) {
                             continue;

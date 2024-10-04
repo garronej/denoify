@@ -50,10 +50,8 @@
         "src/",
         "dist/"
     ],
-    "dependencies": {
-        "tsafe": "^1.7.4"
-    },
     "devDependencies": {
+        "tsafe": "^1.7.5",
         "@types/glob": "^7.1.1",
         "@types/js-yaml": "^3.12.3",
         "@types/node": "^20.2.3",

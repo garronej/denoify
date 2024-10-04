@@ -82,8 +82,6 @@ for (const entrypointFilePath of entrypointFilePaths) {
     });
 
     fs.rmSync(nccOutDirPath, { recursive: true });
-
-    fs.chmodSync(entrypointFilePath, fs.statSync(entrypointFilePath).mode | fs.constants.S_IXUSR | fs.constants.S_IXGRP | fs.constants.S_IXOTH);
 }
 
 transformCodebase({
@@ -105,5 +103,9 @@ transformCodebase({
         return undefined;
     }
 });
+
+for (const entrypointFilePath of entrypointFilePaths) {
+    fs.chmodSync(entrypointFilePath, fs.statSync(entrypointFilePath).mode | fs.constants.S_IXUSR | fs.constants.S_IXGRP | fs.constants.S_IXOTH);
+}
 
 console.log(chalk.green(`✓ built in ${((Date.now() - startTime) / 1000).toFixed(2)}s`));

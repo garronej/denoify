@@ -1,8 +1,6 @@
 import * as fs from "fs";
 import { join as pathJoin, dirname as pathDirname, basename as pathBasename } from "path";
-import { assert } from "tsafe/assert";
 import chalk from "chalk";
-import { same } from "evt/tools/inDepth/same";
 import { getThisCodebaseRootDirPath } from "./tools/getThisCodebaseRootDirPath";
 import { getAbsoluteAndInOsFormatPath } from "./tools/getAbsoluteAndInOsFormatPath";
 import { run } from "./shared/run";

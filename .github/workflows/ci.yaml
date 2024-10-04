@@ -26,6 +26,8 @@ jobs:
     - uses: bahmutov/npm-install@v1
     - run: npm run build
     - run: npm run test
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
   check_if_version_upgraded:
     name: Check if version upgrade

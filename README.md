@@ -7,8 +7,8 @@ The best way to get started with Denoify is to start hacking around with the dem
 ```bash
 git clone https://github.com/garronej/my_dummy_npm_and_deno_module
 cd my_dummy_npm_and_deno_module
-npm install
-npm run build
+yarn install
+yarn build
 
 # Run the sample with node
 node dist/test/test1.js

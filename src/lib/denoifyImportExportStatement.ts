@@ -78,6 +78,9 @@ export function denoifyImportExportStatementFactory(
                 if (fs.existsSync(path.join(dirPath, `${relativePath}.${ext}`))) {
                     return stringify(`${relativePath}.${ext}`);
                 }
+                if (relativePath.endsWith(`.${ext}`) && fs.existsSync(path.join(dirPath, relativePath))) {
+                    return stringify(relativePath);
+                }
             }
 
             // relative esm module import

@@ -2,10 +2,10 @@ module.exports = {
   title: "Denoify",
   subtitle: "The Node to Deno transpiler",
   description: "🦕For NPM module authors that would like to support Deno but do not want to write and maintain a port for it.",
-  preview: "https://denoify.land/assets/img/social_preview.png", //Social media preview image
-  baseUrl: "https://denoify.land",
-  apiUrl: "https://docs.denoify.land",
-  learnMoreUrl: "https://docs.denoify.land",
+  preview: "https://garronej.github.io/denoify/assets/img/social_preview.png", //Social media preview image
+  baseUrl: "https://garronej.github.io/denoify/",
+  apiUrl: "https://evt-garronej.gitbook.io/denoify",
+  learnMoreUrl: "https://evt-garronej.gitbook.io/denoify",
   githubUrl: "https://github.com/garronej/denoify",
   "quotes": [
     {

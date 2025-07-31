@@ -1,5 +1,5 @@
 
-# Build the website (www.denoify.land)
+# Build the website (https://garronej.github.io/denoify/)
 
 ```bash
 npm install

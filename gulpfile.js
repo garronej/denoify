@@ -41,17 +41,12 @@ gulp.task('copy-img', () => {
 		.pipe(gulp.dest('docs/assets/img'));
 })
 
-gulp.task("copy-CNAME", () =>
-	gulp.src("CNAME")
-		.pipe(gulp.dest("docs"))
-);
-
 gulp.task("copy-robots.txt", () =>
 	gulp.src("robots.txt")
 		.pipe(gulp.dest("docs"))
 );
 
-gulp.task('copy', gulp.parallel(['copy-bootstrap', 'copy-fontawesome', 'copy-jquery', 'copy-types', 'copy-img', "copy-CNAME"]));
+gulp.task('copy', gulp.parallel(['copy-bootstrap', 'copy-fontawesome', 'copy-jquery', 'copy-types', 'copy-img']));
 
 gulp.task('ejs', () => {
 	delete require.cache[require.resolve('./content')];

@@ -75,7 +75,7 @@ body {
 .masthead {
   min-height: 500px;
   background-color: #026E00;
-  background-image: url("/assets/img/background8.png");
+  background-image: url("../img/background8.png");
   background-attachment: fixed;
   /*background-position: center; */ }
   .masthead .terminal-wrapper {
